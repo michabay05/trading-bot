@@ -21,8 +21,24 @@ type Candle struct {
 	timestamp int64
 }
 
-type Object = map[string]interface{}
-type Array = []interface{}
+type IndicatorOption struct {
+	ticker      string
+	timestamp   string
+	timespan    string
+	window      int
+	series_type string
+}
+
+var DEFAULT_IND_OPT = IndicatorOption{
+	ticker:      "AAPL",
+	timestamp:   "2025-04-21",
+	timespan:    "hour",
+	window:      21,
+	series_type: "close",
+}
+
+type Object = map[string]any // any ~ interface{}
+type Array = []any           // any ~ interface{}
 
 func httpGetJSON(target_url string) Object {
 	resp, err := http.Get(target_url)
@@ -71,27 +87,23 @@ func getCandles(API_KEY string, stock_ticker string) []Candle {
 	return candles
 }
 
-func getRSIs(API_KEY string) {
-	stock_ticker := "SPY"
-	timestamp := "2025-04-21"
-	timespan := "hour"
-	series_type := "close"
-	window := 14
+func getIndicator(API_KEY string, kind string, opt IndicatorOption) {
 	target_url := fmt.Sprintf(
-		"%s/v1/indicators/rsi/%s?timestamp=%s&timespan=%s&series_type=%s&window=%d&apiKey=%s",
-		BASE_URL, stock_ticker, timestamp, timespan, series_type, window, API_KEY,
+		"%s/v1/indicators/%s/%s?timestamp=%s&timespan=%s&series_type=%s&window=%d&apiKey=%s",
+		BASE_URL, kind, opt.ticker, opt.timestamp, opt.timespan, opt.series_type,
+		opt.window, API_KEY,
 	)
 	fmt.Println("Target URL: " + target_url)
 
 	root := httpGetJSON(target_url)
 	values := root["results"].(Object)["values"].(Array)
 
-	for i, rsiVals := range values {
-		val := rsiVals.(Object)
+	for i, val := range values {
+		v := val.(Object)
 		fmt.Printf("values[%d] = {\n", i)
-		timestamp := int64(val["timestamp"].(float64))
+		timestamp := int64(v["timestamp"].(float64))
 		fmt.Printf("    timestamp: %d (%s)\n", timestamp, timestampToDate(timestamp))
-		fmt.Printf("        value: %f\n", val["value"].(float64))
+		fmt.Printf("        value: %f\n", v["value"].(float64))
 		fmt.Println("}")
 	}
 }
@@ -108,27 +120,5 @@ func main() {
 	}
 	API_KEY := strings.TrimSpace(string(bytes))
 
-	stock_ticker := "AAPL"
-	timestamp := "2025-04-21"
-	timespan := "day"
-	window := 50
-	series_type := "close"
-	target_url := fmt.Sprintf(
-		"%s/v1/indicators/ema/%s?timestamp=%s&timespan=%s&window=%d&series_type=%s&apiKey=%s",
-		BASE_URL, stock_ticker, timestamp, timespan, window, series_type, API_KEY,
-	)
-	fmt.Println("Target URL: " + target_url)
-
-	// TODO: SMA, EMA, and RSI are very similar. Create a simpler way to access them
-	root := httpGetJSON(target_url)
-	values := root["results"].(Object)["values"].(Array)
-
-	for i, emaVals := range values {
-		val := emaVals.(Object)
-		fmt.Printf("values[%d] = {\n", i)
-		timestamp := int64(val["timestamp"].(float64))
-		fmt.Printf("    timestamp: %d (%s)\n", timestamp, timestampToDate(timestamp))
-		fmt.Printf("        value: %f\n", val["value"].(float64))
-		fmt.Println("}")
-	}
+	getIndicator(API_KEY, "ema", DEFAULT_IND_OPT)
 }
