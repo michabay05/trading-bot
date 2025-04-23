@@ -120,7 +120,7 @@ func timestampToDateOnly(timestamp int64) string {
 	return t.Format(time.DateOnly)
 }
 
-func timestampToDatenTime(timestamp int64) string {
+func timestampToDateTime(timestamp int64) string {
 	t := time.UnixMilli(timestamp)
 	return t.Format(time.DateTime)
 }

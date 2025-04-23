@@ -9,3 +9,5 @@
 - [ ] Read paged information via optional 'next_url' option
 - [ ] Implement a basic paper trading account
 - [ ] Backtest strategy using paper account infrastructure
+- [ ] Look into public open source trading bots
+    - [ ] [freqtrade-strategies](https://github.com/freqtrade/freqtrade-strategies/tree/main)
