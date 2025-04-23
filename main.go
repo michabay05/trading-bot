@@ -21,16 +21,23 @@ type Candle struct {
 	timestamp int64
 }
 
+type IndicatorValues struct {
+	timestamp int64
+	value     float64
+}
+
 type IndicatorOption struct {
-	ticker      string
-	timestamp   string
-	timespan    string
-	window      int
+	// Format: YYYY-MM-DD
+	timestamp string
+	// Possible values:
+	// ["second", "minute", "hour", "day", "week", "month", "year"]
+	timespan string
+	window   int
+	// Possible values: ["open", "close", "high", "low"]
 	series_type string
 }
 
 var DEFAULT_IND_OPT = IndicatorOption{
-	ticker:      "AAPL",
 	timestamp:   "2025-04-21",
 	timespan:    "hour",
 	window:      21,
@@ -87,30 +94,58 @@ func getCandles(API_KEY string, stock_ticker string) []Candle {
 	return candles
 }
 
-func getIndicator(API_KEY string, kind string, opt IndicatorOption) {
+func getIndicator(API_KEY string, kind string, ticker string, opt IndicatorOption) []IndicatorValues {
 	target_url := fmt.Sprintf(
 		"%s/v1/indicators/%s/%s?timestamp=%s&timespan=%s&series_type=%s&window=%d&apiKey=%s",
-		BASE_URL, kind, opt.ticker, opt.timestamp, opt.timespan, opt.series_type,
+		BASE_URL, kind, ticker, opt.timestamp, opt.timespan, opt.series_type,
 		opt.window, API_KEY,
 	)
-	fmt.Println("Target URL: " + target_url)
 
 	root := httpGetJSON(target_url)
 	values := root["results"].(Object)["values"].(Array)
 
-	for i, val := range values {
+	ind_vals := []IndicatorValues{}
+	for _, val := range values {
 		v := val.(Object)
-		fmt.Printf("values[%d] = {\n", i)
-		timestamp := int64(v["timestamp"].(float64))
-		fmt.Printf("    timestamp: %d (%s)\n", timestamp, timestampToDate(timestamp))
-		fmt.Printf("        value: %f\n", v["value"].(float64))
-		fmt.Println("}")
+		ind_vals = append(ind_vals, IndicatorValues{
+			timestamp: int64(v["timestamp"].(float64)),
+			value:     v["value"].(float64),
+		})
 	}
+	return ind_vals
 }
 
-func timestampToDate(timestamp int64) string {
+func timestampToDateOnly(timestamp int64) string {
+	t := time.UnixMilli(timestamp)
+	return t.Format(time.DateOnly)
+}
+
+func timestampToDatenTime(timestamp int64) string {
 	t := time.UnixMilli(timestamp)
 	return t.Format(time.DateTime)
+}
+
+// Exports an array of candles into a CSV file
+func exportCandles(candles []Candle) error {
+	sb := strings.Builder{}
+	_, err := sb.WriteString(",date,open,high,low,close,volume\n")
+	if err != nil {
+		return err
+	}
+	for i, c := range candles {
+		date := timestampToDateOnly(c.timestamp)
+		line := fmt.Sprintf(
+			"%d,%s,%.4f,%.4f,%.4f,%.4f,%d",
+			i, date, c.open, c.high, c.low, c.close, c.volume)
+		_, err := sb.WriteString(line + "\n")
+		if err != nil {
+			return err
+		}
+	}
+
+	// Default output path: "ohlcv.csv"
+	os.WriteFile("ohlcv.csv", []byte(sb.String()), 0644)
+	return nil
 }
 
 func main() {
@@ -120,5 +155,6 @@ func main() {
 	}
 	API_KEY := strings.TrimSpace(string(bytes))
 
-	getIndicator(API_KEY, "ema", DEFAULT_IND_OPT)
+	candles := getCandles(API_KEY, "AAPL")
+	exportCandles(candles)
 }

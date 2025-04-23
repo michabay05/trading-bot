@@ -1,0 +1,11 @@
+# TODOs
+- [x] Save candle information values as CSV
+- [ ] If duplicate CSVs, add setting to override or not to override
+- [ ] Develop a way of coding a strategy
+- [ ] Develop conditional
+    - [ ] Line A crossover Line B
+    - [ ] Line A crossunder Line B
+    - [ ] Value above or below a line
+- [ ] Read paged information via optional 'next_url' option
+- [ ] Implement a basic paper trading account
+- [ ] Backtest strategy using paper account infrastructure
