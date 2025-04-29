@@ -6,8 +6,11 @@
     - [ ] Line A crossover Line B
     - [ ] Line A crossunder Line B
     - [ ] Value above or below a line
+    - [ ] Highest candle in a set of $N$ candles by series type
+    - [ ] Lowest candle in a set of $N$ candles by series type
 - [ ] Read paged information via optional 'next_url' option
 - [ ] Implement a basic paper trading account
 - [ ] Backtest strategy using paper account infrastructure
 - [ ] Look into public open source trading bots
     - [ ] [freqtrade-strategies](https://github.com/freqtrade/freqtrade-strategies/tree/main)
+    - [ ] [Octobot](https://github.com/Drakkar-Software/OctoBot)
