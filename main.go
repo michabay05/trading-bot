@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -14,38 +15,56 @@ import (
 const BASE_URL = "https://api.polygon.io"
 
 type Candle struct {
-	open      float64
-	high      float64
-	low       float64
-	close     float64
-	volume    int
-	timestamp int64
+	Open      float64 `json:"o"`
+	High      float64 `json:"h"`
+	Low       float64 `json:"l"`
+	Close     float64 `json:"c"`
+	Volume    float64 `json:"v"`
+	Timestamp int64   `json:"t"`
 }
 
 func (cnd *Candle) String() string {
-	timestamp := timestampToDateTime(cnd.timestamp)
-	return fmt.Sprintf("Candle {\n   open: %.2f\n   high: %.2f\n   low: %.2f\n   close: %.2f\n   volume: %d\n   timestamp: %s\n}",
-		cnd.open, cnd.high, cnd.low, cnd.close, cnd.volume, timestamp)
+	timestamp := timestampToDateTime(cnd.Timestamp)
+	return fmt.Sprintf("Candle {\n   open: %.2f\n   high: %.2f\n   low: %.2f\n   close: %.2f\n   volume: %.1f\n   timestamp: %s\n}",
+		cnd.Open, cnd.High, cnd.Low, cnd.Close, cnd.Volume, timestamp)
 }
 
 func (cnd *Candle) series_val(series string) (float64, error) {
 	switch series {
 	case "open":
-		return cnd.open, nil
+		return cnd.Open, nil
 	case "close":
-		return cnd.close, nil
+		return cnd.Close, nil
 	case "low":
-		return cnd.low, nil
+		return cnd.Low, nil
 	case "high":
-		return cnd.high, nil
+		return cnd.High, nil
 	default:
 		return -1, errors.New("")
 	}
 }
 
+type CandleResponse struct {
+	Ticker       string   `json:"ticker"`
+	QueryCount   int      `json:"queryCount"`
+	ResultsCount int      `json:"resultsCount"`
+	Status       string   `json:"status"`
+	Results      []Candle `json:"results,omitempty"`
+	NextURL      string   `json:"next_url,omitempty"`
+}
+
+// TODO: refactor this to use json stuff
+type IndicatorResponse struct {
+	NextURL string `json:"next_url,omitempty"`
+	Status  string `json:"status"`
+	Results struct {
+		Values []IndicatorValues `json:"values"`
+	} `json:"results"`
+}
+
 type IndicatorValues struct {
-	timestamp int64
-	value     float64
+	Timestamp int64   `json:"timestamp,omitempty"`
+	Value     float64 `json:"value,omitempty"`
 }
 
 type CandleOption struct {
@@ -61,8 +80,8 @@ func (co *CandleOption) String() string {
 }
 
 type IndicatorOption struct {
-	// Format: YYYY-MM-DD
-	timestamp string
+	// Format: Unix millis
+	timestampLTE int64
 	// Possible values:
 	// ["second", "minute", "hour", "day", "week", "month", "year"]
 	timespan string
@@ -75,20 +94,14 @@ type IndicatorOption struct {
 type Object = map[string]any // any ~ interface{}
 type Array = []any           // any ~ interface{}
 
-func httpGetJSON(target_url string) Object {
+func httpGet_v2(target_url string) ([]byte, error) {
 	resp, err := http.Get(target_url)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer resp.Body.Close()
 
-	var root Object
-	decoder := json.NewDecoder(resp.Body)
-	err = decoder.Decode(&root)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	return root
+	return io.ReadAll(resp.Body)
 }
 
 func getCandles(API_KEY string, stock_ticker string, opt CandleOption) []Candle {
@@ -111,45 +124,56 @@ func getCandles(API_KEY string, stock_ticker string, opt CandleOption) []Candle 
 	fmt.Println("Target URL: " + target_url)
 	fmt.Println("-----------")
 
-	root := httpGetJSON(target_url)
-	// TODO: use `json.Unmarshal()` instead of iterating through the array
-	results := root["results"].(Array)
-	candles := []Candle{}
-	for _, candle := range results {
-		c := candle.(Object)
-
-		cnd := Candle{
-			low:       c["l"].(float64),
-			open:      c["o"].(float64),
-			close:     c["c"].(float64),
-			high:      c["h"].(float64),
-			timestamp: int64(c["t"].(float64)),
-			volume:    int(c["v"].(float64)),
-		}
-		candles = append(candles, cnd)
+	data, err := httpGet_v2(target_url)
+	if err != nil {
+		log.Fatal(err)
 	}
-	return candles
+	var root CandleResponse
+	json.Unmarshal(data, &root)
+
+	return root.Results
 }
 
 func getIndicator(API_KEY string, kind string, ticker string, opt IndicatorOption) []IndicatorValues {
 	target_url := fmt.Sprintf(
-		"%s/v1/indicators/%s/%s?timestamp=%s&timespan=%s&series_type=%s&window=%d&apiKey=%s",
-		BASE_URL, kind, ticker, opt.timestamp, opt.timespan, opt.series_type,
+		"%s/v1/indicators/%s/%s?timestamp.lte=%d&timespan=%s&series_type=%s&window=%d&apiKey=%s",
+		BASE_URL, kind, ticker, opt.timestampLTE, opt.timespan, opt.series_type,
 		opt.window, API_KEY,
 	)
 
-	root := httpGetJSON(target_url)
-	values := root["results"].(Object)["values"].(Array)
-
-	ind_vals := []IndicatorValues{}
-	for _, val := range values {
-		v := val.(Object)
-		ind_vals = append(ind_vals, IndicatorValues{
-			timestamp: int64(v["timestamp"].(float64)),
-			value:     v["value"].(float64),
-		})
+	data, err := httpGet_v2(target_url)
+	if err != nil {
+		log.Fatal(err)
 	}
-	return ind_vals
+	var root IndicatorResponse
+	json.Unmarshal(data, &root)
+	return root.Results.Values
+
+	// var root Object
+	// values := root["results"].(Object)["values"].(Array)
+
+	// ind_vals := []IndicatorValues{}
+	// for _, val := range values {
+	// 	v := val.(Object)
+	// 	ind_vals = append(ind_vals, IndicatorValues{
+	// 		timestamp: int64(v["timestamp"].(float64)),
+	// 		value:     v["value"].(float64),
+	// 	})
+	// }
+
+	// max_limit := root["queryCount"].(int64)
+	// val_count := root["resultsCount"].(int64)
+
+	// if val_count > max_limit {
+	// 	log.Fatal("Shut up")
+	// }
+
+	// if int(val_count) != len(values) {
+	// 	log.Fatal("Shut up v2")
+	// }
+	// fmt.Println("yessah")
+
+	// return ind_vals
 }
 
 // Exports an array of candles into a CSV file
@@ -160,10 +184,10 @@ func exportCandles(candles []Candle) error {
 		return err
 	}
 	for i, c := range candles {
-		date := timestampToDateTime(c.timestamp)
+		date := timestampToDateTime(c.Timestamp)
 		line := fmt.Sprintf(
-			"%d,%s,%.4f,%.4f,%.4f,%.4f,%d",
-			i, date, c.open, c.high, c.low, c.close, c.volume)
+			"%d,%s,%.4f,%.4f,%.4f,%.4f,%.0f",
+			i, date, c.Open, c.High, c.Low, c.Close, c.Volume)
 		_, err := sb.WriteString(line + "\n")
 		if err != nil {
 			return err
@@ -215,28 +239,37 @@ func main() {
 	API_KEY := strings.TrimSpace(string(bytes))
 
 	ticker := "SPY"
-	candle_opt := CandleOption{
-		start:    "2025-04-23 15:15:00",
-		end:      "2025-04-24 15:15:00",
-		mult:     15,
-		timespan: "minute",
-	}
-	candles := getCandles(API_KEY, ticker, candle_opt)
-	fmt.Println(candle_opt.String())
-	series_s := []string{ "close", "high", "open" }
-	for _, series := range series_s {
-		ind := highestCandle(candles, series, len(candles))
-		fmt.Printf("Highest candles by %s: %s\n---------------\n", series, candles[ind].String())
-	}
 
+	unix_ts, err := dateTimeToTimestamp("2025-04-13 10:00:00")
+	println(unix_ts)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	ind_opt := IndicatorOption{
+		timestampLTE: unix_ts,
+		timespan:     "minute",
+		window:       8,
+		series_type:  "close",
+	}
+	sma8 := getIndicator(API_KEY, "sma", ticker, ind_opt)
+	ind_opt.window = 21
+	// sma21 := getIndicator(API_KEY, "sma", ticker, ind_opt)
+	fmt.Println(sma8)
+	// fmt.Println(sma21)
 
-	// sma_opt := IndicatorOption{
-	// 	timestamp:   "2025-04-10",
-	// 	timespan:    "hour",
-	// 	window:      10,
-	// 	series_type: "close",
+	// candle_opt := CandleOption{
+	// 	start:    "2025-04-20 15:15:00",
+	// 	end:      "2025-04-24 15:15:00",
+	// 	mult:     1,
+	// 	timespan: "day",
 	// }
-	// sma10 := getIndicator(API_KEY, "sma", ticker, sma_opt)
-	// sma_opt.window = 30
-	// sma30 := getIndicator(API_KEY, "sma", ticker, sma_opt)
+	// candles := getCandles(API_KEY, ticker, candle_opt)
+	// for _, candle := range candles {
+	// 	fmt.Println(candle.String())
+	// }
+	// series_s := []string{ "close", "high", "open" }
+	// for _, series := range series_s {
+	// 	ind := highestCandle(candles, series, len(candles))
+	// 	fmt.Printf("Highest candles by %s: %s\n---------------\n", series, candles[ind].String())
+	// }
 }
