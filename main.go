@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -8,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -72,6 +74,7 @@ type CandleOption struct {
 	end      string
 	mult     int
 	timespan string
+	ticker   string
 }
 
 func (co *CandleOption) String() string {
@@ -131,7 +134,26 @@ func getCandles(API_KEY string, stock_ticker string, opt CandleOption) []Candle 
 	var root CandleResponse
 	json.Unmarshal(data, &root)
 
-	return root.Results
+	candles := root.Results
+	if len(root.NextURL) != 0 {
+		data, err := httpGet_v2(root.NextURL + "?apiKey=" + API_KEY)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var root2 CandleResponse
+		json.Unmarshal(data, &root2)
+		candles = append(candles, root2.Results...)
+
+		if len(root2.NextURL) != 0 {
+			println("--------")
+			println(root2.NextURL)
+			println("TODO: More values to collect")
+			println("--------")
+			log.Fatalln("Fix TODO here")
+		}
+	}
+
+	return candles
 }
 
 func getIndicator(API_KEY string, kind string, ticker string, opt IndicatorOption) []IndicatorValues {
@@ -148,36 +170,53 @@ func getIndicator(API_KEY string, kind string, ticker string, opt IndicatorOptio
 	var root IndicatorResponse
 	json.Unmarshal(data, &root)
 	return root.Results.Values
+}
 
-	// var root Object
-	// values := root["results"].(Object)["values"].(Array)
+func getHistoricalCandles(API_KEY string, opt CandleOption) []Candle {
+	start_unix, err := dateTimeToTimestamp(opt.start)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	end_unix, err := dateTimeToTimestamp(opt.end)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	// ind_vals := []IndicatorValues{}
-	// for _, val := range values {
-	// 	v := val.(Object)
-	// 	ind_vals = append(ind_vals, IndicatorValues{
-	// 		timestamp: int64(v["timestamp"].(float64)),
-	// 		value:     v["value"].(float64),
-	// 	})
-	// }
+	const QUERY_LIMIT int = 1150
+	candles := []Candle{}
+	// Number of candles we can get in one request based on query limit and multiplier
+	CANDLES_PER_REQ := QUERY_LIMIT * opt.mult
+	// Total minutes of data we can get per request
+	MINS_PER_REQ := CANDLES_PER_REQ
+	// Convert minutes to milliseconds for timestamp calculations
+	MS_PER_REQ := MINS_PER_REQ * 60 * 1000
 
-	// max_limit := root["queryCount"].(int64)
-	// val_count := root["resultsCount"].(int64)
+	curr_start := start_unix
+	requestCount := 0
+	for curr_start < end_unix {
+		curr_end := min(curr_start + int64(MS_PER_REQ), end_unix)
 
-	// if val_count > max_limit {
-	// 	log.Fatal("Shut up")
-	// }
+		opt.start = timestampToDateTime(curr_start)
+		opt.end = timestampToDateTime(curr_end)
+		batch := getCandles(API_KEY, opt.ticker, opt)
+		candles = append(candles, batch...)
 
-	// if int(val_count) != len(values) {
-	// 	log.Fatal("Shut up v2")
-	// }
-	// fmt.Println("yessah")
+		log.Printf("Query complete: %s to %s", opt.start, opt.end)
 
-	// return ind_vals
+		curr_start = curr_end
+		requestCount++
+
+		if requestCount%2 == 0 {
+			log.Println("Waiting 60 seconds before next request...")
+			time.Sleep(60 * time.Second)
+		}
+	}
+
+	return candles
 }
 
 // Exports an array of candles into a CSV file
-func exportCandles(candles []Candle) error {
+func exportCandles(candles []Candle, opt CandleOption) error {
 	sb := strings.Builder{}
 	_, err := sb.WriteString(",date,open,high,low,close,volume\n")
 	if err != nil {
@@ -194,9 +233,84 @@ func exportCandles(candles []Candle) error {
 		}
 	}
 
-	// Default output path: "ohlcv.csv"
-	os.WriteFile("ohlcv.csv", []byte(sb.String()), 0644)
+	start_unix, err := dateTimeToTimestamp(opt.start)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	end_unix, err := dateTimeToTimestamp(opt.end)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	outPath := fmt.Sprintf(
+		"ohlcv-%s%s-%s%s-%d%s-%s.csv",
+		time.UnixMilli(start_unix).Format("Jan"),
+		time.UnixMilli(start_unix).Format("06"),
+		time.UnixMilli(end_unix).Format("Jan"),
+		time.UnixMilli(end_unix).Format("06"),
+		opt.mult,
+		opt.timespan,
+		opt.ticker,
+	)
+	os.WriteFile(outPath, []byte(sb.String()), 0644)
 	return nil
+}
+
+func importCandles(filepath string) ([]Candle, error) {
+	candles := []Candle{}
+	f, err := os.Open(filepath)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	lines, err := csv.NewReader(f).ReadAll()
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range len(lines) {
+		// First line is a header
+		if i == 0 {
+			continue
+		}
+		line := lines[i]
+
+		// i, date, c.Open, c.High, c.Low, c.Close, c.Volume
+		unixTimestamp, err := dateTimeToTimestamp(line[1])
+		if err != nil {
+			return nil, err
+		}
+		open, err := strconv.ParseFloat(line[2], 64)
+		if err != nil {
+			return nil, err
+		}
+		high, err := strconv.ParseFloat(line[3], 64)
+		if err != nil {
+			return nil, err
+		}
+		low, err := strconv.ParseFloat(line[4], 64)
+		if err != nil {
+			return nil, err
+		}
+		close, err := strconv.ParseFloat(line[5], 64)
+		if err != nil {
+			return nil, err
+		}
+		volume, err := strconv.ParseFloat(line[6], 64)
+		if err != nil {
+			return nil, err
+		}
+
+		candles = append(candles, Candle{
+			Open:      open,
+			High:      high,
+			Low:       low,
+			Close:     close,
+			Volume:    volume,
+			Timestamp: unixTimestamp,
+		})
+	}
+
+	return candles, nil
 }
 
 func highestCandle(candles []Candle, series string, n int) int {
@@ -231,6 +345,31 @@ func dateTimeToTimestamp(datetime string) (int64, error) {
 	return parsed.UnixMilli(), nil
 }
 
+func candleEqual(a, b Candle) bool {
+	if a.Open != b.Open {
+		return false
+	}
+	if a.Close != b.Close {
+		return false
+	}
+	if a.High != b.High {
+		return false
+	}
+	if a.Low != b.Low {
+		return false
+	}
+	if a.Close != b.Close {
+		return false
+	}
+	if a.Volume != b.Volume {
+		return false
+	}
+	if a.Timestamp != b.Timestamp {
+		return false
+	}
+	return true
+}
+
 func main() {
 	bytes, err := os.ReadFile("API_KEY.secret")
 	if err != nil {
@@ -238,38 +377,17 @@ func main() {
 	}
 	API_KEY := strings.TrimSpace(string(bytes))
 
-	ticker := "SPY"
+	opt := CandleOption{
+		start:    "2024-01-01 10:00:00",
+		end:      "2025-04-30 16:00:00",
+		mult:     5,
+		timespan: "minute",
+		ticker:   "SPY",
+	}
 
-	unix_ts, err := dateTimeToTimestamp("2025-04-13 10:00:00")
-	println(unix_ts)
+	candles := getHistoricalCandles(API_KEY, opt)
+	err = exportCandles(candles, opt)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	ind_opt := IndicatorOption{
-		timestampLTE: unix_ts,
-		timespan:     "minute",
-		window:       8,
-		series_type:  "close",
-	}
-	sma8 := getIndicator(API_KEY, "sma", ticker, ind_opt)
-	ind_opt.window = 21
-	// sma21 := getIndicator(API_KEY, "sma", ticker, ind_opt)
-	fmt.Println(sma8)
-	// fmt.Println(sma21)
-
-	// candle_opt := CandleOption{
-	// 	start:    "2025-04-20 15:15:00",
-	// 	end:      "2025-04-24 15:15:00",
-	// 	mult:     1,
-	// 	timespan: "day",
-	// }
-	// candles := getCandles(API_KEY, ticker, candle_opt)
-	// for _, candle := range candles {
-	// 	fmt.Println(candle.String())
-	// }
-	// series_s := []string{ "close", "high", "open" }
-	// for _, series := range series_s {
-	// 	ind := highestCandle(candles, series, len(candles))
-	// 	fmt.Printf("Highest candles by %s: %s\n---------------\n", series, candles[ind].String())
-	// }
 }
