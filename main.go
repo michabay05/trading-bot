@@ -124,8 +124,8 @@ func getCandles(API_KEY string, stock_ticker string, opt CandleOption) []Candle 
 		"%s/v2/aggs/ticker/%s/range/%d/%s/%d/%d?apiKey=%s",
 		BASE_URL, stock_ticker, opt.mult, opt.timespan, start_unix, end_unix, API_KEY,
 	)
-	fmt.Println("Target URL: " + target_url)
-	fmt.Println("-----------")
+	// fmt.Println("Target URL: " + target_url)
+	// fmt.Println("-----------")
 
 	data, err := httpGet_v2(target_url)
 	if err != nil {
@@ -194,21 +194,24 @@ func getHistoricalCandles(API_KEY string, opt CandleOption) []Candle {
 	curr_start := start_unix
 	requestCount := 0
 	for curr_start < end_unix {
-		curr_end := min(curr_start + int64(MS_PER_REQ), end_unix)
+		curr_end := min(curr_start+int64(MS_PER_REQ), end_unix)
 
 		opt.start = timestampToDateTime(curr_start)
 		opt.end = timestampToDateTime(curr_end)
 		batch := getCandles(API_KEY, opt.ticker, opt)
 		candles = append(candles, batch...)
 
-		log.Printf("Query complete: %s to %s", opt.start, opt.end)
+		log.Printf("Query complete: %s to %s\n", opt.start, opt.end)
+		log.Printf("len(candles) = %d\n", len(candles))
 
 		curr_start = curr_end
 		requestCount++
 
-		if requestCount%2 == 0 {
-			log.Println("Waiting 60 seconds before next request...")
-			time.Sleep(60 * time.Second)
+		// Limit requests to 4 per minute
+		if requestCount%4 == 0 {
+			delay := time.Duration(20) // in seconds
+			log.Printf("Waiting %d seconds before next request...", delay)
+			time.Sleep(delay * time.Second)
 		}
 	}
 
@@ -370,24 +373,98 @@ func candleEqual(a, b Candle) bool {
 	return true
 }
 
+func sliceCandleList(candles []Candle, start string, end string) []Candle {
+	if len(candles) == 0 {
+		return []Candle{}
+	}
+
+	startTs, err := dateTimeToTimestamp(start)
+	if err != nil {
+		log.Fatalln("Invalid start timestamp:", start)
+	}
+	endTs, err := dateTimeToTimestamp(end)
+	if err != nil {
+		log.Fatalln("Invalid end timestamp:", end)
+	}
+
+	if startTs > endTs {
+		log.Fatalln("Start timestamp cannot be after end timestamp")
+	}
+
+	result := []Candle{}
+
+	for _, candle := range candles {
+		if candle.Timestamp >= startTs && candle.Timestamp < endTs {
+			result = append(result, candle)
+		}
+	}
+
+	return result
+}
+
+func findClosestCandle(candles []Candle, datetime string) (int, error) {
+	unixTs, err := dateTimeToTimestamp(datetime)
+	if err != nil {
+		return -1, err
+	}
+
+	// TODO: could improve with search speed w/ binary search
+	prevInd := -1
+	for i, candle := range candles {
+		if unixTs <= candle.Timestamp {
+			return prevInd, nil
+		}
+		prevInd = i
+	}
+
+	errMsg := fmt.Sprintf("Failed to find candle with matching date of %s", datetime)
+	return -1, errors.New(errMsg)
+}
+
 func main() {
-	bytes, err := os.ReadFile("API_KEY.secret")
+	// bytes, err := os.ReadFile("API_KEY.secret")
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+	// API_KEY := strings.TrimSpace(string(bytes))
+
+	// opt := CandleOption{
+	// 	start:    "2024-01-01 10:00:00",
+	// 	end:      "2025-04-30 16:00:00",
+	// 	mult:     5,
+	// 	timespan: "minute",
+	// 	ticker:   "INTL",
+	// }
+
+	// candles := getHistoricalCandles(API_KEY, opt)
+	// log.Printf("\n\nGot %d candles\n", len(candles))
+	// err = exportCandles(candles, opt)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+
+	filepath := "ohlcv-Jan24-Apr25-5minute-INTL.csv"
+	candles, err := importCandles(filepath)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	API_KEY := strings.TrimSpace(string(bytes))
+	fmt.Printf("[INFO] Imported candles from '%s'\n", filepath)
 
-	opt := CandleOption{
-		start:    "2024-01-01 10:00:00",
-		end:      "2025-04-30 16:00:00",
-		mult:     5,
-		timespan: "minute",
-		ticker:   "SPY",
-	}
-
-	candles := getHistoricalCandles(API_KEY, opt)
-	err = exportCandles(candles, opt)
+	// Simulating paper trading
+	capital := 1000.0
+	datetime := "2025-02-05 10:15:00"
+	ind, err := findClosestCandle(candles, datetime)
+	println(ind)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	prevC := candles[ind]
+
+	fmt.Printf("Previous candles: %s\n", prevC.String())
+
+	const numShares int = 4
+	totalPrice := 4 * prevC.Close
+	capital -= totalPrice
+
+	fmt.Printf("Capital: %.2f\n", capital)
 }
