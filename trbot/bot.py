@@ -50,16 +50,8 @@ class TradingBot:
         # Approximate maximum limit of candles returned request
         MAX_CANDLES_PER_REQ: int = 1150
 
-        def to_ms(mult: int, timespan: str) -> int:
-            if timespan == "hour":
-                return mult * 60 * 60 * 1000
-            elif timespan == "minute":
-                return mult * 60 * 1000
-            else:
-                raise Exception(f"Unknown timespan: {timespan}")
-
         # Total milliseconds range of all the candles
-        MS_PER_REQ: int = MAX_CANDLES_PER_REQ * to_ms(opt.mult, opt.timespan.name)
+        MS_PER_REQ: int = MAX_CANDLES_PER_REQ * opt.mult * opt.timespan.to_ms()
 
         curr_start: int = start_unix
         while curr_start < end_unix:

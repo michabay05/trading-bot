@@ -36,6 +36,20 @@ class Timespan(enum.Enum):
         else:
             raise KeyError(f"Unknown timespan: {name}")
 
+    def to_seconds(self) -> int:
+        if self == Timespan.HOUR:
+            # (1 hour) * (60min/hr) * (60s/min)
+            return 60 * 60
+        elif self == Timespan.MINUTE:
+            # (1 minute) * (60s/min)
+            return 60
+        else:
+            raise Exception(f"Unknown timespan: {self.name}")
+
+    def to_ms(self) -> int:
+        return self.to_seconds() * 1000
+
+
 
 class CandleOption:
     def __init__(self, ticker: str, start: str, end: str, mult: int, timespan: Timespan):

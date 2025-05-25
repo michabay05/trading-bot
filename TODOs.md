@@ -6,9 +6,11 @@
     - [x] NKE
     - [x] WMT
 - [x] Store candles as a pandas dataframe
+- [ ] Calculating indicators (via pandas dataframe)
+- [x] Develop a candle replayer (with modifiable replay time factor)
 - [ ] Maintain a portfolio
 - [ ] Handle various types of trades
     - [ ] Market order
     - [ ] Limit order
-- [ ] Calculating indicators (via pandas dataframe)
 - [ ] Research better sources for live-data streaming
+    - Interactive brokers (paid)
