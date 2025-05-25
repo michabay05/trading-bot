@@ -1,16 +1,14 @@
 # TODOs
-- [x] Save candle information values as CSV
-- [ ] If duplicate CSVs, add setting to override or not to override
-- [ ] Develop a way of coding a strategy
-- [ ] Develop conditional
-    - [ ] Line A crossover Line B
-    - [ ] Line A crossunder Line B
-    - [ ] Value above or below a line
-    - [ ] Highest candle in a set of $N$ candles by series type
-    - [ ] Lowest candle in a set of $N$ candles by series type
-- [ ] Read paged information via optional 'next_url' option
-- [ ] Implement a basic paper trading account
-- [ ] Backtest strategy using paper account infrastructure
-- [ ] Look into public open source trading bots
-    - [ ] [freqtrade-strategies](https://github.com/freqtrade/freqtrade-strategies/tree/main)
-    - [ ] [Octobot](https://github.com/Drakkar-Software/OctoBot)
+- [x] Gather historical data on these tickers on 5 mins
+    - [x] SPY
+    - [x] AAPL
+    - [x] INTC
+    - [x] NKE
+    - [x] WMT
+- [x] Store candles as a pandas dataframe
+- [ ] Maintain a portfolio
+- [ ] Handle various types of trades
+    - [ ] Market order
+    - [ ] Limit order
+- [ ] Calculating indicators (via pandas dataframe)
+- [ ] Research better sources for live-data streaming

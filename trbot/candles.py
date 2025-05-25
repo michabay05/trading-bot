@@ -1,0 +1,92 @@
+from datetime import datetime
+import enum
+
+
+class Candle:
+    def __init__(self, open_: float, high: float, low: float, close: float, volume: float, timestamp: int):
+        self.open: float = open_
+        self.high: float = high
+        self.low: float = low
+        self.close: float = close
+        self.volume: float = volume
+        self.timestamp: int = timestamp
+
+    def __repr__(self) -> str:
+        timestamp = timestamp_to_datetime(self.timestamp)
+        return f"Candle {{\n   open: {self.open:.2f}\n   high: {self.high:.2f}\n   low: {self.low:.2f}\n   close: {self.close:.2f}\n   volume: {self.volume:.1f}\n   timestamp: {timestamp}\n}}"
+
+    def __eq__(self, other) -> bool:
+        return (self.open == other.open and
+                self.high == other.high and
+                self.low == other.low and
+                self.close == other.close and
+                self.volume == other.volume and
+                self.timestamp == other.timestamp)
+
+
+class Timespan(enum.Enum):
+    MINUTE = enum.auto()
+    HOUR = enum.auto()
+
+    @staticmethod
+    def from_str(name: str) -> 'Timespan':
+        ts = Timespan[name]
+        if ts:
+            return ts
+        else:
+            raise KeyError(f"Unknown timespan: {name}")
+
+
+class CandleOption:
+    def __init__(self, ticker: str, start: str, end: str, mult: int, timespan: Timespan):
+        self.ticker: str = ticker
+        self.start: str = start
+        self.end: str = end
+        self.mult: int = mult
+        self.timespan: Timespan = timespan
+
+    def __repr__(self) -> str:
+        return f"CandleOption {{\n   ticker: {self.ticker}\n   start: {self.start}\n   end: {self.end}\n   mult: {self.mult}\n   timespan: {self.timespan.name}\n}}"
+
+
+def candles_outpath(out_dir: str, opt: CandleOption) -> str:
+    return f"{out_dir}/ohlcv-{opt.ticker}-{opt.mult}{opt.timespan}.csv"
+
+def candle_info_from_path(filepath: str) -> dict:
+    # filepath format: {out_dir}/ohlcv-{TICKER}-{MULT}{TIMESPAN}.csv
+    #        Example : candles/ohlcv-AAPL-5minute.csv
+
+    # filepath = "candles/ohlcv-AAPL-5minute.csv"
+    # path_no_ext = "candles/ohlcv-AAPL-5minute"
+    path_no_ext: str = filepath[:-4]
+
+    # parts = ["candles/ohlcv", "AAPL", "5minute"]
+    parts: list[str] = path_no_ext.split('-')
+    # ticker = "AAPL"
+    ticker: str = parts[1]
+
+    i: int = 0
+    while i < len(parts[2]):
+        if str.isdigit(parts[2][i]):
+            i += 1
+        else:
+            break
+
+    # mult = 5
+    mult: int = int(parts[2][0:i])
+    # timespan = Timespan.MINUTE
+    timespan: Timespan = Timespan.from_str(parts[2][i:].upper())
+
+    return {
+        "ticker"  : ticker,
+        "mult"    : mult,
+        "timespan": timespan
+    }
+
+def timestamp_to_datetime(timestamp: int) -> str:
+    dt = datetime.fromtimestamp(timestamp/1000)
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
+
+def datetime_to_timestamp(dt_str: str) -> int:
+    dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
+    return int(dt.timestamp() * 1000)
