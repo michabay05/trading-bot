@@ -1,17 +1,16 @@
+import operator
 import pandas as pd
 
 from . import candles
-from .candles import Candle, Timespan
+from .candles import Candle, CandleOption, Timespan
 
 
 class StockFrame:
     def __init__(self, cnds: list[Candle], ticker: str, mult: int, timespan: Timespan) -> None:
         data: list[list[str]] = []
-        # add headers
-        data.append(["date", "open", "high", "low", "close", "volume"])
         for c in cnds:
             data.append([
-                candles.timestamp_to_datetime(c.timestamp), # date
+                candles.timestamp_to_datetime(c.timestamp),
                 f"{c.open:.4f}",
                 f"{c.high:.4f}",
                 f"{c.low:.4f}",
@@ -19,7 +18,10 @@ class StockFrame:
                 f"{c.volume:.4f}"
             ])
 
-        self.df: pd.DataFrame = pd.DataFrame(data)
+        self.df: pd.DataFrame = pd.DataFrame(
+            data,
+            columns=["date", "open", "high", "low", "close", "volume"] # type: ignore
+        )
         self.ticker: str = ticker
         self.mult: int = mult
         self.timespan: Timespan = timespan
@@ -32,6 +34,11 @@ class StockFrame:
         sf.df = pd.read_csv(filepath)
         return sf
 
+    def to_csv(self, outdir: str):
+        self.df.to_csv(
+            candles.candles_outpath("candles", self.ticker, self.mult, self.timespan),
+            index=False
+        )
 
 
 class CandleReplayer:

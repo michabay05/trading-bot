@@ -1,5 +1,5 @@
 from datetime import datetime
-import enum
+from enum import Enum
 
 
 class Candle:
@@ -24,9 +24,10 @@ class Candle:
                 self.timestamp == other.timestamp)
 
 
-class Timespan(enum.Enum):
-    MINUTE = enum.auto()
-    HOUR = enum.auto()
+class Timespan(Enum):
+    MINUTE = "minute"
+    HOUR = "hour"
+    DAY = "day"
 
     @staticmethod
     def from_str(name: str) -> 'Timespan':
@@ -37,7 +38,10 @@ class Timespan(enum.Enum):
             raise KeyError(f"Unknown timespan: {name}")
 
     def to_seconds(self) -> int:
-        if self == Timespan.HOUR:
+        if self == Timespan.DAY:
+            # (1 day) * (24hr/day) * (60min/hr) * (60s/min)
+            return 24 * 60 * 60
+        elif self == Timespan.HOUR:
             # (1 hour) * (60min/hr) * (60s/min)
             return 60 * 60
         elif self == Timespan.MINUTE:
@@ -49,22 +53,35 @@ class Timespan(enum.Enum):
     def to_ms(self) -> int:
         return self.to_seconds() * 1000
 
+    def __str__(self):
+        return self.value
+
 
 
 class CandleOption:
-    def __init__(self, ticker: str, start: str, end: str, mult: int, timespan: Timespan):
+    MAX_LIMIT: int = 50000
+
+    def __init__(self, ticker: str, start: str, end: str, mult: int, timespan: Timespan,
+        adjusted: bool = True, limit: int = MAX_LIMIT
+    ) -> None:
         self.ticker: str = ticker
         self.start: str = start
         self.end: str = end
         self.mult: int = mult
         self.timespan: Timespan = timespan
+        self.adjusted: bool = adjusted
+        self.limit: int = limit
 
     def __repr__(self) -> str:
-        return f"CandleOption {{\n   ticker: {self.ticker}\n   start: {self.start}\n   end: {self.end}\n   mult: {self.mult}\n   timespan: {self.timespan.name}\n}}"
+        return (
+            f"CandleOption {{\n   ticker: {self.ticker}\n   start: {self.start}"
+            f"\n   end: {self.end}\n   mult: {self.mult}\n   timespan: {self.timespan.name}\n}}"
+            f"\n   limit: {self.limit}"
+        )
 
 
-def candles_outpath(out_dir: str, opt: CandleOption) -> str:
-    return f"{out_dir}/ohlcv-{opt.ticker}-{opt.mult}{opt.timespan}.csv"
+def candles_outpath(out_dir: str, ticker: str, mult: int, timespan: Timespan) -> str:
+    return f"{out_dir}/ohlcv-{ticker}-{mult}{timespan.value}.csv"
 
 def candle_info_from_path(filepath: str) -> dict:
     # filepath format: {out_dir}/ohlcv-{TICKER}-{MULT}{TIMESPAN}.csv

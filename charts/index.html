@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lightweight charts</title>
+        <style>
+            #tv-chart {
+                border: solid 2px #222;
+                width: fit-content;
+                margin-inline: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <input type="file" id="csv-input" accept=".csv">
+        <div id="tv-chart"></div>
+
+        <script type="module" src="./node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs"></script>
+        <script type="module" src="./index.mjs"></script>
+    </body>
+</html>
