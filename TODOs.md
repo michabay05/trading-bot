@@ -8,7 +8,7 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Factor risk tolerance into strategy
 - [ ] (feat) Setup script to automatically visualize candles and indicators
 
-# v0.2
+## v0.2
 - [x] (feat) Have bot handle and maintain a portfolio
 - [x] (feat) Create a mechanism to have a persistent portfolio between runs
     - [x] Save portfolio status on program end
