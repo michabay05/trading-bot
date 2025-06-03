@@ -4,17 +4,22 @@ A list of all the TODOs needed to be completed before each release
 ## Future versions
 - [ ] (feat) Calculating indicators - via pandas dataframe
     - [indicators.py from areed1192/python-trading-robot](https://github.com/areed1192/python-trading-robot/blob/master/pyrobot/indicators.py)
-- [ ] (feat) Have bot handle and maintain a portfolio
+- [ ] (feat) Simulate pre-market, market, post-market times using replayer
+- [ ] (feat) Factor risk tolerance into strategy
+- [ ] (feat) Setup script to automatically visualize candles and indicators
+
+# v0.2
+- [x] (feat) Have bot handle and maintain a portfolio
+- [x] (feat) Create a mechanism to have a persistent portfolio between runs
+    - [x] Save portfolio status on program end
+    - [x] Import portfolio status on program start
 - [ ] (feat) Handle various types of trades
     - [ ] Market order
     - [ ] Limit order
-- [ ] (feat) Simulate pre-market, market, post-market times using replayer
-- [ ] (feat) Handle risk tolerance
-
-# v0.2
-- [ ] (feat) Create a mechanism to have a persistent portfolio between runs
-    - [ ] Save portfolio status on program end
-    - [ ] Import portfolio status on program start
+- [ ] (feat) Introduce the notion of a market who will responsible for the following:
+    - Providing all the market data like candles
+    - Making requests to provide the data
+    - Validating order requests and updating the order status
 
 ## v0.1
 - [x] (feature) Download historical data for any ticker and any other option
