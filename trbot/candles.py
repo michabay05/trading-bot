@@ -13,7 +13,11 @@ class Candle:
 
     def __repr__(self) -> str:
         timestamp = timestamp_to_datetime(self.timestamp)
-        return f"Candle {{\n   open: {self.open:.2f}\n   high: {self.high:.2f}\n   low: {self.low:.2f}\n   close: {self.close:.2f}\n   volume: {self.volume:.1f}\n   timestamp: {timestamp}\n}}"
+        return (
+            f"Candle {{\n   open: {self.open:.2f}\n   high: {self.high:.2f}\n"
+            f"   low: {self.low:.2f}\n   close: {self.close:.2f}\n   volume: {self.volume:.1f}\n"
+            f"   timestamp: {timestamp}\n}}"
+        )
 
     def __eq__(self, other) -> bool:
         return (self.open == other.open and

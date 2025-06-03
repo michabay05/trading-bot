@@ -1,26 +1,22 @@
 from enum import Enum
 
 
-class AssetType(Enum):
-    EQUITY = "equity"
-
 class Position:
-    def __init__(self, symbol: str, timestamp: str, quantity: float, purchase_price: float,
-        asset_type: AssetType = AssetType.EQUITY
+    def __init__(self, timestamp: str, quantity: float, purchase_price: float,
     ) -> None:
-        self.symbol: str = symbol
-        self.timestamp: str = timestamp
         self.quantity: float = quantity
         self.purchase_price: float = purchase_price
-        self.asset_type: AssetType = asset_type
+
+    @staticmethod
+    def to_dict(pst: 'Position') -> dict:
+        return {
+            "quantity": f"{pst.quantity:.2f}",
+            "purchase_price": f"{pst.purchase_price:.2f}",
+        }
 
 
 class OrderType(Enum):
     MARKET = "market"
-
-class OrderSide(Enum):
-    LONG = "long"
-    SHORT = "short"
 
 class OrderStatus(Enum):
     CANCELLED = "cancelled"
@@ -29,30 +25,71 @@ class OrderStatus(Enum):
     WORKING = "working"
 
 
-class Trade:
-    def __init__(
-        self, symbol: str, order_type: OrderType, quantity: float, side: OrderSide, price: float
+class Order:
+    def __init__(self, symbol: str, order_type: OrderType, quantity: float, purchase_price: float,
+        purchase_dt: str
     ):
         self.symbol: str = symbol
-        self.order_type: OrderType = order_type
+        self.type: OrderType = order_type
         self.status: OrderStatus = OrderStatus.WORKING
-        self.side: OrderSide = side
         self.quantity: float = quantity
-        self.price: float = price
+        self.purchase_price: float = purchase_price
+        self.purchase_dt: str = purchase_dt
+
+    def __repr__(self) -> str:
+        return (
+            f"Order {{\n"
+            f"    symbol: {self.symbol}\n"
+            f"    type: {self.type.value}\n"
+            f"    status: {self.status.value}\n"
+            f"    quantity: {self.quantity}\n"
+            f"    purchase_price: {self.purchase_price}\n"
+            f"    purchase_dt: {self.purchase_dt}\n"
+            f"}}"
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "symbol": self.symbol,
+            "type": self.type.value,
+            "status": self.status.value,
+            "quantity": f"{self.quantity:.2f}",
+            "purchase_price": f"{self.purchase_price:.2f}",
+            "purchase_dt": self.purchase_dt,
+        }
 
 
 class Portfolio:
-    def __init__(self, initial_capital: float = 1000.0, risk_tolerance: float = 0.0) -> None:
-        self.capital: float = initial_capital
-        self.profit_loss: float = 0.0
-        # TODO: seems to redundant to store symbol in portfolio and key of dictionary
-        self.positions: dict[str, Position] = {}
-        self.risk_tolerance: float = risk_tolerance
-        self.trades: list[Trade] = []
+    def __init__(self, initial_capital: float = 1000.0) -> None:
+        self._captial: float = initial_capital
+        self._positions: dict[str, Position] = {}
+        self._orders: list[Order] = []
 
-    def market_value(self) -> float:
-        value: float = 0.0
-        for pos in self.positions.values():
-            value += pos.quantity * pos.purchase_price
+    def get_capital(self) -> float:
+        return self._capital
 
-        return value
+    def set_capital(self, capital: float) -> None:
+        self._capital = capital
+
+    def get_positions(self) -> dict[str, Position]:
+        return self._positions
+
+    def set_positions(self, pos: dict[str, Position]) -> None:
+        self._positions = pos
+
+    def get_orders(self) -> list[Order]:
+        return self._orders
+
+    def add_order(self, order: Order) -> None:
+        self._orders.append(order)
+
+    @staticmethod
+    def to_dict(pft: 'Portfolio') -> dict:
+        return {
+            "capital": f"{pft.get_capital():.2f}",
+            "positions": {
+                symbol: Position.to_dict(position)
+                for symbol, position in pft.get_positions().items()
+            },
+            "orders": [ Order.to_dict(ord) for ord in pft.get_orders() ]
+        }
