@@ -9,9 +9,11 @@ from trbot.portfolio import Portfolio, Position
 from trbot.stockframe import StockFrame
 
 
-with open("API_KEY.secret", "r") as f:
-    API_KEY: str = f.read().strip()
+# with open("API_KEY.secret", "r") as f:
+#     API_KEY: str = f.read().strip()
 
+
+# ===================== CANDLE REPLAYER =====================
 sf: StockFrame = StockFrame.from_filepath("trout/ohlcv-GM-1hour.csv")
 replayer: CandleReplayer = CandleReplayer(sf)
 
@@ -50,20 +52,3 @@ while True:
 #     cnds: list[Candle] = my_bot.get_historical_candles(opt)
 #     sf = StockFrame(cnds, opt.ticker, opt.mult, opt.timespan)
 #     sf.to_csv("candles")
-
-# ===================== REPLAYER =====================
-# replayer = CandleReplayer(sf)
-# print("New candle every 5 seconds...")
-
-# t: float = time.time()
-# dt: float = 0.0
-# while True:
-#     current = time.time()
-#     dt = current - t
-#     replayer.update_time(dt)
-#     cnd = replayer.grab_next_candle()
-#     if cnd is not None:
-#         print(cnd)
-
-#     time.sleep(1/60)
-#     t = current

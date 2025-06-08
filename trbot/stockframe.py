@@ -1,4 +1,7 @@
+import numpy as np
 import pandas as pd
+import talib
+from abc import ABCMeta, abstractmethod
 
 from . import candles
 from .candles import Candle, CandleOption, Timespan
@@ -38,3 +41,33 @@ class StockFrame:
             candles.candles_outpath("candles", self.ticker, self.mult, self.timespan),
             index=False
         )
+
+    def get_column(self, column_head: str) -> np.ndarray:
+        if column_head in self.df.columns:
+            return self.df[column_head].to_numpy()
+        else:
+            raise Exception(f"Unknown column_head: {column_head}")
+
+class Strategy(metaclass=ABCMeta):
+    def __init__(self, sf: StockFrame):
+        self._data: StockFrame = sf
+        self._indicators: list[float] = []
+
+    def crossover(self, val1: np.float64 | np.ndarray, val2: np.float64 | np.ndarray) -> bool:
+        # TODO: Handle index out of bounds issue
+        if isinstance(val1, np.ndarray) and isinstance(val2, np.ndarray):
+            return val1[-2] < val2[-2] and val1[-1] > val2[-1]
+        elif isinstance(val1, np.float64) and isinstance(val2, np.ndarray):
+            return val1 < val2[-2] and val1 > val2[-1]
+        elif isinstance(val1, np.ndarray) and isinstance(val2, np.float64):
+            return val1[-2] < val2 and val1[-1] > val2
+        else:
+            raise TypeError(f"Unknown type -> series1: {type(val1)}, series2: {type(val2)}")
+
+    @abstractmethod
+    def setup(self):
+        pass
+
+    @abstractmethod
+    def on_next_candle(self):
+        pass

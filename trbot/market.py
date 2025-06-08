@@ -31,6 +31,25 @@ class Market:
             purchase_dt=dt
         )
 
+    def execute_order(self, order: Order, portfolio: Portfolio):
+        if not self.is_open():
+            # if market not open, then status won't be executed. that will happen once the market reopens
+            return OrderStatus.WORKING
+
+        order_total: float = order.quantity * order.purchase_price
+        capital: float = portfolio.get_capital()
+        if order_total <= capital:
+            # Subtract order from total and update portfolio's positions
+            portfolio.set_capital(capital - order_total)
+
+            # Update order status
+            order.status = OrderStatus.FILLED
+            portfolio.add_order(order)
+        else:
+            # Order cancelled due to insufficient funds (Update order status)
+            order.status = OrderStatus.CANCELLED
+            portfolio.add_order(order)
+
     def get_quote(self, symbol: str, dt_str: str | None = None) -> float:
         dt: datetime = datetime.now()
         if dt_str is not None:
@@ -45,26 +64,9 @@ class Market:
             timespan=Timespan.MINUTE
         )
         candles: list[Candle] = self._get_candles(opt)
-        assert len(candles) == 1, "ERROR: there should only be one candle here"
+        assert len(candles) == 1, "ERROR: there should only be one candle here for a quote request"
 
         return candles[0].close
-
-    def update_order_status(self, order: Order, portfolio: Portfolio) -> OrderStatus:
-        if not self.is_open():
-            # if market not open, then status won't be updated. that will happen once the market reopens
-            return OrderStatus.WORKING
-
-        order_total: float = order.quantity * order.purchase_price
-        capital: float = portfolio.get_capital()
-        if order_total <= capital:
-            # Subtract order from total and update portfolio's positions
-            portfolio.set_capital(capital - order_total)
-            return OrderStatus.FILLED
-        else:
-            # Order cancelled due to insufficient funds
-            return OrderStatus.CANCELLED
-
-        return OrderStatus.WORKING
 
     def get_historical_candles(self, opt: CandleOption) -> list[Candle]:
         """ Get historical candles for a certain stock as specified in the options """
