@@ -2,8 +2,7 @@ from enum import Enum
 
 
 class Position:
-    def __init__(self, timestamp: str, quantity: float, purchase_price: float,
-    ) -> None:
+    def __init__(self, timestamp: str, quantity: float, purchase_price: float) -> None:
         self.quantity: float = quantity
         self.purchase_price: float = purchase_price
 
@@ -65,19 +64,24 @@ class Portfolio:
         self._positions: dict[str, Position] = {}
         self._orders: list[Order] = []
 
-    def get_capital(self) -> float:
+    @property
+    def capital(self) -> float:
         return self._capital
 
-    def set_capital(self, capital: float) -> None:
-        self._capital = capital
+    @capital.setter
+    def capital(self, value: float) -> None:
+        self._capital = value
 
-    def get_positions(self) -> dict[str, Position]:
+    @property
+    def positions(self) -> dict[str, Position]:
         return self._positions
 
-    def set_positions(self, pos: dict[str, Position]) -> None:
-        self._positions = pos
+    @positions.setter
+    def positions(self, value: dict[str, Position]) -> None:
+        self._positions = value
 
-    def get_orders(self) -> list[Order]:
+    @property
+    def orders(self) -> list[Order]:
         return self._orders
 
     def add_order(self, order: Order) -> None:
@@ -86,10 +90,10 @@ class Portfolio:
     @staticmethod
     def to_dict(pft: 'Portfolio') -> dict:
         return {
-            "capital": f"{pft.get_capital():.2f}",
+            "capital": f"{pft.capital:.2f}",
             "positions": {
                 symbol: Position.to_dict(position)
-                for symbol, position in pft.get_positions().items()
+                for symbol, position in pft.positions.items()
             },
-            "orders": [ Order.to_dict(ord) for ord in pft.get_orders() ]
+            "orders": [ Order.to_dict(ord) for ord in pft.orders ]
         }

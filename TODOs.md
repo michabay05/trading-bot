@@ -24,17 +24,19 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (fix) Handle index out of bounds issue inside the crossover function
 - [ ] (feat) Add id system for orders and portfolio (seems like a good idea)
 - [ ] (feat) Add more technical indicators, as needed
+- [ ] (feat) Integrate strategy into bot's decision making
+- [ ] (feat) Develop list of tickers for bot to trade
 
 ## v0.3
 - [x] (feat) Find a way to turn strategy into code
-- [ ] (feat) Implement a basic moving average crossover strategy
+- [x] (feat) Implement a basic moving average crossover strategy
 - [x] (feat) Calculate the following indicators (using the stockframe)
     - SMA
     - EMA
     - RSI
     - MACD
     - BBANDS
-- [ ] (refactor) Remove all attribute access without `@property` decorator and add properties with this decorator
+- [x] (refactor) Remove all attribute access without `@property` decorator and add properties with this decorator
 
 ## v0.2
 - [x] (refactor) Improve request error handling

@@ -4,7 +4,7 @@ import json, requests, sys, time
 from . import candles
 from .candles import Candle, CandleOption, Timespan
 from .portfolio import Order, OrderStatus, OrderType, Portfolio
-from .stockframe import StockFrame
+from .stockframe import Stockframe
 
 
 class Market:
@@ -174,8 +174,8 @@ class CandleReplayer:
     # DEFAULT_TIME_FACTOR = 0.25 hour (15 minutes) -> 1 second (900x speedup)
     DEFAULT_TIME_FACTOR: int = 900
 
-    def __init__(self, sf: StockFrame, time_factor: float = DEFAULT_TIME_FACTOR) -> None:
-        self.sf: StockFrame = sf
+    def __init__(self, sf: Stockframe, time_factor: float = DEFAULT_TIME_FACTOR) -> None:
+        self.sf: Stockframe = sf
 
         self.time_factor: float = time_factor
         self.index: int = 0

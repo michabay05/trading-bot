@@ -8,7 +8,7 @@ from trbot.bot import TradingBot
 from trbot.candles import Candle, CandleOption, Timespan
 from trbot.market import CandleReplayer, Market
 from trbot.portfolio import Portfolio, Position
-from trbot.stockframe import StockFrame, Strategy
+from trbot.stockframe import Stockframe, Strategy
 
 
 # with open("API_KEY.secret", "r") as f:
@@ -16,12 +16,20 @@ from trbot.stockframe import StockFrame, Strategy
 
 class MyStrategy(Strategy):
     def setup(self) -> None:
-        close = self.data.close
+        self._close = self.data.close
+        self.fast_ma = self.TA_SMA(self._close, period=8)
+        self.slow_ma = self.TA_SMA(self._close, period=21)
 
-    def on_next_candle(self) -> None:
-        pass
+    def on_candle(self) -> None:
+        price: float = self._close[-1]
+        if self.crossover(self.fast_ma, self.slow_ma):
+            # Go long
+            pass
+        elif self.crossover(self.slow_ma, self.fast_ma):
+            # Go short
+            pass
 
-sf = StockFrame.from_filepath("trout/ohlcv-GM-1hour.csv")
+sf: Stockframe = Stockframe.from_filepath("trout/ohlcv-GM-1hour.csv")
 mys = MyStrategy(sf)
 mys.setup()
 

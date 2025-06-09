@@ -6,7 +6,7 @@ import pandas as pd
 from . import candles
 from .candles import Candle, CandleOption, Timespan
 from .portfolio import Order, OrderType, Portfolio, Position
-from .stockframe import StockFrame
+from .stockframe import Stockframe
 
 
 class TradingBot:
@@ -44,7 +44,7 @@ class TradingBot:
                 pos = Position(
                     timestamp=v["timestamp"],
                     quantity=float(v["quantity"]),
-                    purchase_price=float(v["purchase_price"]),
+                    price=float(v["purchase_price"]),
                 )
                 psts[k] = pos
 
