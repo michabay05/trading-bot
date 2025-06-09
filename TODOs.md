@@ -7,12 +7,12 @@ A list of all the TODOs needed to be completed before each release
     - Interactive brokers
     - Alpaca
     - Alphavantage
+- Research a trading platform that would allow the bot to make automated trading decision
+    - Webull (their API does not work anymore)
+    - Robinhood
+    - Interactive brokers
 
 ## Future versions
-- [ ] (feat) Calculating indicators - via pandas dataframe
-    - [indicators.py from areed1192/python-trading-robot](https://github.com/areed1192/python-trading-robot/blob/master/pyrobot/indicators.py)
-- [ ] (feat) Simulate pre-market, market, post-market times using replayer
-- [ ] (feat) Find a way to turn strategy into code
 - [ ] (feat) Factor risk tolerance into strategy
 - [ ] (feat) Setup script to automatically visualize candles and indicators
 - [ ] (feat) Calculate portfolio's market value
@@ -20,7 +20,21 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Handle more kinds of orders (limit, stop, etc.)
 - [ ] (feat) Add take-profit and stop-loss
 - [ ] (feat) Send email to notify of a trading signal
-    - At some point, the bot itself will be able to execute trades (not sure how at the moment though)
+    - At some point, the bot itself will be able to execute trades (not sure how at the moment though).
+- [ ] (fix) Handle index out of bounds issue inside the crossover function
+- [ ] (feat) Add id system for orders and portfolio (seems like a good idea)
+- [ ] (feat) Add more technical indicators, as needed
+
+## v0.3
+- [x] (feat) Find a way to turn strategy into code
+- [ ] (feat) Implement a basic moving average crossover strategy
+- [x] (feat) Calculate the following indicators (using the stockframe)
+    - SMA
+    - EMA
+    - RSI
+    - MACD
+    - BBANDS
+- [ ] (refactor) Remove all attribute access without `@property` decorator and add properties with this decorator
 
 ## v0.2
 - [x] (refactor) Improve request error handling
@@ -28,11 +42,13 @@ A list of all the TODOs needed to be completed before each release
 - [x] (feat) Create a mechanism to have a persistent portfolio between runs
     - [x] Save portfolio status on program end
     - [x] Import portfolio status on program start
-- [ ] (feat) Introduce the notion of a market who will responsible for the following:
-    - Providing all the market data like candles
-    - Making requests to provide the data
-    - Validating order requests and updating the order status
-- [ ] (feat) Add market orders
+- [x] (feat) Introduce the notion of a market who will responsible for the following:
+    - [x] Providing all the market data like candles
+    - [x] Making requests to provide the data
+    - [x] Validating order requests and updating the order status
+- [x] (feat) Add market orders
+- [x] (feat) Simulate real time using replayer instead giving the next candle after a certain delay
+    - This affects how the bot perceives weekends and market holidays
 
 ## v0.1
 - [x] (feature) Download historical data for any ticker and any other option

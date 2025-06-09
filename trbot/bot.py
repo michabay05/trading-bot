@@ -17,16 +17,15 @@ class TradingBot:
         if portfolio_filepath is not None:
             self._init_portfolio(portfolio_filepath)
 
-    def add_order(self, symbol: str, quantity: float, purchase_price: float, purchase_dt: str) -> None:
-        order = Order(
+    def request_order(self, symbol: str, quantity: float, purchase_price: float, purchase_dt: str) -> Order:
+        # Request the market for a MARKET order. if all checks out, the market grants the order
+        return Order(
             symbol=symbol,
             order_type=OrderType.MARKET,
             quantity=quantity,
             purchase_price=purchase_price,
             purchase_dt=purchase_dt
         )
-
-        self._portfolio.add_order(order)
 
     def save_portfolio(self, filepath: str):
         with open(filepath, "w") as f:

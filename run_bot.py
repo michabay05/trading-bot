@@ -1,38 +1,51 @@
 import json, os, time
 from datetime import datetime, timedelta
 
+import talib
+
 from trbot import candles
 from trbot.bot import TradingBot
 from trbot.candles import Candle, CandleOption, Timespan
 from trbot.market import CandleReplayer, Market
 from trbot.portfolio import Portfolio, Position
-from trbot.stockframe import StockFrame
+from trbot.stockframe import StockFrame, Strategy
 
 
 # with open("API_KEY.secret", "r") as f:
 #     API_KEY: str = f.read().strip()
 
+class MyStrategy(Strategy):
+    def setup(self) -> None:
+        close = self.data.close
+
+    def on_next_candle(self) -> None:
+        pass
+
+sf = StockFrame.from_filepath("trout/ohlcv-GM-1hour.csv")
+mys = MyStrategy(sf)
+mys.setup()
+
 
 # ===================== CANDLE REPLAYER =====================
-sf: StockFrame = StockFrame.from_filepath("trout/ohlcv-GM-1hour.csv")
-replayer: CandleReplayer = CandleReplayer(sf)
+# sf: StockFrame = StockFrame.from_filepath("trout/ohlcv-GM-1hour.csv")
+# replayer: CandleReplayer = CandleReplayer(sf)
 
-t: float = time.time()
-dt: float = 0.0
-while True:
-    current: float = time.time()
-    dt = current - t
+# t: float = time.time()
+# dt: float = 0.0
+# while True:
+#     current: float = time.time()
+#     dt = current - t
 
-    replayer.update_time(dt)
-    print(replayer.get_current_time())
+#     replayer.update_time(dt)
+#     print(replayer.get_current_time())
 
-    cnd: Candle | None = replayer.grab_next_candle()
-    if cnd is not None:
-        # Process info here
-        print(cnd)
+#     cnd: Candle | None = replayer.grab_next_candle()
+#     if cnd is not None:
+#         # Process info here
+#         print(cnd)
 
-    time.sleep(1)
-    t = current
+#     time.sleep(1)
+#     t = current
 
 
 # ===================== HISTORICAL CANDLES =====================
