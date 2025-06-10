@@ -17,20 +17,22 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Setup script to automatically visualize candles and indicators
 - [ ] (feat) Calculate portfolio's market value
 - [ ] (feat) Calculate profitability based on portfolio and order history via various metrics
-- [ ] (feat) Handle more kinds of orders (limit, stop, etc.)
-- [ ] (feat) Add take-profit and stop-loss
 - [ ] (feat) Send email to notify of a trading signal
     - At some point, the bot itself will be able to execute trades (not sure how at the moment though).
-- [ ] (fix) Handle index out of bounds issue inside the crossover function
 - [ ] (feat) Add id system for orders and portfolio (seems like a good idea)
 - [ ] (feat) Add more technical indicators, as needed
-- [ ] (feat) Integrate strategy into bot's decision making
 - [ ] (feat) Develop list of tickers for bot to trade
+
+## v0.4
+- [ ] (feat) Integrate strategy into bot's decision making
+- [x] (fix) Handle index out of bounds issue inside the crossover function
+- [ ] (feat) Handle more kinds of orders (limit, stop, etc.)
+- [ ] (feat) Add take-profit and stop-loss
 
 ## v0.3
 - [x] (feat) Find a way to turn strategy into code
 - [x] (feat) Implement a basic moving average crossover strategy
-- [x] (feat) Calculate the following indicators (using the stockframe)
+- [x] (feat) Calculate the following indicators (using the stockframe and the `TA-lib` library)
     - SMA
     - EMA
     - RSI

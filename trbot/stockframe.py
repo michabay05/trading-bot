@@ -72,13 +72,21 @@ class Strategy(metaclass=ABCMeta):
     def crossover(self,
         val1: np.float64 | NDArray[np.float64], val2: np.float64 | NDArray[np.float64]
     ) -> bool:
-        # TODO: Handle index out of bounds issue
         if isinstance(val1, np.ndarray) and isinstance(val2, np.ndarray):
-            return val1[-2] < val2[-2] and val1[-1] > val2[-1]
+            if len(val1) >= 2 and len(val2) >= 2:
+                return val1[-2] < val2[-2] and val1[-1] > val2[-1]
+            else:
+                raise ValueError("Both lists should have at least 2 elements")
         elif isinstance(val1, np.float64) and isinstance(val2, np.ndarray):
-            return val1 < val2[-2] and val1 > val2[-1]
+            if len(val2) >= 2:
+                return val1 < val2[-2] and val1 > val2[-1]
+            else:
+                raise ValueError("The second list should have at least 2 elements")
         elif isinstance(val1, np.ndarray) and isinstance(val2, np.float64):
-            return val1[-2] < val2 and val1[-1] > val2
+            if len(val1) >= 2:
+                return val1[-2] < val2 and val1[-1] > val2
+            else:
+                raise ValueError("The first list should have at least 2 elements")
         else:
             raise TypeError(f"Unknown type -> series1: {type(val1)}, series2: {type(val2)}")
 
