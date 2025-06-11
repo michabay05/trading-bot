@@ -1,16 +1,20 @@
 from enum import Enum
+import json
 
 
 class Position:
-    def __init__(self, timestamp: str, quantity: float, purchase_price: float) -> None:
+    def __init__(self, quantity: float, price: float) -> None:
         self.quantity: float = quantity
-        self.purchase_price: float = purchase_price
+        self.price: float = price
+
+    def market_value(self) -> float:
+        return self.quantity * self.price
 
     @staticmethod
     def to_dict(pst: 'Position') -> dict:
         return {
             "quantity": f"{pst.quantity:.2f}",
-            "purchase_price": f"{pst.purchase_price:.2f}",
+            "price": f"{pst.price:.2f}",
         }
 
 
@@ -47,6 +51,9 @@ class Order:
             f"}}"
         )
 
+    def value(self) -> float:
+        return self.quantity * self.purchase_price
+
     def to_dict(self) -> dict:
         return {
             "symbol": self.symbol,
@@ -60,7 +67,7 @@ class Order:
 
 class Portfolio:
     def __init__(self, initial_capital: float = 1000.0) -> None:
-        self._captial: float = initial_capital
+        self._capital: float = initial_capital
         self._positions: dict[str, Position] = {}
         self._orders: list[Order] = []
 
@@ -86,6 +93,9 @@ class Portfolio:
 
     def add_order(self, order: Order) -> None:
         self._orders.append(order)
+
+    def __repr__(self) -> str:
+        return json.dumps(Portfolio.to_dict(self), indent=4)
 
     @staticmethod
     def to_dict(pft: 'Portfolio') -> dict:

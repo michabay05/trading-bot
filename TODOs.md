@@ -21,12 +21,21 @@ A list of all the TODOs needed to be completed before each release
     - At some point, the bot itself will be able to execute trades (not sure how at the moment though).
 - [ ] (feat) Add id system for orders and portfolio (seems like a good idea)
 - [ ] (feat) Add more technical indicators, as needed
-- [ ] (feat) Develop list of tickers for bot to trade
+- [ ] (feat) Research and develop list of tickers for bot to trade
+- [ ] (feat) Add stop order
+- [ ] (feat) Add ability to buy based on portfolio's capital percentage
+- [ ] (feat) Add strategy tester
+    - There should be a distinction between a strategy implementation and tester
+- [ ] (feat) Integrate strategy into bot's decision making
+- [ ] (feat) Implement checking when market is open or closed
 
 ## v0.4
-- [ ] (feat) Integrate strategy into bot's decision making
+- [ ] (feat) Add ability to buy or sell while developing a strategy
+- [x] (refactor) Rename 'Market' to 'Broker'
+    - Broker makes a lot more sense for what I'm looking for
+- [x] (fix) When executing an order, the position list must also be updated
 - [x] (fix) Handle index out of bounds issue inside the crossover function
-- [ ] (feat) Handle more kinds of orders (limit, stop, etc.)
+- [ ] (feat) Add a limit order
 - [ ] (feat) Add take-profit and stop-loss
 
 ## v0.3

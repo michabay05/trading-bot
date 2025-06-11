@@ -3,36 +3,74 @@ from datetime import datetime, timedelta
 
 import talib
 
-from trbot import candles
+from trbot import broker, candles
 from trbot.bot import TradingBot
 from trbot.candles import Candle, CandleOption, Timespan
-from trbot.market import CandleReplayer, Market
-from trbot.portfolio import Portfolio, Position
-from trbot.stockframe import Stockframe, Strategy
+from trbot.portfolio import Portfolio, Order, OrderType
+from trbot.stockframe import Stockframe
+from trbot.strategy import Strategy
 
 
-# with open("API_KEY.secret", "r") as f:
-#     API_KEY: str = f.read().strip()
+# ===================== STRATEGY =====================
+# class MyStrategy(Strategy):
+#     def setup(self) -> None:
+#         close = self.data.close
+#         self.fast_ma = self.TA_EMA(close, period=8)
+#         self.slow_ma = self.TA_EMA(close, period=21)
 
-class MyStrategy(Strategy):
-    def setup(self) -> None:
-        self._close = self.data.close
-        self.fast_ma = self.TA_SMA(self._close, period=8)
-        self.slow_ma = self.TA_SMA(self._close, period=21)
+#     def on_candle(self) -> None:
+#         price: float = self.data.close[-1]
+#         if self.crossover(self.fast_ma, self.slow_ma):
+#             # Go long
+#             pass
+#         elif self.crossover(self.slow_ma, self.fast_ma):
+#             # Go short
+#             pass
 
-    def on_candle(self) -> None:
-        price: float = self._close[-1]
-        if self.crossover(self.fast_ma, self.slow_ma):
-            # Go long
-            pass
-        elif self.crossover(self.slow_ma, self.fast_ma):
-            # Go short
-            pass
+# sf: Stockframe = Stockframe.from_filepath("trout/ohlcv-GM-1hour.csv")
+# mys = MyStrategy(sf)
+# mys.setup()
 
-sf: Stockframe = Stockframe.from_filepath("trout/ohlcv-GM-1hour.csv")
-mys = MyStrategy(sf)
-mys.setup()
+# ===================== BROKER AND ORDER =====================
+pft: Portfolio = Portfolio(initial_capital=10_000)
+symb: str = "GM"
+order: Order = Order(
+    symbol=symb,
+    order_type=OrderType.MARKET,
+    quantity=2.0,
+    purchase_price=36.10,
+    purchase_dt="2025-02-12 10:21:43"
+)
+broker.execute_order(order, pft)
 
+order = Order(
+    symbol=symb,
+    order_type=OrderType.MARKET,
+    quantity=-1.0,
+    purchase_price=35.95,
+    purchase_dt="2025-02-12 12:32:18"
+)
+broker.execute_order(order, pft)
+
+order = Order(
+    symbol=symb,
+    order_type=OrderType.MARKET,
+    quantity=-3.0,
+    purchase_price=35.62,
+    purchase_dt="2025-02-12 14:26:03"
+)
+broker.execute_order(order, pft)
+
+order = Order(
+    symbol=symb,
+    order_type=OrderType.MARKET,
+    quantity=5.0,
+    purchase_price=36.23,
+    purchase_dt="2025-02-12 15:32:43"
+)
+broker.execute_order(order, pft)
+
+print(pft)
 
 # ===================== CANDLE REPLAYER =====================
 # sf: StockFrame = StockFrame.from_filepath("trout/ohlcv-GM-1hour.csv")

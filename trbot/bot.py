@@ -17,16 +17,6 @@ class TradingBot:
         if portfolio_filepath is not None:
             self._init_portfolio(portfolio_filepath)
 
-    def request_order(self, symbol: str, quantity: float, purchase_price: float, purchase_dt: str) -> Order:
-        # Request the market for a MARKET order. if all checks out, the market grants the order
-        return Order(
-            symbol=symbol,
-            order_type=OrderType.MARKET,
-            quantity=quantity,
-            purchase_price=purchase_price,
-            purchase_dt=purchase_dt
-        )
-
     def save_portfolio(self, filepath: str):
         with open(filepath, "w") as f:
             json.dump(self._portfolio, f, indent=4, default=Portfolio.to_dict)
@@ -38,7 +28,7 @@ class TradingBot:
 
         with open(filepath, "r") as f:
             root = json.load(f)
-            self._portfolio.set_capital(float(root["capital"]))
+            self._portfolio.capital = float(root["capital"])
             psts: dict[str, Position] = {}
             for k, v in root["positions"].items():
                 pos = Position(
@@ -48,4 +38,4 @@ class TradingBot:
                 )
                 psts[k] = pos
 
-        self._portfolio.set_positions(psts)
+        self._portfolio.positions = psts
