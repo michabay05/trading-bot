@@ -1,5 +1,5 @@
 from enum import Enum
-import json
+import json, os
 
 
 class Position:
@@ -54,6 +54,9 @@ class Order:
     def value(self) -> float:
         return self.quantity * self.purchase_price
 
+    def abs_value(self) -> float:
+        return abs(self.value())
+
     def to_dict(self) -> dict:
         return {
             "symbol": self.symbol,
@@ -107,3 +110,25 @@ class Portfolio:
             },
             "orders": [ Order.to_dict(ord) for ord in pft.orders ]
         }
+
+    def save_to_json(self, filepath: str) -> None:
+        with open(filepath, "w") as f:
+            json.dump(self, f, indent=4, default=Portfolio.to_dict)
+
+    def _init_from_json(self, filepath: str) -> None:
+        if not os.path.exists(filepath):
+            print(f"[ERROR] Unable to find '{filepath}'")
+            return
+
+        with open(filepath, "r") as f:
+            root = json.load(f)
+            self.capital = float(root["capital"])
+            psts: dict[str, Position] = {}
+            for k, v in root["positions"].items():
+                pos = Position(
+                    quantity=float(v["quantity"]),
+                    price=float(v["purchase_price"]),
+                )
+                psts[k] = pos
+
+        self.positions = psts

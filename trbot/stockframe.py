@@ -28,18 +28,22 @@ class Stockframe:
         self.timespan: Timespan = timespan
 
     @classmethod
-    def from_filepath(cls, filepath: str) -> 'Stockframe':
+    def from_csv(cls, filepath: str) -> 'Stockframe':
         info: dict = candles.candle_info_from_path(filepath)
 
         sf = cls(cnds=[], ticker=info["ticker"], mult=info["mult"], timespan=info["timespan"])
         sf.df = pd.read_csv(filepath)
         return sf
 
-    def to_csv(self, outdir: str):
+    def save_to_csv(self, outdir: str):
         self.df.to_csv(
-            candles.candles_outpath("candles", self.ticker, self.mult, self.timespan),
+            candles.candles_outpath(outdir, self.ticker, self.mult, self.timespan),
             index=False
         )
+
+    @property
+    def size(self) -> int:
+        return len(self.df)
 
     @property
     def close(self) -> NDArray[np.float64]:

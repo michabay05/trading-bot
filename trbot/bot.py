@@ -1,12 +1,14 @@
 from datetime import datetime
-import csv, enum, json, os, requests, time
+import csv, enum, json, requests, time
 
 import pandas as pd
+
 
 from . import candles
 from .candles import Candle, CandleOption, Timespan
 from .portfolio import Order, OrderType, Portfolio, Position
 from .stockframe import Stockframe
+from .strategy import Strategy
 
 
 class TradingBot:
@@ -16,26 +18,3 @@ class TradingBot:
         self._portfolio: Portfolio = Portfolio()
         if portfolio_filepath is not None:
             self._init_portfolio(portfolio_filepath)
-
-    def save_portfolio(self, filepath: str):
-        with open(filepath, "w") as f:
-            json.dump(self._portfolio, f, indent=4, default=Portfolio.to_dict)
-
-    def _init_portfolio(self, filepath: str) -> None:
-        if not os.path.exists(filepath):
-            print(f"[ERROR] Unable to find '{filepath}'")
-            return
-
-        with open(filepath, "r") as f:
-            root = json.load(f)
-            self._portfolio.capital = float(root["capital"])
-            psts: dict[str, Position] = {}
-            for k, v in root["positions"].items():
-                pos = Position(
-                    timestamp=v["timestamp"],
-                    quantity=float(v["quantity"]),
-                    price=float(v["purchase_price"]),
-                )
-                psts[k] = pos
-
-        self._portfolio.positions = psts

@@ -1,33 +1,43 @@
 from abc import ABCMeta, abstractmethod
+import time
+
 import numpy as np
 from numpy.typing import NDArray
-from typing import Tuple
-
 import talib
 from talib._ta_lib import MA_Type
 
 from . import broker
+from .candles import Candle
 from .stockframe import Stockframe
 from .replayer import CandleReplayer
 from .portfolio import Portfolio, Order, OrderType
 
 
 IndValues = NDArray[np.float64]
-TripleIndValues = Tuple[IndValues, IndValues, IndValues]
+TripleIndValues = tuple[IndValues, IndValues, IndValues]
 
 class Strategy(metaclass=ABCMeta):
     def __init__(self, sf: Stockframe):
-        self.replayer: CandleReplayer = CandleReplayer(sf)
-        self.portfolio: Portfolio = Portfolio()
-        self._indicators = {}
+        self._portfolio: Portfolio = Portfolio()
+        self._indicators: dict[str, IndValues] = {}
+        self._sf: Stockframe = sf
+        self._start: int = 0
+        self._repl: CandleReplayer = CandleReplayer(self._sf, start_ind=self._start)
+        self._ind: int = self._start
 
     @property
-    def data(self) -> Stockframe:
-        return self.replayer.stockframe
+    def last_close(self) -> float:
+        return self._sf.close[self._ind-1]
+
+    def series_slice(self, series: NDArray[np.float64]) -> NDArray[np.float64]:
+        return series[self._start:self._ind]
 
     @property
-    def current_price(self) -> float:
-        return self.replayer.last_price
+    def curr_time_str(self) -> str:
+        return self._repl.current_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    def get_next_candle(self):
+        self._ind += 1
 
     @abstractmethod
     def setup(self) -> None:
@@ -35,111 +45,102 @@ class Strategy(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def on_candle(self) -> None:
+    def on_candle(self) -> Order | None:
         """ Called on each candle """
         pass
 
-    def buy(self, size: int) -> None:
-        order: Order = Order(
-            symbol=self.data.ticker,
+    def run(self) -> None:
+        self.setup()
+
+        t: float = time.time()
+        dt: float = 0.0
+        while self._ind < self._sf.size:
+            current: float = time.time()
+            dt = current - t
+
+            self._repl.update_time(dt)
+
+            if self._repl.is_candle_available():
+                print(f"{self._repl.current_time} -> New Candle")
+                self.get_next_candle()
+                order: Order | None = self.on_candle()
+                if order is not None:
+                    broker.execute_order(order, self._portfolio)
+                    print(order)
+            else:
+                print(self._repl.current_time)
+
+            time.sleep(1)
+            t = current
+
+    def buy(self, size: int) -> Order:
+        return Order(
+            symbol=self._sf.ticker,
             order_type=OrderType.MARKET,
             quantity=float(size),
-            purchase_price=self.current_price,
-            purchase_dt=self.replayer.current_time.strftime("%Y-%m-%d %H:%M:%S")
+            purchase_price=self.last_close,
+            purchase_dt=self.curr_time_str
         )
 
-        broker.execute_order(order, self.portfolio)
-
-    def sell(self, size: int) -> None:
-        order: Order = Order(
-            symbol=self.data.ticker,
+    def sell(self, size: int) -> Order:
+        return Order(
+            symbol=self._sf.ticker,
             order_type=OrderType.MARKET,
             quantity=float(size) * -1.0,
-            purchase_price=self.current_price,
-            purchase_dt=self.replayer.current_time.strftime("%Y-%m-%d %H:%M:%S")
+            purchase_price=self.last_close,
+            purchase_dt=self.curr_time_str
         )
 
-        broker.execute_order(order, self.portfolio)
+    def ind_crossover(self, val1: str | float, val2: str | float) -> bool:
+        s1: list[float] | IndValues = (
+            [ val1, val1 ] if isinstance(val1, float)
+            else self.series_slice(self._indicators[val1])  # type: ignore
+        )
+        s2: list[float] | IndValues = (
+            [ val2, val2 ] if isinstance(val2, float)
+            else self.series_slice(self._indicators[val2])  # type: ignore
+        )
+        try:
+            print(f">> {s1[-4:]}")
+            print(f">> {s2[-4:]}")
+        except IndexError:
+            print(f">> {s1}")
+            print(f">> {s2}")
 
-    def crossover(self,
-        val1: np.float64 | NDArray[np.float64], val2: np.float64 | NDArray[np.float64]
-    ) -> bool:
-        if isinstance(val1, np.ndarray) and isinstance(val2, np.ndarray):
-            if len(val1) >= 2 and len(val2) >= 2:
-                return val1[-2] < val2[-2] and val1[-1] > val2[-1]
-            else:
-                raise ValueError("Both lists should have at least 2 elements")
-        elif isinstance(val1, np.float64) and isinstance(val2, np.ndarray):
-            if len(val2) >= 2:
-                return val1 < val2[-2] and val1 > val2[-1]
-            else:
-                raise ValueError("The second list should have at least 2 elements")
-        elif isinstance(val1, np.ndarray) and isinstance(val2, np.float64):
-            if len(val1) >= 2:
-                return val1[-2] < val2 and val1[-1] > val2
-            else:
-                raise ValueError("The first list should have at least 2 elements")
-        else:
-            raise TypeError(f"Unknown type -> series1: {type(val1)}, series2: {type(val2)}")
+        try:
+            return _crossover(s1, s2)
+        except ValueError as v_err:
+            print(f"[ERROR] {str(v_err)}")
+            return False
 
-    def TA_SMA(self, data: IndValues, period: int = 30) -> IndValues:
+    # =========================== INDICATORS ===========================
+    def TA_SMA(self, data: IndValues, period: int = 30) -> str:
         key: str = f"SMA_{period}"
-        if key in self._indicators.keys():
-            return self._indicators[key]
-        else:
+        if not key in self._indicators.keys():
             values: IndValues = talib.SMA(data, timeperiod=period)
             self._indicators[key] = values
-            return values
 
-    def TA_EMA(self, data: IndValues, period: int = 30) -> IndValues:
+        return key
+
+    def TA_EMA(self, data: IndValues, period: int = 30) -> str:
         key: str = f"EMA_{period}"
-        if key in self._indicators.keys():
-            return self._indicators[key]
-        else:
+        if not key in self._indicators.keys():
             values: IndValues = talib.EMA(data, timeperiod=period)
             self._indicators[key] = values
-            return values
 
-    def TA_RSI(self, data: IndValues, period: int = 14) -> IndValues:
+        return key
+
+    def TA_RSI(self, data: IndValues, period: int = 14) -> str:
         key: str = f"RSI_{period}"
-        if key in self._indicators.keys():
-            return self._indicators[key]
-        else:
+        if not key in self._indicators.keys():
             values: IndValues = talib.RSI(data, timeperiod=period)
             self._indicators[key] = values
-            return values
 
-    def TA_MACD(self,
-        data: IndValues, fast_period: int = 12, slow_period: int = 26, signal_period: int = 9
-    ) -> TripleIndValues:
-        key: str = f"MACD_fp{fast_period}_sp{slow_period}_signal{signal_period}"
-        if key in self._indicators.keys():
-            return self._indicators[key]
-        else:
-            values: TripleIndValues = talib.MACD(
-                data,
-                fastperiod=fast_period,
-                slowperiod=slow_period,
-                signalperiod=signal_period
-            )
-            self._indicators[key] = values
-            return values
+        return key
 
-    def TA_BBANDS(
-        self,
-        data: IndValues, period: int = 14, stddevup: float = 2, stddevdn: float = 2,
-        use_sma: bool = True
-    ) -> TripleIndValues:
-        key: str = f"BBANDS_p{period}_sdup{stddevup}_sddn{stddevdn}"
-        if key in self._indicators.keys():
-            return self._indicators[key]
-        else:
-            values: TripleIndValues = talib.BBANDS(
-                data,
-                timeperiod=period,
-                nbdevup=stddevup,
-                nbdevdn=stddevdn,
-                matype=MA_Type.SMA if use_sma else MA_Type.EMA,
-            )
-            self._indicators[key] = values
-            return values
+
+def _crossover(val1: list[float] | IndValues, val2: list[float] | IndValues) -> bool:
+    if len(val1) >= 2 and len(val2) >= 2:
+        return val1[-2] < val2[-2] and val1[-1] > val2[-1]
+    else:
+        raise ValueError("Both lists should have at least 2 elements")

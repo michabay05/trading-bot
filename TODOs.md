@@ -29,15 +29,24 @@ A list of all the TODOs needed to be completed before each release
     - There should be a distinction between a strategy implementation and tester
 - [ ] (feat) Integrate strategy into bot's decision making
 - [ ] (feat) Implement checking when market is open or closed
+- [ ] (feat) Bring back MACD and BBANDS indicators
+- [ ] (feat) Add a limit order
+- [ ] (fix) When new candle is available, it waits until the next time step to make it available
+- [ ] (feat) Implement indicator warm up
+- [ ] (feat) Plot P/L of portfolio
+    - Probably using matplotlib
+- [ ] (feat) Add ability to close position
+- [ ] (feat) Add take-profit and stop-loss
 
 ## v0.4
-- [ ] (feat) Add ability to buy or sell while developing a strategy
+- [x] (feat) Add ability to buy or sell while developing a strategy
+- [x] (feat) Implement a basic MA w/ buying and selling
 - [x] (refactor) Rename 'Market' to 'Broker'
     - Broker makes a lot more sense for what I'm looking for
 - [x] (fix) When executing an order, the position list must also be updated
 - [x] (fix) Handle index out of bounds issue inside the crossover function
-- [ ] (feat) Add a limit order
-- [ ] (feat) Add take-profit and stop-loss
+- [x] (refactor) CandleReplayer should have no knowledge of candles
+- [x] (refactor) Removed MACD and BBANDS indicators
 
 ## v0.3
 - [x] (feat) Find a way to turn strategy into code

@@ -36,11 +36,10 @@ def execute_order(order: Order, portfolio: Portfolio) -> None:
         order.status = OrderStatus.WORKING
         return
 
-    order_total: float = order.quantity * order.purchase_price
     capital: float = portfolio.capital
-    if order_total <= capital:
+    if order.abs_value() <= capital:
         # Subtract order from total and update portfolio's positions
-        portfolio.capital = capital - order_total
+        portfolio.capital = capital - order.abs_value()
         # Update order status
         order.status = OrderStatus.FILLED
         portfolio.add_order(order)
@@ -60,7 +59,7 @@ def execute_order(order: Order, portfolio: Portfolio) -> None:
         # New position was justed created
         portfolio.positions[order.symbol] = Position(order.quantity, order.purchase_price)
 
-def get_historical_candles(self, opt: CandleOption) -> list[Candle]:
+def get_historical_candles(opt: CandleOption) -> list[Candle]:
     """ Get historical candles for a certain stock as specified in the options """
     start_unix: int = candles.datetime_to_timestamp(opt.start)
     end_unix: int = candles.datetime_to_timestamp(opt.end)
@@ -79,7 +78,7 @@ def get_historical_candles(self, opt: CandleOption) -> list[Candle]:
 
         opt.start = candles.timestamp_to_datetime(curr_start)
         opt.end = candles.timestamp_to_datetime(curr_end)
-        batch = self._get_candles(opt)
+        batch = _get_candles(opt)
         cnds.extend(batch)
 
         print(f"Query complete: {opt.start} to {opt.end}")
@@ -111,6 +110,10 @@ def _get_quote(symbol: str, dt_str: str | None = None) -> float:
     return candles[0].close
 
 def _get_candles(opt: CandleOption) -> list[Candle]:
+    # Init API_KEY if not done already
+    if len(_API_KEY) == 0:
+        _init_api_key()
+
     start_unix: int = candles.datetime_to_timestamp(opt.start)
     end_unix: int = candles.datetime_to_timestamp(opt.end)
 
@@ -156,10 +159,6 @@ def _get_candles(opt: CandleOption) -> list[Candle]:
 
 def _make_request(url: str) -> bytes:
     """ Make HTTP requests while respecting rate limit """
-    # Init API_KEY if not done already
-    if len(_API_KEY) == 0:
-        _init_api_key()
-
     dt_now = datetime.now()
     # Rate limiting: ensure we don't exceed the specified requests per minute
     if len(_REQUEST_TIMES) >= _REQ_PER_MIN:
@@ -177,11 +176,12 @@ def _make_request(url: str) -> bytes:
 
     resp = requests.get(url)
     if not resp.ok:
-        print(f"[{resp.status_code}] ERROR: {resp.json()["message"]}")
+        print(f"[{resp.status_code}] ERROR: {resp.json()}")
         sys.exit(1)
 
     return resp.content
 
-def _init_api_key():
+def _init_api_key() -> None:
+    global _API_KEY
     with open(_API_KEY_FILEPATH, "r") as f:
         _API_KEY = f.read().strip()
