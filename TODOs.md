@@ -11,6 +11,7 @@ A list of all the TODOs needed to be completed before each release
     - Webull (their API does not work anymore)
     - Robinhood
     - Interactive brokers
+- Pattern Day Trading??
 
 ## Future versions
 - [ ] (feat) Factor risk tolerance into strategy
