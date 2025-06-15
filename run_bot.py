@@ -9,50 +9,41 @@ from trbot.candles import Candle, CandleOption, Timespan
 from trbot.portfolio import Portfolio, Order, OrderType
 from trbot.replayer import CandleReplayer
 from trbot.stockframe import Stockframe
-from trbot.strategy import Strategy
+from trbot.strategy import StrategyTester
 
 
 # ===================== STRATEGY =====================
-class MyStrategy(Strategy):
+class MyStrategy(StrategyTester):
     def setup(self) -> None:
         close = self._sf.close
         self.fast_ma = self.TA_EMA(close, period=8)
         self.slow_ma = self.TA_EMA(close, period=21)
 
-    def on_candle(self) -> Order | None:
+    def on_candle(self) -> None:
         if self.ind_crossover(self.fast_ma, self.slow_ma):
-            return self.buy(1)
+            self.close_position()
+            self.buy(1)
 
         if self.ind_crossover(self.slow_ma, self.fast_ma):
-            return self.sell(1)
+            self.close_position()
+            self.sell(1)
 
-        return None
+tickers = []
+dir: str = "trout/aggs"
+for filename in os.listdir(dir):
+    fpath: str = os.path.join(dir, filename)
+    info: dict = candles.candle_info_from_path(fpath)
+    tickers.append(info["ticker"])
 
-sf: Stockframe = Stockframe.from_csv("trout/aggs/MODIFIED_ohlcv-GM-4hour.csv")
-mys = MyStrategy(sf)
-mys.run()
+sum: float = 0.0
+for t in tickers:
+    sf: Stockframe = Stockframe.from_csv(f"trout/aggs/ohlcv-{t}-4hour.csv")
+    mys = MyStrategy(sf)
+    # mys.run()
+    sum += mys.run()
+    mys.export_portfolio("trout/pfts")
 
-# # ===================== CANDLE REPLAYER =====================
-# sf: Stockframe = Stockframe.from_filepath("trout/ohlcv-GM-1hour.csv")
-# replayer: CandleReplayer = CandleReplayer(sf)
-
-# t: float = time.time()
-# dt: float = 0.0
-# while True:
-#     current: float = time.time()
-#     dt = current - t
-
-#     replayer.update_time(dt)
-#     print(replayer.current_time)
-
-#     cnd: Candle | None = replayer.grab_next_candle()
-#     if cnd is not None:
-#         # Process info here
-#         print(cnd)
-
-#     time.sleep(1)
-#     t = current
-
+print(f"Total: {sum}")
 
 # ===================== HISTORICAL CANDLES =====================
 # for ticker in [

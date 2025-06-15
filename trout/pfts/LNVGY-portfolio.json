@@ -1,0 +1,453 @@
+{
+    "capital": 978.5525,
+    "pl": 2.222499999999968,
+    "capital_pct": 100.22225,
+    "positions": {
+        "LNVGY": {
+            "quantity": 1.0,
+            "price": 23.67
+        }
+    },
+    "orders": [
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 21.4475,
+            "purchase_dt": "2023-06-28 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.6716,
+            "purchase_dt": "2023-07-11 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 21.5305,
+            "purchase_dt": "2023-07-13 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 21.11,
+            "purchase_dt": "2023-07-26 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 22.58,
+            "purchase_dt": "2023-07-28 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 21.53,
+            "purchase_dt": "2023-08-08 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.68,
+            "purchase_dt": "2023-08-24 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 21.0066,
+            "purchase_dt": "2023-09-07 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.31,
+            "purchase_dt": "2023-10-04 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 19.61,
+            "purchase_dt": "2023-10-18 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 22.055,
+            "purchase_dt": "2023-10-24 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.27,
+            "purchase_dt": "2023-11-10 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.1,
+            "purchase_dt": "2023-11-13 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.61,
+            "purchase_dt": "2023-11-29 14:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 25.14,
+            "purchase_dt": "2023-12-04 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 22.77,
+            "purchase_dt": "2023-12-05 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 25.3115,
+            "purchase_dt": "2023-12-11 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 26.21,
+            "purchase_dt": "2024-01-08 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 27.1,
+            "purchase_dt": "2024-01-12 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 25.2075,
+            "purchase_dt": "2024-01-16 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 26.2,
+            "purchase_dt": "2024-01-25 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.85,
+            "purchase_dt": "2024-01-26 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 21.83,
+            "purchase_dt": "2024-02-21 14:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.09,
+            "purchase_dt": "2024-03-20 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.33,
+            "purchase_dt": "2024-03-20 14:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 22.72,
+            "purchase_dt": "2024-03-25 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 22.05,
+            "purchase_dt": "2024-04-24 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.03,
+            "purchase_dt": "2024-06-04 14:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.175,
+            "purchase_dt": "2024-06-06 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 27.13,
+            "purchase_dt": "2024-06-07 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 28.5914,
+            "purchase_dt": "2024-06-18 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.621,
+            "purchase_dt": "2024-06-27 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.1,
+            "purchase_dt": "2024-07-09 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 27.81,
+            "purchase_dt": "2024-07-15 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 25.53,
+            "purchase_dt": "2024-08-09 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 25.0,
+            "purchase_dt": "2024-08-16 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.09,
+            "purchase_dt": "2024-09-16 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 26.6,
+            "purchase_dt": "2024-10-10 14:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 28.45,
+            "purchase_dt": "2024-10-14 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.255,
+            "purchase_dt": "2024-10-23 14:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 23.915,
+            "purchase_dt": "2024-12-04 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.13,
+            "purchase_dt": "2024-12-04 14:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 25.0,
+            "purchase_dt": "2024-12-09 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.398,
+            "purchase_dt": "2024-12-13 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.48,
+            "purchase_dt": "2024-12-20 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.39,
+            "purchase_dt": "2025-01-08 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.47,
+            "purchase_dt": "2025-01-27 14:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.905,
+            "purchase_dt": "2025-01-28 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.42,
+            "purchase_dt": "2025-01-30 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.51,
+            "purchase_dt": "2025-02-28 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 32.371,
+            "purchase_dt": "2025-03-07 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 29.94,
+            "purchase_dt": "2025-03-12 10:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 22.384,
+            "purchase_dt": "2025-04-23 06:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.55,
+            "purchase_dt": "2025-05-22 14:00:00"
+        },
+        {
+            "symbol": "LNVGY",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 23.67,
+            "purchase_dt": "2025-06-09 14:00:00"
+        }
+    ]
+}

@@ -1,0 +1,853 @@
+{
+    "capital": 976.3700000000001,
+    "pl": 19.165000000000077,
+    "capital_pct": 101.91650000000001,
+    "positions": {
+        "SMCI": {
+            "quantity": 1.0,
+            "price": 42.795
+        }
+    },
+    "orders": [
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 23.63,
+            "purchase_dt": "2023-06-28 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 31.884,
+            "purchase_dt": "2023-08-02 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.349,
+            "purchase_dt": "2023-08-04 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 31.45,
+            "purchase_dt": "2023-08-08 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 25.7826,
+            "purchase_dt": "2023-08-22 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 25.0395,
+            "purchase_dt": "2023-08-25 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 26.42,
+            "purchase_dt": "2023-08-29 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 25.65,
+            "purchase_dt": "2023-09-07 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 27.9615,
+            "purchase_dt": "2023-09-08 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 26.82,
+            "purchase_dt": "2023-09-12 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.95,
+            "purchase_dt": "2023-09-25 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.48,
+            "purchase_dt": "2023-10-13 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.7,
+            "purchase_dt": "2023-10-17 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.497,
+            "purchase_dt": "2023-10-18 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 26.129,
+            "purchase_dt": "2023-11-01 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.344,
+            "purchase_dt": "2023-11-03 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 26.3725,
+            "purchase_dt": "2023-11-03 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 25.6,
+            "purchase_dt": "2023-11-13 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 26.4,
+            "purchase_dt": "2023-11-14 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.556,
+            "purchase_dt": "2023-11-22 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.1,
+            "purchase_dt": "2023-11-27 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.545,
+            "purchase_dt": "2023-11-28 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.12,
+            "purchase_dt": "2023-11-29 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 27.277,
+            "purchase_dt": "2023-11-30 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 27.326,
+            "purchase_dt": "2023-12-08 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 26.248,
+            "purchase_dt": "2023-12-12 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 26.55,
+            "purchase_dt": "2023-12-12 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.7425,
+            "purchase_dt": "2023-12-22 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 28.82,
+            "purchase_dt": "2024-01-05 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 32.35,
+            "purchase_dt": "2024-01-17 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.004,
+            "purchase_dt": "2024-01-19 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 80.924,
+            "purchase_dt": "2024-02-20 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 98.588,
+            "purchase_dt": "2024-02-22 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 84.396,
+            "purchase_dt": "2024-02-27 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 88.0,
+            "purchase_dt": "2024-02-29 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 108.698,
+            "purchase_dt": "2024-03-11 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 112.309,
+            "purchase_dt": "2024-03-12 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 109.98,
+            "purchase_dt": "2024-03-15 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 102.036,
+            "purchase_dt": "2024-03-25 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 101.1,
+            "purchase_dt": "2024-03-28 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 102.1,
+            "purchase_dt": "2024-04-01 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 99.702,
+            "purchase_dt": "2024-04-02 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 102.3,
+            "purchase_dt": "2024-04-04 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 96.1,
+            "purchase_dt": "2024-04-04 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 98.4665,
+            "purchase_dt": "2024-04-16 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 91.799,
+            "purchase_dt": "2024-04-19 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 82.2434,
+            "purchase_dt": "2024-04-26 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 77.2,
+            "purchase_dt": "2024-04-30 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 81.3805,
+            "purchase_dt": "2024-05-06 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 79.998,
+            "purchase_dt": "2024-05-10 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 81.9927,
+            "purchase_dt": "2024-05-14 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 84.9145,
+            "purchase_dt": "2024-05-23 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 80.7,
+            "purchase_dt": "2024-06-06 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 76.25,
+            "purchase_dt": "2024-06-06 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 79.1867,
+            "purchase_dt": "2024-06-13 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 86.55,
+            "purchase_dt": "2024-06-24 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 89.0,
+            "purchase_dt": "2024-06-27 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 82.46,
+            "purchase_dt": "2024-06-28 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 84.5,
+            "purchase_dt": "2024-07-03 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 87.8,
+            "purchase_dt": "2024-07-16 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 55.6515,
+            "purchase_dt": "2024-08-13 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 56.322,
+            "purchase_dt": "2024-08-26 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 43.9427,
+            "purchase_dt": "2024-09-11 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 43.68,
+            "purchase_dt": "2024-09-19 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 45.2031,
+            "purchase_dt": "2024-09-20 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 39.66,
+            "purchase_dt": "2024-09-26 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 48.31,
+            "purchase_dt": "2024-10-07 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 47.2,
+            "purchase_dt": "2024-10-18 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 48.3,
+            "purchase_dt": "2024-10-21 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 47.56,
+            "purchase_dt": "2024-10-22 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 47.094,
+            "purchase_dt": "2024-10-25 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 37.42,
+            "purchase_dt": "2024-10-30 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 21.41,
+            "purchase_dt": "2024-11-18 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 32.09,
+            "purchase_dt": "2024-12-02 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 42.26,
+            "purchase_dt": "2024-12-02 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 40.6497,
+            "purchase_dt": "2024-12-10 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.32,
+            "purchase_dt": "2024-12-24 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 31.874,
+            "purchase_dt": "2024-12-27 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 33.26,
+            "purchase_dt": "2025-01-03 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 32.3,
+            "purchase_dt": "2025-01-08 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 32.8,
+            "purchase_dt": "2025-01-21 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.2,
+            "purchase_dt": "2025-01-27 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 31.72,
+            "purchase_dt": "2025-02-05 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 50.89,
+            "purchase_dt": "2025-02-24 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 41.0,
+            "purchase_dt": "2025-03-11 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 38.0785,
+            "purchase_dt": "2025-03-18 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 42.05,
+            "purchase_dt": "2025-03-21 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 38.3653,
+            "purchase_dt": "2025-03-26 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.81,
+            "purchase_dt": "2025-04-08 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.29,
+            "purchase_dt": "2025-04-08 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 36.19,
+            "purchase_dt": "2025-04-09 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 32.9,
+            "purchase_dt": "2025-04-14 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.305,
+            "purchase_dt": "2025-04-15 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 33.359,
+            "purchase_dt": "2025-04-15 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.23,
+            "purchase_dt": "2025-04-23 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.6,
+            "purchase_dt": "2025-04-29 18:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 32.505,
+            "purchase_dt": "2025-05-09 06:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 31.695,
+            "purchase_dt": "2025-05-09 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 33.97,
+            "purchase_dt": "2025-05-12 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 41.23,
+            "purchase_dt": "2025-05-21 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 42.91,
+            "purchase_dt": "2025-05-28 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 40.84,
+            "purchase_dt": "2025-05-29 14:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 43.299,
+            "purchase_dt": "2025-06-03 10:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 41.72,
+            "purchase_dt": "2025-06-06 02:00:00"
+        },
+        {
+            "symbol": "SMCI",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 42.795,
+            "purchase_dt": "2025-06-09 10:00:00"
+        }
+    ]
+}

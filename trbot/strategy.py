@@ -10,34 +10,35 @@ from . import broker
 from .candles import Candle
 from .stockframe import Stockframe
 from .replayer import CandleReplayer
-from .portfolio import Portfolio, Order, OrderType
+from .portfolio import Portfolio, Order, OrderType, Position
 
 
 IndValues = NDArray[np.float64]
 TripleIndValues = tuple[IndValues, IndValues, IndValues]
 
-class Strategy(metaclass=ABCMeta):
-    def __init__(self, sf: Stockframe):
+class StrategyTester(metaclass=ABCMeta):
+    def __init__(self, sf: Stockframe, start_ind: int = 0, end_ind: int = -1) -> None:
         self._portfolio: Portfolio = Portfolio()
         self._indicators: dict[str, IndValues] = {}
         self._sf: Stockframe = sf
-        self._start: int = 0
+        self._start: int = start_ind
+        self._end: int = end_ind if start_ind < end_ind else sf.size
         self._repl: CandleReplayer = CandleReplayer(self._sf, start_ind=self._start)
-        self._ind: int = self._start
+        self._index: int = self._start
 
     @property
     def last_close(self) -> float:
-        return self._sf.close[self._ind-1]
+        return self._sf.close[self._index-1]
 
     def series_slice(self, series: NDArray[np.float64]) -> NDArray[np.float64]:
-        return series[self._start:self._ind]
+        return series[self._start:self._index]
 
     @property
     def curr_time_str(self) -> str:
         return self._repl.current_time.strftime("%Y-%m-%d %H:%M:%S")
 
-    def get_next_candle(self):
-        self._ind += 1
+    def get_next_candle(self) -> None:
+        self._index += 1
 
     @abstractmethod
     def setup(self) -> None:
@@ -45,51 +46,54 @@ class Strategy(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def on_candle(self) -> Order | None:
+    def on_candle(self) -> None:
         """ Called on each candle """
         pass
 
-    def run(self) -> None:
+    def run(self) -> float:
         self.setup()
 
         t: float = time.time()
         dt: float = 0.0
-        while self._ind < self._sf.size:
+        while self._index < self._end:
             current: float = time.time()
             dt = current - t
 
-            self._repl.update_time(dt)
-
             if self._repl.is_candle_available():
-                print(f"{self._repl.current_time} -> New Candle")
+                # print(f"{self._repl.current_time} -> New Candle")
                 self.get_next_candle()
-                order: Order | None = self.on_candle()
-                if order is not None:
-                    broker.execute_order(order, self._portfolio)
-                    print(order)
-            else:
-                print(self._repl.current_time)
+                self.on_candle()
+            # else:
+            #     print(self._repl.current_time)
 
-            time.sleep(1)
+            self._repl.step_time()
             t = current
 
-    def buy(self, size: int) -> Order:
-        return Order(
+        print(f"{self._sf.ticker}: {self._portfolio.pl}")
+        return self._portfolio.pl
+
+    def buy(self, size: int) -> None:
+        order: Order = Order(
             symbol=self._sf.ticker,
             order_type=OrderType.MARKET,
             quantity=float(size),
             purchase_price=self.last_close,
             purchase_dt=self.curr_time_str
         )
+        broker.execute_order(order, self._portfolio)
 
-    def sell(self, size: int) -> Order:
-        return Order(
+    def sell(self, size: int) -> None:
+        order: Order = Order(
             symbol=self._sf.ticker,
             order_type=OrderType.MARKET,
-            quantity=float(size) * -1.0,
+            quantity=abs(size) * -1.0,
             purchase_price=self.last_close,
             purchase_dt=self.curr_time_str
         )
+        broker.execute_order(order, self._portfolio)
+
+    def close_position(self) -> None:
+        broker.close_position(self._portfolio, self._sf.ticker, self.last_close)
 
     def ind_crossover(self, val1: str | float, val2: str | float) -> bool:
         s1: list[float] | IndValues = (
@@ -100,18 +104,14 @@ class Strategy(metaclass=ABCMeta):
             [ val2, val2 ] if isinstance(val2, float)
             else self.series_slice(self._indicators[val2])  # type: ignore
         )
-        try:
-            print(f">> {s1[-4:]}")
-            print(f">> {s2[-4:]}")
-        except IndexError:
-            print(f">> {s1}")
-            print(f">> {s2}")
 
         try:
             return _crossover(s1, s2)
         except ValueError as v_err:
-            print(f"[ERROR] {str(v_err)}")
             return False
+
+    def export_portfolio(self, outdir: str) -> None:
+        self._portfolio.save_to_json(f"{outdir}/{self._sf.ticker}-portfolio.json")
 
     # =========================== INDICATORS ===========================
     def TA_SMA(self, data: IndValues, period: int = 30) -> str:

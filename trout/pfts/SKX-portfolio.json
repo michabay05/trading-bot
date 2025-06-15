@@ -1,0 +1,789 @@
+{
+    "capital": 947.69,
+    "pl": 9.81000000000006,
+    "capital_pct": 100.98100000000001,
+    "positions": {
+        "SKX": {
+            "quantity": 1.0,
+            "price": 62.12
+        }
+    },
+    "orders": [
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 52.31,
+            "purchase_dt": "2023-06-30 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 50.98,
+            "purchase_dt": "2023-07-13 02:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 52.66,
+            "purchase_dt": "2023-07-13 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 52.02,
+            "purchase_dt": "2023-07-21 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 53.33,
+            "purchase_dt": "2023-07-28 02:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 54.48,
+            "purchase_dt": "2023-08-03 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 54.84,
+            "purchase_dt": "2023-08-04 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 54.19,
+            "purchase_dt": "2023-08-04 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 55.282,
+            "purchase_dt": "2023-08-10 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 53.685,
+            "purchase_dt": "2023-08-11 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 50.275,
+            "purchase_dt": "2023-08-31 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 48.79,
+            "purchase_dt": "2023-09-06 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 48.21,
+            "purchase_dt": "2023-09-22 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 47.435,
+            "purchase_dt": "2023-09-22 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 48.385,
+            "purchase_dt": "2023-09-25 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 47.04,
+            "purchase_dt": "2023-09-26 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 48.47,
+            "purchase_dt": "2023-09-28 18:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 47.9,
+            "purchase_dt": "2023-10-05 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 48.82,
+            "purchase_dt": "2023-10-10 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 47.78,
+            "purchase_dt": "2023-10-12 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 49.5088,
+            "purchase_dt": "2023-10-16 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 48.75,
+            "purchase_dt": "2023-10-19 18:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 48.93,
+            "purchase_dt": "2023-11-06 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 61.42,
+            "purchase_dt": "2024-01-03 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 62.26,
+            "purchase_dt": "2024-01-09 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 62.11,
+            "purchase_dt": "2024-01-23 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 63.84,
+            "purchase_dt": "2024-01-29 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 57.51,
+            "purchase_dt": "2024-02-01 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 59.34,
+            "purchase_dt": "2024-02-12 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 58.05,
+            "purchase_dt": "2024-02-13 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 59.06,
+            "purchase_dt": "2024-02-13 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 58.13,
+            "purchase_dt": "2024-02-20 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 59.65,
+            "purchase_dt": "2024-02-22 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 60.05,
+            "purchase_dt": "2024-03-08 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 61.25,
+            "purchase_dt": "2024-03-12 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 60.44,
+            "purchase_dt": "2024-03-18 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 61.61,
+            "purchase_dt": "2024-03-21 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 60.33,
+            "purchase_dt": "2024-03-22 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 61.26,
+            "purchase_dt": "2024-03-22 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 60.42,
+            "purchase_dt": "2024-03-25 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 61.29,
+            "purchase_dt": "2024-03-28 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 58.39,
+            "purchase_dt": "2024-04-02 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 58.01,
+            "purchase_dt": "2024-04-22 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 68.09,
+            "purchase_dt": "2024-05-22 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 70.08,
+            "purchase_dt": "2024-05-28 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 71.74,
+            "purchase_dt": "2024-06-17 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 73.25,
+            "purchase_dt": "2024-06-18 18:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 72.71,
+            "purchase_dt": "2024-06-21 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 74.07,
+            "purchase_dt": "2024-06-24 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 72.0033,
+            "purchase_dt": "2024-06-25 18:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 68.29,
+            "purchase_dt": "2024-07-12 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 66.99,
+            "purchase_dt": "2024-07-15 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 65.03,
+            "purchase_dt": "2024-07-31 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 62.98,
+            "purchase_dt": "2024-08-01 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 62.23,
+            "purchase_dt": "2024-08-09 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 67.37,
+            "purchase_dt": "2024-09-03 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 67.145,
+            "purchase_dt": "2024-09-13 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 62.0,
+            "purchase_dt": "2024-09-19 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 66.3,
+            "purchase_dt": "2024-09-26 02:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 66.22,
+            "purchase_dt": "2024-10-02 02:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 67.745,
+            "purchase_dt": "2024-10-04 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 65.57,
+            "purchase_dt": "2024-10-08 02:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 67.07,
+            "purchase_dt": "2024-10-10 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 65.36,
+            "purchase_dt": "2024-10-14 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 65.75,
+            "purchase_dt": "2024-10-24 18:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.805,
+            "purchase_dt": "2024-10-25 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 62.5,
+            "purchase_dt": "2024-11-01 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 61.66,
+            "purchase_dt": "2024-11-06 18:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 63.42,
+            "purchase_dt": "2024-11-07 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 61.01,
+            "purchase_dt": "2024-11-11 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 61.69,
+            "purchase_dt": "2024-11-22 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 68.23,
+            "purchase_dt": "2024-12-16 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 67.85,
+            "purchase_dt": "2024-12-31 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 67.24,
+            "purchase_dt": "2024-12-31 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 68.1,
+            "purchase_dt": "2024-12-31 18:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 69.41,
+            "purchase_dt": "2025-01-17 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 70.63,
+            "purchase_dt": "2025-01-17 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 69.74,
+            "purchase_dt": "2025-01-17 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 73.43,
+            "purchase_dt": "2025-01-21 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 72.0,
+            "purchase_dt": "2025-02-03 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 66.8,
+            "purchase_dt": "2025-02-19 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 63.13,
+            "purchase_dt": "2025-02-21 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 57.53,
+            "purchase_dt": "2025-03-17 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 55.89,
+            "purchase_dt": "2025-03-20 18:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 57.73,
+            "purchase_dt": "2025-03-24 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 56.35,
+            "purchase_dt": "2025-03-31 02:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 58.11,
+            "purchase_dt": "2025-04-02 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 52.97,
+            "purchase_dt": "2025-04-02 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 49.935,
+            "purchase_dt": "2025-04-14 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 49.14,
+            "purchase_dt": "2025-04-14 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 50.0,
+            "purchase_dt": "2025-04-23 02:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 46.96,
+            "purchase_dt": "2025-04-25 02:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 49.02,
+            "purchase_dt": "2025-04-29 10:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 46.97,
+            "purchase_dt": "2025-04-30 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 49.01,
+            "purchase_dt": "2025-05-02 06:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 61.9506,
+            "purchase_dt": "2025-06-02 14:00:00"
+        },
+        {
+            "symbol": "SKX",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 62.12,
+            "purchase_dt": "2025-06-04 10:00:00"
+        }
+    ]
+}

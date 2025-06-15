@@ -1,0 +1,669 @@
+{
+    "capital": 919.51,
+    "pl": -25.83000000000004,
+    "capital_pct": 97.417,
+    "positions": {
+        "GIS": {
+            "quantity": 1.0,
+            "price": 54.66
+        }
+    },
+    "orders": [
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 80.49,
+            "purchase_dt": "2023-06-27 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 75.55,
+            "purchase_dt": "2023-07-20 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 75.7398,
+            "purchase_dt": "2023-07-26 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 66.65,
+            "purchase_dt": "2023-09-15 02:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 65.49,
+            "purchase_dt": "2023-09-18 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 66.47,
+            "purchase_dt": "2023-09-18 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 65.31,
+            "purchase_dt": "2023-09-20 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 64.0,
+            "purchase_dt": "2023-10-10 02:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 62.61,
+            "purchase_dt": "2023-10-11 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 63.59,
+            "purchase_dt": "2023-10-16 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 65.29,
+            "purchase_dt": "2023-11-08 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 65.9998,
+            "purchase_dt": "2023-11-09 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 65.285,
+            "purchase_dt": "2023-11-13 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 65.18,
+            "purchase_dt": "2023-11-24 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 63.67,
+            "purchase_dt": "2023-11-27 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 64.13,
+            "purchase_dt": "2023-12-01 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 65.5,
+            "purchase_dt": "2023-12-15 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 66.8,
+            "purchase_dt": "2023-12-19 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 64.01,
+            "purchase_dt": "2023-12-20 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 64.97,
+            "purchase_dt": "2023-12-29 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 64.61,
+            "purchase_dt": "2024-01-05 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 64.75,
+            "purchase_dt": "2024-01-23 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 63.875,
+            "purchase_dt": "2024-02-05 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 64.245,
+            "purchase_dt": "2024-02-16 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 64.17,
+            "purchase_dt": "2024-02-27 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 64.855,
+            "purchase_dt": "2024-03-06 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 68.64,
+            "purchase_dt": "2024-04-10 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 68.98,
+            "purchase_dt": "2024-04-18 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 70.23,
+            "purchase_dt": "2024-04-29 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 70.395,
+            "purchase_dt": "2024-05-10 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 69.87,
+            "purchase_dt": "2024-05-16 02:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 70.99,
+            "purchase_dt": "2024-05-16 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 70.23,
+            "purchase_dt": "2024-05-22 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 66.92,
+            "purchase_dt": "2024-06-20 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 63.695,
+            "purchase_dt": "2024-06-26 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 63.32,
+            "purchase_dt": "2024-07-12 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 62.895,
+            "purchase_dt": "2024-07-15 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 64.5579,
+            "purchase_dt": "2024-07-17 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 72.96,
+            "purchase_dt": "2024-09-12 02:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 74.87,
+            "purchase_dt": "2024-09-16 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 73.92,
+            "purchase_dt": "2024-09-23 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 74.38,
+            "purchase_dt": "2024-09-27 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 73.53,
+            "purchase_dt": "2024-09-30 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 74.33,
+            "purchase_dt": "2024-10-01 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 73.15,
+            "purchase_dt": "2024-10-02 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 64.675,
+            "purchase_dt": "2024-11-22 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 65.33,
+            "purchase_dt": "2024-12-04 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 66.08,
+            "purchase_dt": "2024-12-10 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 65.65,
+            "purchase_dt": "2024-12-17 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 66.61,
+            "purchase_dt": "2024-12-18 02:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 63.0,
+            "purchase_dt": "2024-12-18 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 63.96,
+            "purchase_dt": "2025-01-06 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 62.14,
+            "purchase_dt": "2025-01-06 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 60.28,
+            "purchase_dt": "2025-01-21 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.0454,
+            "purchase_dt": "2025-01-22 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 60.16,
+            "purchase_dt": "2025-01-24 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.9988,
+            "purchase_dt": "2025-01-29 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 60.65,
+            "purchase_dt": "2025-01-30 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 60.06,
+            "purchase_dt": "2025-02-03 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 59.5,
+            "purchase_dt": "2025-02-14 02:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 58.8762,
+            "purchase_dt": "2025-02-14 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 59.26,
+            "purchase_dt": "2025-02-20 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.2,
+            "purchase_dt": "2025-02-27 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 60.28,
+            "purchase_dt": "2025-02-28 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 60.86,
+            "purchase_dt": "2025-03-12 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 59.47,
+            "purchase_dt": "2025-03-27 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.01,
+            "purchase_dt": "2025-04-02 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 60.63,
+            "purchase_dt": "2025-04-03 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 58.01,
+            "purchase_dt": "2025-04-07 02:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 58.7801,
+            "purchase_dt": "2025-04-14 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 57.08,
+            "purchase_dt": "2025-04-16 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 58.11,
+            "purchase_dt": "2025-04-22 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 57.4,
+            "purchase_dt": "2025-04-22 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 58.0,
+            "purchase_dt": "2025-04-22 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 57.1,
+            "purchase_dt": "2025-04-23 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 56.94,
+            "purchase_dt": "2025-05-01 02:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 56.04,
+            "purchase_dt": "2025-05-01 06:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 54.97,
+            "purchase_dt": "2025-05-16 10:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 53.176,
+            "purchase_dt": "2025-05-21 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 53.99,
+            "purchase_dt": "2025-05-29 18:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 54.28,
+            "purchase_dt": "2025-06-11 14:00:00"
+        },
+        {
+            "symbol": "GIS",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 54.66,
+            "purchase_dt": "2025-06-12 18:00:00"
+        }
+    ]
+}

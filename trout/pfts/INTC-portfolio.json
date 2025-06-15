@@ -1,0 +1,789 @@
+{
+    "capital": 966.45,
+    "pl": -13.241899999999987,
+    "capital_pct": 98.67581,
+    "positions": {
+        "INTC": {
+            "quantity": 1.0,
+            "price": 20.3081
+        }
+    },
+    "orders": [
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 33.55,
+            "purchase_dt": "2023-07-03 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 32.955,
+            "purchase_dt": "2023-07-05 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 32.93,
+            "purchase_dt": "2023-07-11 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 33.4,
+            "purchase_dt": "2023-07-20 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.01,
+            "purchase_dt": "2023-07-24 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 33.66,
+            "purchase_dt": "2023-07-24 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.07,
+            "purchase_dt": "2023-07-26 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 34.7501,
+            "purchase_dt": "2023-08-02 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.35,
+            "purchase_dt": "2023-08-07 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 34.22,
+            "purchase_dt": "2023-08-08 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.025,
+            "purchase_dt": "2023-08-14 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 34.5157,
+            "purchase_dt": "2023-08-16 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 33.88,
+            "purchase_dt": "2023-08-23 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 32.57,
+            "purchase_dt": "2023-08-24 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 33.695,
+            "purchase_dt": "2023-08-28 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 37.81,
+            "purchase_dt": "2023-09-15 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.14,
+            "purchase_dt": "2023-09-28 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.93,
+            "purchase_dt": "2023-10-13 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 36.61,
+            "purchase_dt": "2023-10-16 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.16,
+            "purchase_dt": "2023-10-17 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.86,
+            "purchase_dt": "2023-10-27 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 43.77,
+            "purchase_dt": "2023-12-01 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 42.9,
+            "purchase_dt": "2023-12-08 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 48.035,
+            "purchase_dt": "2024-01-02 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 48.5,
+            "purchase_dt": "2024-01-08 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 47.6,
+            "purchase_dt": "2024-01-10 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 48.235,
+            "purchase_dt": "2024-01-19 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 45.2303,
+            "purchase_dt": "2024-01-25 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 43.31,
+            "purchase_dt": "2024-02-09 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 43.085,
+            "purchase_dt": "2024-02-22 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 43.44,
+            "purchase_dt": "2024-03-01 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 43.835,
+            "purchase_dt": "2024-03-11 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 45.07,
+            "purchase_dt": "2024-03-12 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 44.685,
+            "purchase_dt": "2024-03-13 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 43.2,
+            "purchase_dt": "2024-03-27 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 42.1101,
+            "purchase_dt": "2024-04-02 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 31.2,
+            "purchase_dt": "2024-05-07 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.935,
+            "purchase_dt": "2024-05-07 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 30.5642,
+            "purchase_dt": "2024-05-13 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 31.56,
+            "purchase_dt": "2024-05-22 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 31.01,
+            "purchase_dt": "2024-06-03 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.365,
+            "purchase_dt": "2024-06-03 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 30.71,
+            "purchase_dt": "2024-06-05 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.3901,
+            "purchase_dt": "2024-06-06 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 30.57,
+            "purchase_dt": "2024-06-07 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.2455,
+            "purchase_dt": "2024-06-13 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 30.84,
+            "purchase_dt": "2024-06-17 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.65,
+            "purchase_dt": "2024-06-25 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 30.955,
+            "purchase_dt": "2024-06-28 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 33.445,
+            "purchase_dt": "2024-07-19 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.7,
+            "purchase_dt": "2024-08-15 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.2,
+            "purchase_dt": "2024-08-22 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.71,
+            "purchase_dt": "2024-08-30 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.26,
+            "purchase_dt": "2024-09-04 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 19.57,
+            "purchase_dt": "2024-09-12 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 22.565,
+            "purchase_dt": "2024-10-01 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 23.25,
+            "purchase_dt": "2024-10-08 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 22.66,
+            "purchase_dt": "2024-10-15 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 22.945,
+            "purchase_dt": "2024-10-25 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 22.31,
+            "purchase_dt": "2024-10-30 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 22.73,
+            "purchase_dt": "2024-11-01 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 22.48,
+            "purchase_dt": "2024-11-04 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 23.365,
+            "purchase_dt": "2024-11-05 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.0284,
+            "purchase_dt": "2024-11-12 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 25.1199,
+            "purchase_dt": "2024-11-14 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.44,
+            "purchase_dt": "2024-11-15 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.5001,
+            "purchase_dt": "2024-11-22 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.94,
+            "purchase_dt": "2024-11-26 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 25.03,
+            "purchase_dt": "2024-12-02 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.72,
+            "purchase_dt": "2024-12-03 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.17,
+            "purchase_dt": "2024-12-23 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 19.78,
+            "purchase_dt": "2024-12-30 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.2399,
+            "purchase_dt": "2025-01-02 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 19.93,
+            "purchase_dt": "2025-01-07 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 19.7501,
+            "purchase_dt": "2025-01-15 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.82,
+            "purchase_dt": "2025-01-24 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 19.72,
+            "purchase_dt": "2025-02-10 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.4888,
+            "purchase_dt": "2025-02-24 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 25.1401,
+            "purchase_dt": "2025-03-03 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 22.97,
+            "purchase_dt": "2025-03-03 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 22.9401,
+            "purchase_dt": "2025-03-12 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.845,
+            "purchase_dt": "2025-03-20 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.58,
+            "purchase_dt": "2025-03-24 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.18,
+            "purchase_dt": "2025-03-24 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.67,
+            "purchase_dt": "2025-04-10 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 19.9789,
+            "purchase_dt": "2025-04-10 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.39,
+            "purchase_dt": "2025-04-14 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 19.45,
+            "purchase_dt": "2025-04-15 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 19.85,
+            "purchase_dt": "2025-04-22 14:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 19.655,
+            "purchase_dt": "2025-04-30 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.61,
+            "purchase_dt": "2025-05-02 10:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 19.855,
+            "purchase_dt": "2025-05-06 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.98,
+            "purchase_dt": "2025-05-08 02:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 21.365,
+            "purchase_dt": "2025-05-15 06:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.32,
+            "purchase_dt": "2025-06-03 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 19.94,
+            "purchase_dt": "2025-06-05 18:00:00"
+        },
+        {
+            "symbol": "INTC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.3081,
+            "purchase_dt": "2025-06-06 06:00:00"
+        }
+    ]
+}

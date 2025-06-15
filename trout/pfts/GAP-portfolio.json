@@ -1,0 +1,365 @@
+{
+    "capital": 978.95,
+    "pl": 0.7000000000000455,
+    "capital_pct": 100.07000000000002,
+    "positions": {
+        "GAP": {
+            "quantity": -1.0,
+            "price": 21.75
+        }
+    },
+    "orders": [
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 21.05,
+            "purchase_dt": "2024-09-13 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.18,
+            "purchase_dt": "2024-09-17 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.534,
+            "purchase_dt": "2024-09-19 18:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.23,
+            "purchase_dt": "2024-09-20 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.725,
+            "purchase_dt": "2024-09-24 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.5,
+            "purchase_dt": "2024-10-02 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 21.71,
+            "purchase_dt": "2024-10-04 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.425,
+            "purchase_dt": "2024-10-07 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 21.645,
+            "purchase_dt": "2024-10-11 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 21.73,
+            "purchase_dt": "2024-10-22 14:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 21.7,
+            "purchase_dt": "2024-11-05 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 21.4466,
+            "purchase_dt": "2024-11-15 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.93,
+            "purchase_dt": "2024-11-21 14:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 25.15,
+            "purchase_dt": "2024-12-10 02:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 25.31,
+            "purchase_dt": "2024-12-18 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.48,
+            "purchase_dt": "2024-12-18 14:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.56,
+            "purchase_dt": "2024-12-26 14:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.89,
+            "purchase_dt": "2024-12-30 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.33,
+            "purchase_dt": "2025-01-03 18:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.86,
+            "purchase_dt": "2025-01-07 18:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.03,
+            "purchase_dt": "2025-01-13 02:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.0,
+            "purchase_dt": "2025-01-13 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.18,
+            "purchase_dt": "2025-01-21 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.1,
+            "purchase_dt": "2025-01-27 18:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 24.565,
+            "purchase_dt": "2025-01-28 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 24.1,
+            "purchase_dt": "2025-01-31 14:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 22.8,
+            "purchase_dt": "2025-02-14 02:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 22.415,
+            "purchase_dt": "2025-02-20 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 23.325,
+            "purchase_dt": "2025-02-26 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 22.7,
+            "purchase_dt": "2025-02-28 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 23.05,
+            "purchase_dt": "2025-03-07 02:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 21.53,
+            "purchase_dt": "2025-03-12 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.59,
+            "purchase_dt": "2025-03-20 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.275,
+            "purchase_dt": "2025-03-28 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 21.21,
+            "purchase_dt": "2025-04-01 18:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 20.13,
+            "purchase_dt": "2025-04-03 02:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 20.34,
+            "purchase_dt": "2025-04-09 14:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 18.54,
+            "purchase_dt": "2025-04-11 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 19.26,
+            "purchase_dt": "2025-04-14 10:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 18.62,
+            "purchase_dt": "2025-04-15 14:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 19.06,
+            "purchase_dt": "2025-04-21 14:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 23.7145,
+            "purchase_dt": "2025-05-29 14:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 22.23,
+            "purchase_dt": "2025-06-10 06:00:00"
+        },
+        {
+            "symbol": "GAP",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 21.75,
+            "purchase_dt": "2025-06-12 06:00:00"
+        }
+    ]
+}

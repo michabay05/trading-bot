@@ -21,22 +21,31 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Send email to notify of a trading signal
     - At some point, the bot itself will be able to execute trades (not sure how at the moment though).
 - [ ] (feat) Add id system for orders and portfolio (seems like a good idea)
-- [ ] (feat) Add more technical indicators, as needed
 - [ ] (feat) Research and develop list of tickers for bot to trade
+- [ ] (feat) Add a limit order
 - [ ] (feat) Add stop order
 - [ ] (feat) Add ability to buy based on portfolio's capital percentage
-- [ ] (feat) Add strategy tester
-    - There should be a distinction between a strategy implementation and tester
-- [ ] (feat) Integrate strategy into bot's decision making
 - [ ] (feat) Implement checking when market is open or closed
 - [ ] (feat) Bring back MACD and BBANDS indicators
-- [ ] (feat) Add a limit order
-- [ ] (fix) When new candle is available, it waits until the next time step to make it available
 - [ ] (feat) Implement indicator warm up
-- [ ] (feat) Plot P/L of portfolio
-    - Probably using matplotlib
-- [ ] (feat) Add ability to close position
+- [ ] (feat) Plot P/L of portfolio - probably using matplotlib
+- [ ] (fix) Check close position logic
+- [ ] (refactor) Handle edge case where position has zero quantity
+    - Remove it from the list of positions
+- [ ] (refactor) Change candle csv naming scheme to match that of the portfolios
 - [ ] (feat) Add take-profit and stop-loss
+
+---
+
+## v0.5
+- [x] (refactor) Change Strategy to StrategyTester
+    - There should be a distinction between a strategy implementation and tester
+- [x] (fix) When new candle is available, it waits until the next time step to make it available
+- [x] (feat) Add ability to close position
+- [x] (fix) Check capital before executing order
+- [x] (feat) When closing a position, keep track of P/L and P/L percentage of portfolio
+- [x] (refactor) When saving to json, save P/L and P/L percentage
+- [x] (feat) Implement backtest simple EMA-based strat
 
 ## v0.4
 - [x] (feat) Add ability to buy or sell while developing a strategy

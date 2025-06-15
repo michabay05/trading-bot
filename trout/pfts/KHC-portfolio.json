@@ -1,0 +1,829 @@
+{
+    "capital": 964.1100000000001,
+    "pl": -9.444999999999823,
+    "capital_pct": 99.05550000000002,
+    "positions": {
+        "KHC": {
+            "quantity": -1.0,
+            "price": 26.445
+        }
+    },
+    "orders": [
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.89,
+            "purchase_dt": "2023-07-05 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.41,
+            "purchase_dt": "2023-07-07 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.81,
+            "purchase_dt": "2023-07-10 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.5,
+            "purchase_dt": "2023-07-10 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.755,
+            "purchase_dt": "2023-07-12 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.63,
+            "purchase_dt": "2023-07-13 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.82,
+            "purchase_dt": "2023-07-14 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.51,
+            "purchase_dt": "2023-07-17 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 36.16,
+            "purchase_dt": "2023-07-19 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 36.095,
+            "purchase_dt": "2023-07-28 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 36.47,
+            "purchase_dt": "2023-08-03 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.98,
+            "purchase_dt": "2023-08-03 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 33.835,
+            "purchase_dt": "2023-08-25 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 33.155,
+            "purchase_dt": "2023-08-31 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 33.135,
+            "purchase_dt": "2023-09-11 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 34.02,
+            "purchase_dt": "2023-09-28 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 31.7,
+            "purchase_dt": "2023-10-24 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 31.39,
+            "purchase_dt": "2023-10-27 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 32.47,
+            "purchase_dt": "2023-11-01 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 32.89,
+            "purchase_dt": "2023-11-10 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 33.32,
+            "purchase_dt": "2023-11-13 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 36.5904,
+            "purchase_dt": "2023-12-15 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 36.4604,
+            "purchase_dt": "2023-12-26 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 37.75,
+            "purchase_dt": "2024-01-11 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 37.45,
+            "purchase_dt": "2024-01-25 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 37.11,
+            "purchase_dt": "2024-02-05 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.62,
+            "purchase_dt": "2024-02-21 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.775,
+            "purchase_dt": "2024-02-27 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.91,
+            "purchase_dt": "2024-03-18 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 36.8205,
+            "purchase_dt": "2024-04-08 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 37.16,
+            "purchase_dt": "2024-04-10 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 36.79,
+            "purchase_dt": "2024-04-10 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 36.86,
+            "purchase_dt": "2024-04-17 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 36.25,
+            "purchase_dt": "2024-05-01 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 36.47,
+            "purchase_dt": "2024-05-13 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.955,
+            "purchase_dt": "2024-05-15 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 36.24,
+            "purchase_dt": "2024-05-22 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.84,
+            "purchase_dt": "2024-05-23 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.56,
+            "purchase_dt": "2024-06-04 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 34.54,
+            "purchase_dt": "2024-06-05 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 32.9,
+            "purchase_dt": "2024-06-21 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 32.315,
+            "purchase_dt": "2024-06-26 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 32.29,
+            "purchase_dt": "2024-07-11 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 32.77,
+            "purchase_dt": "2024-07-22 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 33.18,
+            "purchase_dt": "2024-07-25 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 34.92,
+            "purchase_dt": "2024-08-07 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.25,
+            "purchase_dt": "2024-08-07 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.01,
+            "purchase_dt": "2024-08-07 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.36,
+            "purchase_dt": "2024-08-08 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 34.58,
+            "purchase_dt": "2024-08-12 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.9,
+            "purchase_dt": "2024-08-19 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.49,
+            "purchase_dt": "2024-08-28 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.9,
+            "purchase_dt": "2024-09-04 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.52,
+            "purchase_dt": "2024-09-10 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.65,
+            "purchase_dt": "2024-09-16 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.135,
+            "purchase_dt": "2024-09-17 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.255,
+            "purchase_dt": "2024-09-27 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 34.255,
+            "purchase_dt": "2024-10-02 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.748,
+            "purchase_dt": "2024-10-08 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 34.4745,
+            "purchase_dt": "2024-10-08 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 34.65,
+            "purchase_dt": "2024-10-09 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.47,
+            "purchase_dt": "2024-10-22 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 35.95,
+            "purchase_dt": "2024-10-22 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 35.64,
+            "purchase_dt": "2024-10-22 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 31.81,
+            "purchase_dt": "2024-11-22 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 31.64,
+            "purchase_dt": "2024-12-02 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 31.84,
+            "purchase_dt": "2024-12-09 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 31.4,
+            "purchase_dt": "2024-12-12 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 31.615,
+            "purchase_dt": "2024-12-12 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.91,
+            "purchase_dt": "2024-12-16 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 30.73,
+            "purchase_dt": "2024-12-27 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.33,
+            "purchase_dt": "2024-12-30 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 30.6878,
+            "purchase_dt": "2024-12-31 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.34,
+            "purchase_dt": "2025-01-06 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.305,
+            "purchase_dt": "2025-01-17 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 29.105,
+            "purchase_dt": "2025-01-23 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.2997,
+            "purchase_dt": "2025-01-24 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 29.29,
+            "purchase_dt": "2025-02-03 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.29,
+            "purchase_dt": "2025-02-07 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.905,
+            "purchase_dt": "2025-02-10 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.395,
+            "purchase_dt": "2025-02-11 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 27.6,
+            "purchase_dt": "2025-02-12 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.34,
+            "purchase_dt": "2025-02-14 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.83,
+            "purchase_dt": "2025-02-18 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.1954,
+            "purchase_dt": "2025-02-18 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.79,
+            "purchase_dt": "2025-02-27 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 31.23,
+            "purchase_dt": "2025-03-03 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 31.14,
+            "purchase_dt": "2025-03-11 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.66,
+            "purchase_dt": "2025-03-27 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 30.09,
+            "purchase_dt": "2025-04-03 02:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 30.87,
+            "purchase_dt": "2025-04-03 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 29.6068,
+            "purchase_dt": "2025-04-04 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.48,
+            "purchase_dt": "2025-04-11 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 28.88,
+            "purchase_dt": "2025-04-16 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 29.46,
+            "purchase_dt": "2025-04-17 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 29.5754,
+            "purchase_dt": "2025-04-24 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 27.795,
+            "purchase_dt": "2025-05-19 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 26.9074,
+            "purchase_dt": "2025-05-21 10:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 27.02,
+            "purchase_dt": "2025-05-29 14:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 26.675,
+            "purchase_dt": "2025-05-30 06:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 26.86,
+            "purchase_dt": "2025-06-03 18:00:00"
+        },
+        {
+            "symbol": "KHC",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 26.445,
+            "purchase_dt": "2025-06-05 06:00:00"
+        }
+    ]
+}

@@ -1,0 +1,861 @@
+{
+    "capital": 947.7699999999998,
+    "pl": 45.519999999999754,
+    "capital_pct": 104.55199999999998,
+    "positions": {
+        "WMT": {
+            "quantity": -1.0,
+            "price": 97.75
+        }
+    },
+    "orders": [
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 52.23,
+            "purchase_dt": "2023-06-30 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 51.65,
+            "purchase_dt": "2023-07-07 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 51.9633,
+            "purchase_dt": "2023-07-20 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 53.0617,
+            "purchase_dt": "2023-08-02 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 53.2133,
+            "purchase_dt": "2023-08-02 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 53.0,
+            "purchase_dt": "2023-08-03 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 53.62,
+            "purchase_dt": "2023-08-07 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 53.2067,
+            "purchase_dt": "2023-08-14 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 53.0267,
+            "purchase_dt": "2023-08-24 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 52.24,
+            "purchase_dt": "2023-08-24 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 52.7867,
+            "purchase_dt": "2023-08-28 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 54.4733,
+            "purchase_dt": "2023-09-18 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 52.9333,
+            "purchase_dt": "2023-10-11 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 52.9967,
+            "purchase_dt": "2023-10-20 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 53.7267,
+            "purchase_dt": "2023-10-23 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 53.6667,
+            "purchase_dt": "2023-10-27 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 54.2833,
+            "purchase_dt": "2023-10-30 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 54.5867,
+            "purchase_dt": "2023-11-09 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 55.31,
+            "purchase_dt": "2023-11-10 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 52.22,
+            "purchase_dt": "2023-11-16 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 52.3333,
+            "purchase_dt": "2023-11-28 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 51.8933,
+            "purchase_dt": "2023-11-29 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 52.0667,
+            "purchase_dt": "2023-12-06 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 51.35,
+            "purchase_dt": "2023-12-06 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 51.3,
+            "purchase_dt": "2023-12-13 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 51.925,
+            "purchase_dt": "2024-01-05 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 52.8633,
+            "purchase_dt": "2024-01-09 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 53.4867,
+            "purchase_dt": "2024-01-24 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 54.2067,
+            "purchase_dt": "2024-01-25 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 56.0667,
+            "purchase_dt": "2024-02-14 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 56.6667,
+            "purchase_dt": "2024-02-16 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 58.75,
+            "purchase_dt": "2024-02-29 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 59.51,
+            "purchase_dt": "2024-03-05 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 60.3,
+            "purchase_dt": "2024-03-15 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 61.05,
+            "purchase_dt": "2024-03-20 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 60.8,
+            "purchase_dt": "2024-03-25 02:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 59.83,
+            "purchase_dt": "2024-04-08 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.88,
+            "purchase_dt": "2024-04-15 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 60.165,
+            "purchase_dt": "2024-04-16 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.955,
+            "purchase_dt": "2024-04-16 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 60.1,
+            "purchase_dt": "2024-04-22 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.005,
+            "purchase_dt": "2024-04-23 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 60.06,
+            "purchase_dt": "2024-04-25 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.25,
+            "purchase_dt": "2024-04-30 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 59.86,
+            "purchase_dt": "2024-05-03 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 59.675,
+            "purchase_dt": "2024-05-14 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 63.67,
+            "purchase_dt": "2024-05-16 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 64.88,
+            "purchase_dt": "2024-05-30 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 65.836,
+            "purchase_dt": "2024-05-31 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 66.1254,
+            "purchase_dt": "2024-06-12 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 66.63,
+            "purchase_dt": "2024-06-14 02:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 67.5,
+            "purchase_dt": "2024-06-25 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 68.385,
+            "purchase_dt": "2024-06-26 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 67.42,
+            "purchase_dt": "2024-06-28 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 67.95,
+            "purchase_dt": "2024-07-03 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 69.24,
+            "purchase_dt": "2024-07-12 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 70.135,
+            "purchase_dt": "2024-07-16 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 70.31,
+            "purchase_dt": "2024-07-23 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 70.705,
+            "purchase_dt": "2024-07-24 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 70.055,
+            "purchase_dt": "2024-07-25 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 70.09,
+            "purchase_dt": "2024-08-02 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 68.075,
+            "purchase_dt": "2024-08-02 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 68.31,
+            "purchase_dt": "2024-08-12 02:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 76.47,
+            "purchase_dt": "2024-09-06 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 77.22,
+            "purchase_dt": "2024-09-09 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 78.6965,
+            "purchase_dt": "2024-09-17 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 79.72,
+            "purchase_dt": "2024-09-23 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 80.1,
+            "purchase_dt": "2024-09-27 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 80.7,
+            "purchase_dt": "2024-09-30 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 80.0,
+            "purchase_dt": "2024-10-03 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 80.86,
+            "purchase_dt": "2024-10-03 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 79.725,
+            "purchase_dt": "2024-10-07 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 80.49,
+            "purchase_dt": "2024-10-10 02:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 79.92,
+            "purchase_dt": "2024-10-10 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 80.3,
+            "purchase_dt": "2024-10-14 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 81.8,
+            "purchase_dt": "2024-10-29 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 82.37,
+            "purchase_dt": "2024-11-04 02:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 84.6,
+            "purchase_dt": "2024-11-15 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 85.3,
+            "purchase_dt": "2024-11-19 02:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 93.68,
+            "purchase_dt": "2024-12-10 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 94.65,
+            "purchase_dt": "2024-12-10 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 94.2,
+            "purchase_dt": "2024-12-13 02:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 95.64,
+            "purchase_dt": "2024-12-16 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 93.34,
+            "purchase_dt": "2024-12-18 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 92.62,
+            "purchase_dt": "2024-12-27 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 91.31,
+            "purchase_dt": "2024-12-27 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 91.9862,
+            "purchase_dt": "2025-01-06 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 91.13,
+            "purchase_dt": "2025-01-14 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 92.0125,
+            "purchase_dt": "2025-01-17 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 98.2899,
+            "purchase_dt": "2025-02-20 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 97.345,
+            "purchase_dt": "2025-02-28 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 95.46,
+            "purchase_dt": "2025-03-04 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 87.71,
+            "purchase_dt": "2025-03-18 02:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 85.9,
+            "purchase_dt": "2025-03-18 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 87.085,
+            "purchase_dt": "2025-03-24 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 84.8441,
+            "purchase_dt": "2025-03-25 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 86.78,
+            "purchase_dt": "2025-03-31 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 83.45,
+            "purchase_dt": "2025-04-02 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 87.9266,
+            "purchase_dt": "2025-04-03 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 86.7575,
+            "purchase_dt": "2025-04-04 06:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 89.85,
+            "purchase_dt": "2025-04-09 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 97.649,
+            "purchase_dt": "2025-05-08 18:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 97.83,
+            "purchase_dt": "2025-05-16 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 96.37,
+            "purchase_dt": "2025-05-21 14:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": 1.0,
+            "purchase_price": 97.315,
+            "purchase_dt": "2025-05-27 10:00:00"
+        },
+        {
+            "symbol": "WMT",
+            "type": "market",
+            "status": "filled",
+            "quantity": -1.0,
+            "purchase_price": 97.75,
+            "purchase_dt": "2025-06-05 14:00:00"
+        }
+    ]
+}

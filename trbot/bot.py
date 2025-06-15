@@ -8,7 +8,7 @@ from . import candles
 from .candles import Candle, CandleOption, Timespan
 from .portfolio import Order, OrderType, Portfolio, Position
 from .stockframe import Stockframe
-from .strategy import Strategy
+from .strategy import StrategyTester
 
 
 class TradingBot:

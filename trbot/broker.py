@@ -36,17 +36,16 @@ def execute_order(order: Order, portfolio: Portfolio) -> None:
         order.status = OrderStatus.WORKING
         return
 
-    capital: float = portfolio.capital
-    if order.abs_value() <= capital:
-        # Subtract order from total and update portfolio's positions
-        portfolio.capital = capital - order.abs_value()
-        # Update order status
-        order.status = OrderStatus.FILLED
-        portfolio.add_order(order)
-    else:
+    if portfolio.capital < order.abs_value():
         # Order cancelled due to insufficient funds (Update order status)
-        order.status = OrderStatus.CANCELLED
-        portfolio.add_order(order)
+        print(f"[ERROR] Insufficient funds. (Capital: ${portfolio.capital}, order total: {order.abs_value()}")
+        return
+
+    # Subtract order from total and update portfolio's positions
+    portfolio.capital = portfolio.capital - order.abs_value()
+    # Update order status
+    order.status = OrderStatus.FILLED
+    portfolio.add_order(order)
 
     # Update portfolio position
     if order.symbol in portfolio.positions.keys():
@@ -57,7 +56,20 @@ def execute_order(order: Order, portfolio: Portfolio) -> None:
         pst.quantity = new_value / order.purchase_price
     else:
         # New position was justed created
-        portfolio.positions[order.symbol] = Position(order.quantity, order.purchase_price)
+        portfolio.positions[order.symbol] = Position(
+            order.symbol, order.quantity, order.purchase_price
+        )
+
+def close_position(portfolio: Portfolio, ticker: str, curr_market_price: float) -> None:
+    if not ticker in portfolio.positions.keys():
+        # There is no position with this ticker to close
+        return
+
+    position: Position = portfolio.positions[ticker]
+    portfolio.capital += abs(position.quantity) * curr_market_price
+    del portfolio.positions[ticker]
+
+    portfolio.update_pl()
 
 def get_historical_candles(opt: CandleOption) -> list[Candle]:
     """ Get historical candles for a certain stock as specified in the options """
