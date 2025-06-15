@@ -14,7 +14,7 @@ $ python run_bot.py
 ## Features
 - Historical data downloader
 - Candle replayer (with a modifiable replay time factor)
-- A variety of Indicators such as SMA, EMA, RSI, MACD, BBANDS
+- A variety of Indicators such as SMA, EMA, RSI
 - Strategy implementation system
 
 ## Resource used
