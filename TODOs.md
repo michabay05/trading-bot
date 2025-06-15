@@ -16,8 +16,6 @@ A list of all the TODOs needed to be completed before each release
 ## Future versions
 - [ ] (feat) Factor risk tolerance into strategy
 - [ ] (feat) Setup script to automatically visualize candles and indicators
-- [ ] (feat) Calculate portfolio's market value
-- [ ] (feat) Calculate profitability based on portfolio and order history via various metrics
 - [ ] (feat) Send email to notify of a trading signal
     - At some point, the bot itself will be able to execute trades (not sure how at the moment though).
 - [ ] (feat) Add id system for orders and portfolio (seems like a good idea)
