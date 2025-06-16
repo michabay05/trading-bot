@@ -25,17 +25,17 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Implement checking when market is open or closed
 - [ ] (feat) Bring back MACD and BBANDS indicators
 - [ ] (feat) Implement indicator warm up
-- [ ] (feat) Plot P/L of portfolio - probably using matplotlib
 - [ ] (fix) Check close position logic
 - [ ] (refactor) Handle edge case where position has zero quantity
     - Remove it from the list of positions
 - [ ] (refactor) Change candle csv naming scheme to match that of the portfolios
-- [ ] (feat) Add take-profit and stop-loss
 
 ---
 
 # v0.6
-- [ ] (refactor) Remove `bot.py`
+- [ ] (feat) Plot P/L of portfolio - probably using matplotlib
+- [ ] (feat) Add take-profit and stop-loss
+- [x] (refactor) Remove `bot.py`
     - `run_bot.py` does everything I want `bot.py` to do
 - [x] (feat) Setup script to automatically visualize candles and indicators
 - [x] (refactor) The horizontal axis of the candle visualizer should be human-readable
