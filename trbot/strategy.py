@@ -28,7 +28,7 @@ class StrategyTester(metaclass=ABCMeta):
 
     @property
     def last_close(self) -> float:
-        return self._sf.close[self._index-1]
+        return self._sf.close_series[self._index-1]
 
     def series_slice(self, series: NDArray[np.float64]) -> NDArray[np.float64]:
         return series[self._start:self._index]

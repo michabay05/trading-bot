@@ -4,18 +4,18 @@ from datetime import datetime, timedelta
 import talib
 
 from trbot import broker, candles
-from trbot.bot import TradingBot
 from trbot.candles import Candle, CandleOption, Timespan
 from trbot.portfolio import Portfolio, Order, OrderType
 from trbot.replayer import CandleReplayer
 from trbot.stockframe import Stockframe
 from trbot.strategy import StrategyTester
+import visualize_candles as vs_cd
 
 
 # ===================== STRATEGY =====================
 class MyStrategy(StrategyTester):
     def setup(self) -> None:
-        close = self._sf.close
+        close = self._sf.close_series
         self.fast_ma = self.TA_EMA(close, period=8)
         self.slow_ma = self.TA_EMA(close, period=21)
 
@@ -28,13 +28,7 @@ class MyStrategy(StrategyTester):
             self.close_position()
             self.sell(1)
 
-tickers = []
-dir: str = "trout/aggs"
-for filename in os.listdir(dir):
-    fpath: str = os.path.join(dir, filename)
-    info: dict = candles.candle_info_from_path(fpath)
-    tickers.append(info["ticker"])
-
+tickers: list[str] = vs_cd.valid_tickers("trout/aggs")[0]
 sum: float = 0.0
 for t in tickers:
     sf: Stockframe = Stockframe.from_csv(f"trout/aggs/ohlcv-{t}-4hour.csv")

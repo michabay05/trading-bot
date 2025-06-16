@@ -19,7 +19,7 @@ class Stockframe:
                 f"{c.volume:.4f}"
             ])
 
-        self.df: pd.DataFrame = pd.DataFrame(
+        self._df: pd.DataFrame = pd.DataFrame(
             data,
             columns=["Date", "Open", "High", "Low", "Close", "Volume"] # type: ignore
         )
@@ -32,19 +32,27 @@ class Stockframe:
         info: dict = candles.candle_info_from_path(filepath)
 
         sf = cls(cnds=[], ticker=info["ticker"], mult=info["mult"], timespan=info["timespan"])
-        sf.df = pd.read_csv(filepath)
+        sf._df = pd.read_csv(filepath)
         return sf
 
     def save_to_csv(self, outdir: str):
-        self.df.to_csv(
+        self._df.to_csv(
             candles.candles_outpath(outdir, self.ticker, self.mult, self.timespan),
             index=False
         )
 
     @property
-    def size(self) -> int:
-        return len(self.df)
+    def df(self):
+        return self._df
 
     @property
-    def close(self) -> NDArray[np.float64]:
-        return self.df["Close"].to_numpy()
+    def size(self) -> int:
+        return len(self._df)
+
+    @property
+    def close_series(self) -> NDArray[np.float64]:
+        return self._df["Close"].to_numpy()
+
+    @property
+    def date_series(self) -> list[str]:
+        return self._df["Date"].to_list()

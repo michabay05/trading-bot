@@ -15,7 +15,6 @@ A list of all the TODOs needed to be completed before each release
 
 ## Future versions
 - [ ] (feat) Factor risk tolerance into strategy
-- [ ] (feat) Setup script to automatically visualize candles and indicators
 - [ ] (feat) Send email to notify of a trading signal
     - At some point, the bot itself will be able to execute trades (not sure how at the moment though).
 - [ ] (feat) Add id system for orders and portfolio (seems like a good idea)
@@ -34,6 +33,13 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Add take-profit and stop-loss
 
 ---
+
+# v0.6
+- [ ] (refactor) Remove `bot.py`
+    - `run_bot.py` does everything I want `bot.py` to do
+- [x] (feat) Setup script to automatically visualize candles and indicators
+- [x] (refactor) The horizontal axis of the candle visualizer should be human-readable
+    - Instead of unix timestamps, it should be human-readable date string
 
 ## v0.5
 - [x] (refactor) Change Strategy to StrategyTester

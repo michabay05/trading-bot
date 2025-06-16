@@ -84,8 +84,10 @@ class CandleOption:
         )
 
 
-def candles_outpath(out_dir: str, ticker: str, mult: int, timespan: Timespan) -> str:
-    return f"{out_dir}/ohlcv-{ticker}-{mult}{timespan.value}.csv"
+def candles_outpath(
+    out_dir: str, ticker: str, mult: int, timespan: Timespan, ext_wo_dot: str = "csv"
+) -> str:
+    return f"{out_dir}/ohlcv-{ticker}-{mult}{timespan.value}.{ext_wo_dot}"
 
 def candle_info_from_path(filepath: str) -> dict:
     # filepath format: {out_dir}/ohlcv-{TICKER}-{MULT}{TIMESPAN}.csv
@@ -110,7 +112,8 @@ def candle_info_from_path(filepath: str) -> dict:
     # mult = 5
     mult: int = int(parts[2][0:i])
     # timespan = Timespan.MINUTE
-    timespan: Timespan = Timespan.from_str(parts[2][i:].upper())
+    # timespan: Timespan = Timespan(parts[2][i:].upper())
+    timespan: Timespan = Timespan(parts[2][i:])
 
     return {
         "ticker"  : ticker,
