@@ -4,11 +4,17 @@
 > The trading bot is still a **work in progress**. Take heed.
 
 ## Quickstart
+Run trading bot
 ```bash
 $ python -m venv .venv
 $ source .venv/bin/activate
 $ pip install -r requirements.txt
 $ python run_bot.py
+```
+---
+Visualize candles and indicators (run this command after setting up virtual environment)
+```bash
+$ python visualize_candles.py GM
 ```
 
 ## Features
