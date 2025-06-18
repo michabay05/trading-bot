@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-import time
+import math, time
 
 import numpy as np
 from numpy.typing import NDArray
@@ -10,20 +10,23 @@ from . import broker
 from .candles import Candle
 from .stockframe import Stockframe
 from .replayer import CandleReplayer
-from .portfolio import Portfolio, Order, OrderType, Position
+from .portfolio import OrderStatus, Portfolio, Order, OrderType, Position
 
 
 IndValues = NDArray[np.float64]
 TripleIndValues = tuple[IndValues, IndValues, IndValues]
 
 class StrategyTester(metaclass=ABCMeta):
-    def __init__(self, sf: Stockframe, start_ind: int = 0, end_ind: int = -1) -> None:
+    def __init__(self,
+        sf: Stockframe, start_ind: int = 0, end_ind: int = -1, sleep: bool = False
+    ) -> None:
         self._portfolio: Portfolio = Portfolio()
         self._indicators: dict[str, IndValues] = {}
         self._sf: Stockframe = sf
         self._start: int = start_ind
         self._end: int = end_ind if start_ind < end_ind else sf.size
-        self._repl: CandleReplayer = CandleReplayer(self._sf, start_ind=self._start)
+        self._sleep: bool = sleep
+        self._repl: CandleReplayer = CandleReplayer(self._sf, start_ind=self._start, sleep=self._sleep)
         self._index: int = self._start
 
     @property
@@ -34,7 +37,7 @@ class StrategyTester(metaclass=ABCMeta):
         return series[self._start:self._index]
 
     @property
-    def curr_time_str(self) -> str:
+    def curr_dt_str(self) -> str:
         return self._repl.current_time.strftime("%Y-%m-%d %H:%M:%S")
 
     def get_next_candle(self) -> None:
@@ -50,47 +53,89 @@ class StrategyTester(metaclass=ABCMeta):
         """ Called on each candle """
         pass
 
-    def run(self) -> float:
+    def run(self) -> dict:
         self.setup()
 
-        t: float = time.time()
-        dt: float = 0.0
         while self._index < self._end:
-            current: float = time.time()
-            dt = current - t
+            # if self._sleep:
+            if True:
+                # Notify user of progress
+                n: int = len(self._portfolio.incomplete_orders)
+                print(f"[{self._index}:{n}] {self._repl.current_time}")
+
+            # Check up on any orders that have a take profit or stop loss
+            completed_ord_inds: list[int] = []
+            for i, order in enumerate(self._portfolio.incomplete_orders):
+                if order.type == OrderType.TP:
+                    tp_limit: float = order.issue_price
+                    tp_cross: bool = self.last_close >= tp_limit if order.is_long() else self.last_close <= tp_limit
+                    if tp_cross:
+                        # When take profit is crossed, a sell market order is issued ...
+                        tp_order: Order = Order(
+                            symbol=order.symbol,
+                            order_type=OrderType.MARKET,
+                            quantity=order.quantity,
+                            issue_price=self.last_close,
+                            issue_dt=order.issue_dt,
+                        )
+                        broker.execute_market_order(tp_order, self._portfolio, self.curr_dt_str)
+                        if order.status == OrderStatus.FILLED:
+                            completed_ord_inds.append(i)
+
+            for ind in reversed(completed_ord_inds):
+                del self._portfolio.incomplete_orders[ind]
 
             if self._repl.is_candle_available():
-                # print(f"{self._repl.current_time} -> New Candle")
                 self.get_next_candle()
                 self.on_candle()
-            # else:
-            #     print(self._repl.current_time)
 
             self._repl.step_time()
-            t = current
 
-        print(f"{self._sf.ticker}: {self._portfolio.pl}")
-        return self._portfolio.pl
+        return {
+            "pl": self._portfolio.pl
+        }
 
-    def buy(self, size: int) -> None:
+    def market_buy(self, size: float, take_profit: float | None = None) -> None:
+        size = abs(size)
+        qty: float = 0.0
+        if size < 1.0:
+            # In essence, buy as much shares as possible with this amount:
+            #   > size * portfolio.capital
+            pct: float = size
+            max_ord_value: float = pct * self._portfolio.capital
+            qty = math.floor(max_ord_value / self.last_close)
+        else:
+            qty = int(size)
+
         order: Order = Order(
             symbol=self._sf.ticker,
             order_type=OrderType.MARKET,
-            quantity=float(size),
-            purchase_price=self.last_close,
-            purchase_dt=self.curr_time_str
+            quantity=qty,
+            issue_price=self.last_close,
+            issue_dt=self.curr_dt_str,
         )
-        broker.execute_order(order, self._portfolio)
+        broker.execute_market_order(order, self._portfolio, self.curr_dt_str)
 
-    def sell(self, size: int) -> None:
+        if take_profit is not None:
+            tp_order: Order = Order(
+                symbol=self._sf.ticker,
+                order_type=OrderType.TP,
+                quantity=order.quantity * -1.0,
+                issue_price=order.issue_price,
+                issue_dt=order.issue_dt
+            )
+            self._portfolio.add_incomplete_order(tp_order)
+
+    def market_sell(self, size: int) -> None:
+        size = -abs(size)
         order: Order = Order(
             symbol=self._sf.ticker,
             order_type=OrderType.MARKET,
-            quantity=abs(size) * -1.0,
-            purchase_price=self.last_close,
-            purchase_dt=self.curr_time_str
+            quantity=size,
+            issue_price=self.last_close,
+            issue_dt=self.curr_dt_str
         )
-        broker.execute_order(order, self._portfolio)
+        broker.execute_market_order(order, self._portfolio, self.curr_dt_str)
 
     def close_position(self) -> None:
         broker.close_position(self._portfolio, self._sf.ticker, self.last_close)
@@ -107,7 +152,7 @@ class StrategyTester(metaclass=ABCMeta):
 
         try:
             return _crossover(s1, s2)
-        except ValueError as v_err:
+        except ValueError:
             return False
 
     def export_portfolio(self, outdir: str) -> None:

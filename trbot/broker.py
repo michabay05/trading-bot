@@ -6,16 +6,19 @@ import requests
 from . import candles
 from .candles import Candle, CandleOption, Timespan
 from .portfolio import Portfolio, Order, OrderStatus, OrderType, Position
+import tbsecrets
 
 
 _BASE_URL: str = "https://api.polygon.io"
 _API_KEY_FILEPATH: str = "./API_KEY.secret"
-_API_KEY: str = ""
+_API_KEY: str = tbsecrets.POLYGON_IO_SECRETS["api_key"]
 _REQ_PER_MIN: int = 4
 _REQUEST_TIMES: list[datetime] = []
 
-def is_market_open() -> bool:
-    return True
+def is_market_open(dt_str: str) -> bool:
+    dt: datetime = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
+    # Note: dt.weekday() -> 0-6 where [Monday = 0]
+    return dt.weekday() < 5 and (9 <= dt.hour <= 16)
 
 def market_order(symbol: str, quantity: float, dt_str: str | None = None) -> Order:
     start = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S") if dt_str is not None else datetime.now()
@@ -26,38 +29,48 @@ def market_order(symbol: str, quantity: float, dt_str: str | None = None) -> Ord
         symbol=symbol,
         order_type=OrderType.MARKET,
         quantity=quantity,
-        purchase_price=purchase_price,
-        purchase_dt=dt
+        issue_price=purchase_price,
+        issue_dt=dt
     )
 
-def execute_order(order: Order, portfolio: Portfolio) -> None:
-    if not is_market_open():
+class InsufficientFundsError(Exception):
+    pass
+
+def execute_market_order(order: Order, portfolio: Portfolio, curr_dt_str: str) -> None:
+    if order.value() == 0.0:
+        # Nothing is being bought here
+        return
+
+    if order.type != OrderType.MARKET:
+        return
+
+    if not is_market_open(curr_dt_str):
         # if market not open, then status won't be executed. that will happen once the market reopens
         order.status = OrderStatus.WORKING
         return
 
     if portfolio.capital < order.abs_value():
         # Order cancelled due to insufficient funds (Update order status)
-        print(f"[ERROR] Insufficient funds. (Capital: ${portfolio.capital}, order total: {order.abs_value()}")
-        return
+        raise InsufficientFundsError(f"(Capital: ${portfolio.capital:.4f}, order total: {order.abs_value()})")
 
     # Subtract order from total and update portfolio's positions
     portfolio.capital = portfolio.capital - order.abs_value()
     # Update order status
     order.status = OrderStatus.FILLED
-    portfolio.add_order(order)
+    order.purchase_dt = curr_dt_str
+    portfolio.add_completed_order(order)
 
     # Update portfolio position
     if order.symbol in portfolio.positions.keys():
         # Position already exists
         pst: Position = portfolio.positions[order.symbol]
         new_value = pst.market_value() + order.value()
-        pst.price = order.purchase_price
-        pst.quantity = new_value / order.purchase_price
+        pst.price = order.issue_price
+        pst.quantity = new_value / order.issue_price
     else:
         # New position was justed created
         portfolio.positions[order.symbol] = Position(
-            order.symbol, order.quantity, order.purchase_price
+            order.symbol, order.quantity, order.issue_price
         )
 
 def close_position(portfolio: Portfolio, ticker: str, curr_market_price: float) -> None:
@@ -192,8 +205,3 @@ def _make_request(url: str) -> bytes:
         sys.exit(1)
 
     return resp.content
-
-def _init_api_key() -> None:
-    global _API_KEY
-    with open(_API_KEY_FILEPATH, "r") as f:
-        _API_KEY = f.read().strip()

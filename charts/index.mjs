@@ -1,5 +1,7 @@
 // import { createChart, LineSeries } from "./node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs";
-import { createChart, CandlestickSeries, LineSeries } from "./node_modules/lightweight-charts/dist/lightweight-charts.standalone.development.mjs";
+import {
+    createChart, CandlestickSeries, LineSeries, CrosshairMode
+}  from "./node_modules/lightweight-charts/dist/lightweight-charts.standalone.development.mjs";
 
 const w = 0.9 * window.innerWidth;
 const h = 0.9 * window.innerHeight;
@@ -26,4 +28,15 @@ for (const key in indsJSON) {
     const lineSeries = chart.addSeries(LineSeries, { color: colors[i++] });
     lineSeries.setData(indsJSON[key]);
 }
+chart.applyOptions({
+    "crosshair": {
+        "mode": CrosshairMode.Normal,
+    },
+    "layout": {
+        "attributionLogo": false,
+    },
+    "timeScale": {
+        "timeVisible": true,
+    },
+})
 chart.timeScale().resetTimeScale();

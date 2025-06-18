@@ -21,25 +21,36 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Research and develop list of tickers for bot to trade
 - [ ] (feat) Add a limit order
 - [ ] (feat) Add stop order
-- [ ] (feat) Add ability to buy based on portfolio's capital percentage
-- [ ] (feat) Implement checking when market is open or closed
 - [ ] (feat) Bring back MACD and BBANDS indicators
 - [ ] (feat) Implement indicator warm up
 - [ ] (fix) Check close position logic
 - [ ] (refactor) Handle edge case where position has zero quantity
     - Remove it from the list of positions
 - [ ] (refactor) Change candle csv naming scheme to match that of the portfolios
+- [ ] (feat) Plot P/L of portfolio - probably using matplotlib
+- [ ] (refactor) Ditch lightweight charts and use the samething 'backtesting.py' uses
+    - I think it uses bokeh: [CandleStick plotting](https://docs.bokeh.org/en/latest/docs/examples/topics/timeseries/candlestick.html)
+- [ ] (feat) Add market holidays to market open or closed functionality
+- [ ] (refactor) Update the portfolio init from json and save to json functions
 
 ---
 
 # v0.6
-- [ ] (feat) Plot P/L of portfolio - probably using matplotlib
 - [ ] (feat) Add take-profit and stop-loss
+    - [x] Take profit
+    - [ ] Stop loss
+- [x] (feat) Implement checking when market is open or closed
+- [x] (feat) Add ability to buy based on portfolio's capital percentage
+- [ ] (refactor) Change the structure of following classes to use `@dataclass`
+    - Order
+    - Candle
+    - CandleOption
 - [x] (refactor) Remove `bot.py`
     - `run_bot.py` does everything I want `bot.py` to do
 - [x] (feat) Setup script to automatically visualize candles and indicators
 - [x] (refactor) The horizontal axis of the candle visualizer should be human-readable
     - Instead of unix timestamps, it should be human-readable date string
+- [ ] Experiment with alpaca-py
 
 ## v0.5
 - [x] (refactor) Change Strategy to StrategyTester

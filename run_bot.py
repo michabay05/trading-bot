@@ -1,12 +1,5 @@
-import json, os, time
-from datetime import datetime, timedelta
-
-import talib
-
-from trbot import broker, candles
+from trbot import broker
 from trbot.candles import Candle, CandleOption, Timespan
-from trbot.portfolio import Portfolio, Order, OrderType
-from trbot.replayer import CandleReplayer
 from trbot.stockframe import Stockframe
 from trbot.strategy import StrategyTester
 import visualize_candles as vs_cd
@@ -22,21 +15,25 @@ class MyStrategy(StrategyTester):
     def on_candle(self) -> None:
         if self.ind_crossover(self.fast_ma, self.slow_ma):
             self.close_position()
-            self.buy(1)
+            self.market_buy(size=1, take_profit=40.00)
 
-        if self.ind_crossover(self.slow_ma, self.fast_ma):
-            self.close_position()
-            self.sell(1)
 
-tickers: list[str] = vs_cd.valid_tickers("trout/aggs")[0]
+# tickers: list[str] = vs_cd.valid_tickers("trout/aggs")[0]
+tickers: list[str] = ["GM"]
 sum: float = 0.0
 for t in tickers:
     sf: Stockframe = Stockframe.from_csv(f"trout/aggs/ohlcv-{t}-4hour.csv")
+    # mys = MyStrategy(sf, start_ind=115, end_ind=139)
     mys = MyStrategy(sf)
-    # mys.run()
-    sum += mys.run()
-    mys.export_portfolio("trout/pfts")
+    try:
+        # mys.run()
+        output = mys.run()
+        print(f"{t}: {output["pl"]}")
+        sum += output["pl"]
+    finally:
+        mys.export_portfolio("trout/pfts")
 
+print("----------------------")
 print(f"Total: {sum}")
 
 # ===================== HISTORICAL CANDLES =====================

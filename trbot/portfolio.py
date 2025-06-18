@@ -24,6 +24,7 @@ class Position:
 
 class OrderType(Enum):
     MARKET = "market"
+    TP = "take profit"
 
 class OrderStatus(Enum):
     FILLED = "filled"
@@ -32,30 +33,27 @@ class OrderStatus(Enum):
 
 
 class Order:
-    def __init__(self, symbol: str, order_type: OrderType, quantity: float, purchase_price: float,
-        purchase_dt: str, status: OrderStatus = OrderStatus.WORKING
+    def __init__(self, symbol: str, order_type: OrderType, quantity: float, issue_price: float,
+        issue_dt: str, status: OrderStatus = OrderStatus.WORKING, purchase_dt: str | None = None
     ):
         self.symbol: str = symbol
         self.type: OrderType = order_type
         self.status: OrderStatus = status
         self.quantity: float = quantity
-        self.purchase_price: float = purchase_price
-        self.purchase_dt: str = purchase_dt
+        # This program assumes that the price at which the order was issued is the same as the price
+        # at which the order was purchased (or filled).
+        self.issue_price: float = issue_price
+        self.issue_dt: str = issue_dt
+        self.purchase_dt: str | None = purchase_dt
+
+    def is_long(self):
+        return self.quantity > 0
 
     def __repr__(self) -> str:
-        return (
-            f"Order {{\n"
-            f"    symbol: {self.symbol}\n"
-            f"    type: {self.type.value}\n"
-            f"    status: {self.status.value}\n"
-            f"    quantity: {self.quantity}\n"
-            f"    purchase_price: {self.purchase_price}\n"
-            f"    purchase_dt: {self.purchase_dt}\n"
-            f"}}"
-        )
+        return json.dumps(self.to_dict(), indent=4)
 
     def value(self) -> float:
-        return self.quantity * self.purchase_price
+        return self.quantity * self.issue_price
 
     def abs_value(self) -> float:
         return abs(self.value())
@@ -66,7 +64,8 @@ class Order:
             "type": self.type.value,
             "status": self.status.value,
             "quantity": self.quantity,
-            "purchase_price": self.purchase_price,
+            "purchase_price": self.issue_price,
+            "issue_dt": self.issue_dt,
             "purchase_dt": self.purchase_dt,
         }
 
@@ -76,7 +75,8 @@ class Portfolio:
         self._initial_capital: float = initial_capital
         self._capital: float = self._initial_capital
         self._positions: dict[str, Position] = {}
-        self._orders: list[Order] = []
+        self._completed_orders: list[Order] = []
+        self._incomplete_orders: list[Order] = []
         self._pl: float = 0.0
         self._capital_pct: float = 0.0
 
@@ -101,11 +101,18 @@ class Portfolio:
         return self._positions
 
     @property
-    def orders(self) -> list[Order]:
-        return self._orders
+    def completed_orders(self) -> list[Order]:
+        return self._completed_orders
 
-    def add_order(self, order: Order) -> None:
-        self._orders.append(order)
+    @property
+    def incomplete_orders(self) -> list[Order]:
+        return self._incomplete_orders
+
+    def add_completed_order(self, order: Order) -> None:
+        self._completed_orders.append(order)
+
+    def add_incomplete_order(self, order: Order) -> None:
+        self._incomplete_orders.append(order)
 
     def __repr__(self) -> str:
         return json.dumps(Portfolio.to_dict(self), indent=4)
@@ -137,12 +144,12 @@ class Portfolio:
                     order_type=OrderType(ord["type"]),
                     status=OrderStatus(ord["status"]),
                     quantity=ord["quantity"],
-                    purchase_price=ord["purchase_price"],
-                    purchase_dt=ord["purchase_dt"]
+                    issue_price=ord["purchase_price"],
+                    issue_dt=ord["purchase_dt"]
                 ))
 
         self._positions = psts
-        self._orders = ords
+        self._completed_orders = ords
         self.update_pl()
 
     @staticmethod
@@ -151,11 +158,13 @@ class Portfolio:
             "capital": pft.capital,
             "pl": pft.pl,
             "capital_pct": pft._capital_pct,
+            "position_count": len(pft.positions),
+            "order_count": len(pft.completed_orders),
             "positions": {
                 symbol: Position.to_dict(position)
                 for symbol, position in pft.positions.items()
             },
-            "orders": [ Order.to_dict(ord) for ord in pft.orders ]
+            "orders": [ Order.to_dict(ord) for ord in pft.completed_orders ]
         }
 
     def update_pl(self):

@@ -1,4 +1,20 @@
 {
     "venvPath": ".",
-    "venv": ".venv"
+    "venv": ".venv",
+
+    // Additional diagnostics
+    "reportUnusedImport": "warning",
+    "reportUnusedClass": "warning",
+    "reportUnusedFunction": "warning",
+    "reportUnusedVariable": "warning",
+    "reportUnusedExpression": "warning",
+    "reportUnusedCallResult": "warning",
+    "reportUnnecessaryTypeIgnoreComment": "warning",
+    "reportUnnecessaryIsInstance": "warning",
+    "reportUnnecessaryComparison": "warning",
+    "reportUnnecessaryCast": "warning",
+    "reportUnnecessaryContains": "warning",
+    "reportRedundantExpr": "warning",
+    "reportConstantRedefinition": "arning",
+    "reportWildcardImportFromLibrary": "warning"
 }

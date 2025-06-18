@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import timezone
 import http.server, json, math, os, shutil, socketserver, sys, webbrowser
 
 import numpy as np
@@ -37,8 +38,9 @@ def candle_csv_to_json(csv_path: str, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path)
     timestamps: list[int] = []
     for date in sf.date_series:
-        unix_timestamp = int(datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp())
-        timestamps.append(unix_timestamp)
+        # unix_timestamp = int(datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp())
+        unix = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+        timestamps.append(int(unix.timestamp()))
 
     sf.df["Date"] = timestamps
     sf.df.rename(
