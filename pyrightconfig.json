@@ -8,7 +8,6 @@
     "reportUnusedFunction": "warning",
     "reportUnusedVariable": "warning",
     "reportUnusedExpression": "warning",
-    "reportUnusedCallResult": "warning",
     "reportUnnecessaryTypeIgnoreComment": "warning",
     "reportUnnecessaryIsInstance": "warning",
     "reportUnnecessaryComparison": "warning",

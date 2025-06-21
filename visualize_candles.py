@@ -91,24 +91,32 @@ def main():
     (tickers, filenames) = valid_tickers(os.path.join(os.getcwd(), "trout/aggs"))
 
     program_name: str = sys.argv[0]
-    ticker: str = ""
+    value: str = ""
     if len(sys.argv) > 1:
-        ticker = sys.argv[1]
+        value = sys.argv[1]
     else:
         usage(program_name)
         print("[ERROR] Please provide a valid ticker")
         sys.exit(1)
 
-    i: int = tickers.index(ticker)
-    if i < 0:
-        print(f"[ERROR] Ticker '{ticker}' is not valid. Look through trout/aggs/ to find a valid ticker.")
-        sys.exit(1)
+    fname: str = ""
+    if '.' in value:
+        fname = value
+    else:
+        t = value
+        i: int = tickers.index(t)
+        if i < 0:
+            print(f"[ERROR] Ticker '{t}' is not valid. Look through trout/aggs/ to find a valid ticker.")
+            sys.exit(1)
+        fname = filenames[i]
+
+    print(f"[INFO] Found aggregate csv: '{fname}'")
 
     # Copy necessary candle csv over to 'charts/' as a json
-    candle_csv_to_json(filenames[i], "charts/ohlc.json")
+    candle_csv_to_json(fname, "charts/ohlc.json")
 
     # Calculate and save necessary indicators
-    calc_save_indicators(filenames[i], "charts/inds.json")
+    calc_save_indicators(fname, "charts/inds.json")
 
     start_server(DEFAULT_PORT)
 

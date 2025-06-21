@@ -10,7 +10,6 @@ import tbsecrets
 
 
 _BASE_URL: str = "https://api.polygon.io"
-_API_KEY_FILEPATH: str = "./API_KEY.secret"
 _API_KEY: str = tbsecrets.POLYGON_IO_SECRETS["api_key"]
 _REQ_PER_MIN: int = 4
 _REQUEST_TIMES: list[datetime] = []
@@ -135,10 +134,6 @@ def _get_quote(symbol: str, dt_str: str | None = None) -> float:
     return candles[0].close
 
 def _get_candles(opt: CandleOption) -> list[Candle]:
-    # Init API_KEY if not done already
-    if len(_API_KEY) == 0:
-        _init_api_key()
-
     start_unix: int = candles.datetime_to_timestamp(opt.start)
     end_unix: int = candles.datetime_to_timestamp(opt.end)
 
