@@ -1,789 +1,199 @@
 {
-    "capital": 865.5200000000002,
-    "pl": -37.769999999999754,
-    "capital_pct": 96.22300000000003,
+    "capital": 751.7395558219401,
+    "pl": -46.0904441780599,
+    "capital_pct": 95.39095558219401,
+    "position_count": 1,
+    "orders_count": 8,
     "positions": {
         "TGT": {
-            "quantity": 1.0,
-            "price": 96.71
+            "quantity": 2,
+            "price": 101.085
         }
     },
     "orders": [
         {
             "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 134.48,
-            "purchase_dt": "2023-06-27 02:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 132.53,
-            "purchase_dt": "2023-06-27 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 134.86,
-            "purchase_dt": "2023-07-03 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 132.6,
-            "purchase_dt": "2023-07-05 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 133.38,
-            "purchase_dt": "2023-07-11 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 131.01,
-            "purchase_dt": "2023-07-14 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 132.16,
-            "purchase_dt": "2023-07-19 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 131.79,
-            "purchase_dt": "2023-07-26 02:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 134.2599,
-            "purchase_dt": "2023-07-26 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 132.8,
-            "purchase_dt": "2023-08-01 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 131.5,
-            "purchase_dt": "2023-08-17 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 127.95,
-            "purchase_dt": "2023-08-21 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 126.11,
-            "purchase_dt": "2023-08-29 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 124.63,
-            "purchase_dt": "2023-09-06 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 124.88,
-            "purchase_dt": "2023-09-14 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 123.12,
-            "purchase_dt": "2023-09-15 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 110.41,
-            "purchase_dt": "2023-10-10 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 110.6097,
-            "purchase_dt": "2023-10-19 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 110.4,
-            "purchase_dt": "2023-10-25 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 107.3,
-            "purchase_dt": "2023-10-27 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 110.79,
-            "purchase_dt": "2023-10-31 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 109.7184,
-            "purchase_dt": "2023-11-08 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 111.8,
-            "purchase_dt": "2023-11-14 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 136.9,
-            "purchase_dt": "2023-12-20 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 139.55,
-            "purchase_dt": "2023-12-21 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 138.51,
-            "purchase_dt": "2024-01-03 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 141.73,
-            "purchase_dt": "2024-01-08 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 140.86,
-            "purchase_dt": "2024-01-12 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 140.7499,
-            "purchase_dt": "2024-01-23 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 139.2,
-            "purchase_dt": "2024-01-25 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 140.485,
-            "purchase_dt": "2024-01-25 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 140.08,
-            "purchase_dt": "2024-01-30 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 143.775,
-            "purchase_dt": "2024-02-01 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 145.34,
-            "purchase_dt": "2024-02-14 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 146.99,
-            "purchase_dt": "2024-02-15 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 145.99,
-            "purchase_dt": "2024-02-16 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 149.075,
-            "purchase_dt": "2024-02-16 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 165.67,
-            "purchase_dt": "2024-03-13 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 167.59,
-            "purchase_dt": "2024-03-18 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 172.07,
-            "purchase_dt": "2024-04-04 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 168.3,
-            "purchase_dt": "2024-04-19 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 166.5,
-            "purchase_dt": "2024-04-23 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 160.38,
-            "purchase_dt": "2024-05-07 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 159.07,
-            "purchase_dt": "2024-05-14 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 150.26,
-            "purchase_dt": "2024-05-30 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 147.09,
-            "purchase_dt": "2024-06-05 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 145.25,
-            "purchase_dt": "2024-06-21 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 145.7295,
-            "purchase_dt": "2024-07-01 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 149.6,
-            "purchase_dt": "2024-07-08 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 145.52,
-            "purchase_dt": "2024-07-10 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 148.18,
-            "purchase_dt": "2024-07-11 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 150.595,
-            "purchase_dt": "2024-07-19 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 150.19,
-            "purchase_dt": "2024-07-31 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 146.75,
-            "purchase_dt": "2024-08-01 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 136.62,
-            "purchase_dt": "2024-08-14 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 153.95,
-            "purchase_dt": "2024-08-29 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 151.72,
-            "purchase_dt": "2024-09-13 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 153.07,
-            "purchase_dt": "2024-10-01 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 153.525,
-            "purchase_dt": "2024-10-09 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 155.4,
-            "purchase_dt": "2024-10-18 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 150.55,
-            "purchase_dt": "2024-11-01 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 145.76,
-            "purchase_dt": "2024-11-06 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 151.95,
-            "purchase_dt": "2024-11-07 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 152.52,
-            "purchase_dt": "2024-11-15 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 155.39,
-            "purchase_dt": "2024-11-18 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 129.71,
-            "purchase_dt": "2024-11-20 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 132.32,
-            "purchase_dt": "2024-11-29 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 129.8209,
-            "purchase_dt": "2024-12-04 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 132.395,
-            "purchase_dt": "2024-12-06 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 133.7585,
-            "purchase_dt": "2024-12-16 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 132.45,
-            "purchase_dt": "2024-12-24 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 136.9738,
-            "purchase_dt": "2025-01-14 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 137.34,
-            "purchase_dt": "2025-01-21 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 137.05,
-            "purchase_dt": "2025-01-31 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 130.75,
-            "purchase_dt": "2025-02-19 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 128.75,
-            "purchase_dt": "2025-02-20 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 107.29,
-            "purchase_dt": "2025-03-24 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 105.35,
-            "purchase_dt": "2025-03-26 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 107.15,
-            "purchase_dt": "2025-03-27 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 103.0358,
-            "purchase_dt": "2025-03-28 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 105.99,
-            "purchase_dt": "2025-04-02 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 99.99,
-            "purchase_dt": "2025-04-02 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 94.25,
-            "purchase_dt": "2025-04-14 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 92.03,
-            "purchase_dt": "2025-04-15 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 93.78,
-            "purchase_dt": "2025-04-21 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 92.46,
-            "purchase_dt": "2025-04-24 02:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 95.015,
-            "purchase_dt": "2025-04-24 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 94.1,
-            "purchase_dt": "2025-05-05 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 96.69,
-            "purchase_dt": "2025-05-08 02:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 95.1,
-            "purchase_dt": "2025-05-14 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 98.7695,
-            "purchase_dt": "2025-05-16 10:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 91.74,
-            "purchase_dt": "2025-05-21 06:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 96.91,
-            "purchase_dt": "2025-05-27 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 94.6988,
-            "purchase_dt": "2025-05-29 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 95.9,
-            "purchase_dt": "2025-06-03 18:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 94.0,
-            "purchase_dt": "2025-06-04 14:00:00"
-        },
-        {
-            "symbol": "TGT",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 96.71,
-            "purchase_dt": "2025-06-06 10:00:00"
+            "quantity": 1,
+            "side": "buy",
+            "requested_price": 134.27,
+            "issue_dt": "2023-07-26 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 205,
+            "status": "filled",
+            "purchase_dt": "2023-07-26 14:00:00",
+            "purchase_price": 134.27,
+            "take_profit": {
+                "tp_limit": 147.02342213908042,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 127.8932889304598,
+                "purchase_dt": "2023-08-15 12:00:00",
+                "purchase_price": 126.23
+            }
+        },
+        {
+            "symbol": "TGT",
+            "quantity": 1,
+            "side": "buy",
+            "requested_price": 129.66,
+            "issue_dt": "2023-11-15 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 207,
+            "status": "filled",
+            "purchase_dt": "2023-11-15 10:00:00",
+            "purchase_price": 129.66,
+            "take_profit": {
+                "tp_limit": 155.73182774358216,
+                "purchase_dt": "2024-03-04 04:00:00",
+                "purchase_price": 155.8
+            },
+            "stop_loss": {
+                "sl_limit": 116.62408612820892,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
+        },
+        {
+            "symbol": "TGT",
+            "quantity": 1,
+            "side": "buy",
+            "requested_price": 152.08,
+            "issue_dt": "2024-07-15 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 209,
+            "status": "filled",
+            "purchase_dt": "2024-07-15 10:00:00",
+            "purchase_price": 152.08,
+            "take_profit": {
+                "tp_limit": 169.53940833940794,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 143.35029583029603,
+                "purchase_dt": "2024-08-02 08:00:00",
+                "purchase_price": 141.005
+            }
+        },
+        {
+            "symbol": "TGT",
+            "quantity": 1,
+            "side": "buy",
+            "requested_price": 158.75,
+            "issue_dt": "2024-08-21 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 211,
+            "status": "filled",
+            "purchase_dt": "2024-08-21 14:00:00",
+            "purchase_price": 158.75,
+            "take_profit": {
+                "tp_limit": 190.24265096237056,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 143.00367451881473,
+                "purchase_dt": "2024-11-20 08:00:00",
+                "purchase_price": 129.71
+            }
+        },
+        {
+            "symbol": "TGT",
+            "quantity": 1,
+            "side": "buy",
+            "requested_price": 154.33,
+            "issue_dt": "2024-10-09 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 212,
+            "status": "filled",
+            "purchase_dt": "2024-10-09 14:00:00",
+            "purchase_price": 154.33,
+            "take_profit": {
+                "tp_limit": 168.3591399846085,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 147.31543000769577,
+                "purchase_dt": "2024-11-06 12:00:00",
+                "purchase_price": 145.76
+            }
+        },
+        {
+            "symbol": "TGT",
+            "quantity": 1,
+            "side": "buy",
+            "requested_price": 156.36,
+            "issue_dt": "2024-11-13 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 214,
+            "status": "filled",
+            "purchase_dt": "2024-11-13 10:00:00",
+            "purchase_price": 156.36,
+            "take_profit": {
+                "tp_limit": 173.31136681907867,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 147.88431659046068,
+                "purchase_dt": "2024-11-20 08:00:00",
+                "purchase_price": 129.71
+            }
+        },
+        {
+            "symbol": "TGT",
+            "quantity": 1,
+            "side": "buy",
+            "requested_price": 139.26,
+            "issue_dt": "2025-01-06 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 217,
+            "status": "filled",
+            "purchase_dt": "2025-01-06 14:00:00",
+            "purchase_price": 139.26,
+            "take_profit": {
+                "tp_limit": 153.08716560386114,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 132.34641719806942,
+                "purchase_dt": "2025-01-16 08:00:00",
+                "purchase_price": 130.18
+            }
+        },
+        {
+            "symbol": "TGT",
+            "quantity": 2,
+            "side": "buy",
+            "requested_price": 101.085,
+            "issue_dt": "2025-06-10 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 221,
+            "status": "filled",
+            "purchase_dt": "2025-06-10 10:00:00",
+            "purchase_price": 101.085,
+            "take_profit": {
+                "tp_limit": 112.46964094995117,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 95.3926795250244,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         }
     ]
 }

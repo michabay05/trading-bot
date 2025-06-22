@@ -1,16 +1,14 @@
 from abc import ABCMeta, abstractmethod
-import math, time
+import math
 
 import numpy as np
 from numpy.typing import NDArray
 import talib
-from talib._ta_lib import MA_Type
 
-from . import broker
-from .candles import Candle
+from .broker import Broker
 from .stockframe import Stockframe
 from .replayer import CandleReplayer
-from .portfolio import OrderStatus, Portfolio, Order, OrderType, Position
+from .portfolio import OrderIntent, OrderSide, Portfolio, MarketOrder, StopLossRequest, TakeProfitRequest
 
 
 IndValues = NDArray[np.float64]
@@ -21,13 +19,18 @@ class StrategyTester(metaclass=ABCMeta):
         sf: Stockframe, start_ind: int = 0, end_ind: int = -1, sleep: bool = False
     ) -> None:
         self._portfolio: Portfolio = Portfolio()
+        self._broker: Broker = Broker()
         self._indicators: dict[str, IndValues] = {}
         self._sf: Stockframe = sf
+
+        assert start_ind != end_ind
+        assert end_ind <= sf.size
         self._start: int = start_ind
         self._end: int = end_ind if start_ind < end_ind else sf.size
+        self._index: int = self._start
+
         self._sleep: bool = sleep
         self._repl: CandleReplayer = CandleReplayer(self._sf, start_ind=self._start, sleep=self._sleep)
-        self._index: int = self._start
 
     @property
     def last_close(self) -> float:
@@ -35,6 +38,9 @@ class StrategyTester(metaclass=ABCMeta):
 
     def series_slice(self, series: NDArray[np.float64]) -> NDArray[np.float64]:
         return series[self._start:self._index]
+
+    def last_ind_value(self, ind_key: str) -> float:
+        return self._indicators[ind_key][self._index-1]
 
     @property
     def curr_dt_str(self) -> str:
@@ -57,33 +63,12 @@ class StrategyTester(metaclass=ABCMeta):
         self.setup()
 
         while self._index < self._end:
-            # if self._sleep:
-            if True:
+            if self._sleep:
                 # Notify user of progress
-                n: int = len(self._portfolio.incomplete_orders)
-                print(f"[{self._index}:{n}] {self._repl.current_time}")
+                print(f"[{self._index}] {self._repl.current_time}")
 
-            # Check up on any orders that have a take profit or stop loss
-            completed_ord_inds: list[int] = []
-            for i, order in enumerate(self._portfolio.incomplete_orders):
-                if order.type == OrderType.TP:
-                    tp_limit: float = order.issue_price
-                    tp_cross: bool = self.last_close >= tp_limit if order.is_long() else self.last_close <= tp_limit
-                    if tp_cross:
-                        # When take profit is crossed, a sell market order is issued ...
-                        tp_order: Order = Order(
-                            symbol=order.symbol,
-                            order_type=OrderType.MARKET,
-                            quantity=order.quantity,
-                            issue_price=self.last_close,
-                            issue_dt=order.issue_dt,
-                        )
-                        broker.execute_market_order(tp_order, self._portfolio, self.curr_dt_str)
-                        if order.status == OrderStatus.FILLED:
-                            completed_ord_inds.append(i)
-
-            for ind in reversed(completed_ord_inds):
-                del self._portfolio.incomplete_orders[ind]
+            # TODO: Check up on any orders that have a take profit or stop loss
+            self._broker.order_checkup(self._portfolio, self.last_close, self.curr_dt_str)
 
             if self._repl.is_candle_available():
                 self.get_next_candle()
@@ -95,50 +80,35 @@ class StrategyTester(metaclass=ABCMeta):
             "pl": self._portfolio.pl
         }
 
-    def market_buy(self, size: float, take_profit: float | None = None) -> None:
-        size = abs(size)
+    def market_buy(self,
+        size: float, tp_limit: float | None = None, sl_limit: float | None = None
+    ) -> None:
+        assert size > 0, "Negative size provided. (size > 0)"
+
         qty: float = 0.0
         if size < 1.0:
             # In essence, buy as much shares as possible with this amount:
-            #   > size * portfolio.capital
+            #   >> size * portfolio.capital
             pct: float = size
             max_ord_value: float = pct * self._portfolio.capital
             qty = math.floor(max_ord_value / self.last_close)
         else:
             qty = int(size)
 
-        order: Order = Order(
+        mkt_ord: MarketOrder = MarketOrder(
             symbol=self._sf.ticker,
-            order_type=OrderType.MARKET,
+            side=OrderSide.BUY,
             quantity=qty,
-            issue_price=self.last_close,
-            issue_dt=self.curr_dt_str,
+            requested_price=self.last_close,
+            requested_dt=self.curr_dt_str,
+            intent=OrderIntent.BUY_TO_OPEN
         )
-        broker.execute_market_order(order, self._portfolio, self.curr_dt_str)
+        if tp_limit is not None:
+            mkt_ord.take_profit = TakeProfitRequest(tp_limit=tp_limit)
+        if sl_limit is not None:
+            mkt_ord.stop_loss = StopLossRequest(sl_limit=sl_limit)
 
-        if take_profit is not None:
-            tp_order: Order = Order(
-                symbol=self._sf.ticker,
-                order_type=OrderType.TP,
-                quantity=order.quantity * -1.0,
-                issue_price=order.issue_price,
-                issue_dt=order.issue_dt
-            )
-            self._portfolio.add_incomplete_order(tp_order)
-
-    def market_sell(self, size: int) -> None:
-        size = -abs(size)
-        order: Order = Order(
-            symbol=self._sf.ticker,
-            order_type=OrderType.MARKET,
-            quantity=size,
-            issue_price=self.last_close,
-            issue_dt=self.curr_dt_str
-        )
-        broker.execute_market_order(order, self._portfolio, self.curr_dt_str)
-
-    def close_position(self) -> None:
-        broker.close_position(self._portfolio, self._sf.ticker, self.last_close)
+        self._broker.execute_open_order(mkt_ord, self._portfolio, self.last_close, self.curr_dt_str)
 
     def ind_crossover(self, val1: str | float, val2: str | float) -> bool:
         s1: list[float] | IndValues = (
@@ -171,6 +141,17 @@ class StrategyTester(metaclass=ABCMeta):
         key: str = f"EMA_{period}"
         if not key in self._indicators.keys():
             values: IndValues = talib.EMA(data, timeperiod=period)
+            self._indicators[key] = values
+
+        return key
+
+    def TA_ATR(self,
+        high: NDArray[np.float64], low: NDArray[np.float64], close: NDArray[np.float64],
+        period: int = 14
+    ) -> str:
+        key: str = f"ATR_{period}"
+        if not key in self._indicators.keys():
+            values: IndValues = talib.ATR(high, low, close, timeperiod=period)
             self._indicators[key] = values
 
         return key

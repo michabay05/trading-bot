@@ -54,5 +54,13 @@ class Stockframe:
         return self._df["Close"].to_numpy()
 
     @property
+    def high_series(self) -> NDArray[np.float64]:
+        return self._df["High"].to_numpy()
+
+    @property
+    def low_series(self) -> NDArray[np.float64]:
+        return self._df["Low"].to_numpy()
+
+    @property
     def date_series(self) -> list[str]:
         return self._df["Date"].to_list()

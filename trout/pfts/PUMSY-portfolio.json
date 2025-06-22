@@ -1,389 +1,153 @@
 {
-    "capital": 994.3399,
-    "pl": -3.2101000000000113,
-    "capital_pct": 99.67899,
+    "capital": 510.4621971830986,
+    "pl": -96.07780281690134,
+    "capital_pct": 90.39221971830986,
+    "position_count": 1,
+    "orders_count": 6,
     "positions": {
         "PUMSY": {
-            "quantity": -1.0,
-            "price": 2.45
+            "quantity": 151.33076923076925,
+            "price": 2.6
         }
     },
     "orders": [
         {
             "symbol": "PUMSY",
+            "quantity": 40,
+            "side": "buy",
+            "requested_price": 6.12,
+            "issue_dt": "2023-11-28 14:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 176,
             "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 5.6601,
-            "purchase_dt": "2023-07-07 14:00:00"
+            "purchase_dt": "2023-11-28 14:00:00",
+            "purchase_price": 6.12,
+            "take_profit": {
+                "tp_limit": 7.679203846621732,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 5.340398076689134,
+                "purchase_dt": "2024-01-03 12:00:00",
+                "purchase_price": 5.3301
+            }
         },
         {
             "symbol": "PUMSY",
+            "quantity": 50,
+            "side": "buy",
+            "requested_price": 4.775,
+            "issue_dt": "2024-05-03 10:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 178,
             "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 5.8,
-            "purchase_dt": "2023-07-10 14:00:00"
+            "purchase_dt": "2024-05-03 10:00:00",
+            "purchase_price": 4.775,
+            "take_profit": {
+                "tp_limit": 5.654914661649425,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 4.335042669175288,
+                "purchase_dt": "2024-08-07 08:00:00",
+                "purchase_price": 3.96
+            }
         },
         {
             "symbol": "PUMSY",
+            "quantity": 36,
+            "side": "buy",
+            "requested_price": 4.97,
+            "issue_dt": "2024-07-31 10:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 179,
             "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.735,
-            "purchase_dt": "2023-08-18 14:00:00"
+            "purchase_dt": "2024-07-31 10:00:00",
+            "purchase_price": 4.97,
+            "take_profit": {
+                "tp_limit": 5.653293198606119,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 4.62835340069694,
+                "purchase_dt": "2024-08-05 08:00:00",
+                "purchase_price": 4.452
+            }
         },
         {
             "symbol": "PUMSY",
+            "quantity": 50,
+            "side": "buy",
+            "requested_price": 4.54,
+            "issue_dt": "2024-10-25 14:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 182,
             "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.74,
-            "purchase_dt": "2023-08-30 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.64,
-            "purchase_dt": "2023-08-31 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.725,
-            "purchase_dt": "2023-08-31 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.535,
-            "purchase_dt": "2023-09-05 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.2062,
-            "purchase_dt": "2023-10-03 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 5.575,
-            "purchase_dt": "2023-10-05 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 5.7,
-            "purchase_dt": "2023-10-24 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 5.57,
-            "purchase_dt": "2023-11-13 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 5.8701,
-            "purchase_dt": "2023-11-15 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 5.71,
-            "purchase_dt": "2023-11-16 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.0,
-            "purchase_dt": "2023-11-17 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.0299,
-            "purchase_dt": "2023-12-08 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 4.28,
-            "purchase_dt": "2024-02-08 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 4.41,
-            "purchase_dt": "2024-03-04 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
+            "purchase_dt": "2024-10-25 14:00:00",
             "purchase_price": 4.54,
-            "purchase_dt": "2024-03-07 10:00:00"
+            "take_profit": {
+                "tp_limit": 5.318168543672893,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 4.150915728163553,
+                "purchase_dt": "2025-01-16 12:00:00",
+                "purchase_price": 4.121
+            }
         },
         {
             "symbol": "PUMSY",
+            "quantity": 87,
+            "side": "buy",
+            "requested_price": 2.58,
+            "issue_dt": "2025-05-19 14:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 184,
             "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 4.3699,
-            "purchase_dt": "2024-03-18 06:00:00"
+            "purchase_dt": "2025-05-19 14:00:00",
+            "purchase_price": 2.58,
+            "take_profit": {
+                "tp_limit": 3.0487615760225206,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 2.34561921198874,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         },
         {
             "symbol": "PUMSY",
+            "quantity": 65,
+            "side": "buy",
+            "requested_price": 2.6,
+            "issue_dt": "2025-05-27 14:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 185,
             "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 4.4299,
-            "purchase_dt": "2024-03-27 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 4.3,
-            "purchase_dt": "2024-04-12 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 4.53,
-            "purchase_dt": "2024-04-18 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 5.315,
-            "purchase_dt": "2024-05-22 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 4.75,
-            "purchase_dt": "2024-07-12 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 4.69,
-            "purchase_dt": "2024-08-02 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 4.095,
-            "purchase_dt": "2024-08-21 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 4.16,
-            "purchase_dt": "2024-09-11 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 4.24,
-            "purchase_dt": "2024-09-16 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 4.13,
-            "purchase_dt": "2024-09-17 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 4.16,
-            "purchase_dt": "2024-09-26 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 4.058,
-            "purchase_dt": "2024-10-02 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 4.235,
-            "purchase_dt": "2024-10-16 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 4.5785,
-            "purchase_dt": "2024-11-21 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 4.76,
-            "purchase_dt": "2024-12-05 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 4.69,
-            "purchase_dt": "2024-12-17 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 3.13,
-            "purchase_dt": "2025-02-25 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 3.02,
-            "purchase_dt": "2025-02-27 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 3.17,
-            "purchase_dt": "2025-03-06 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 2.85,
-            "purchase_dt": "2025-03-11 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 2.19,
-            "purchase_dt": "2025-04-15 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 2.55,
-            "purchase_dt": "2025-05-14 14:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 2.635,
-            "purchase_dt": "2025-05-20 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 2.54,
-            "purchase_dt": "2025-05-22 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
+            "purchase_dt": "2025-05-27 14:00:00",
             "purchase_price": 2.6,
-            "purchase_dt": "2025-05-28 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 2.54,
-            "purchase_dt": "2025-05-30 06:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 2.56,
-            "purchase_dt": "2025-06-10 10:00:00"
-        },
-        {
-            "symbol": "PUMSY",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 2.45,
-            "purchase_dt": "2025-06-12 06:00:00"
+            "take_profit": {
+                "tp_limit": 3.1146126323022303,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 2.3426936838488848,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         }
     ]
 }

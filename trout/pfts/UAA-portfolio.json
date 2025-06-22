@@ -1,949 +1,171 @@
 {
-    "capital": 992.575,
-    "pl": -0.6599999999999682,
-    "capital_pct": 99.934,
-    "positions": {
-        "UAA": {
-            "quantity": 1.0,
-            "price": 6.765
-        }
-    },
+    "capital": 1177.387851741076,
+    "pl": 177.38785174107602,
+    "capital_pct": 117.7387851741076,
+    "position_count": 0,
+    "orders_count": 7,
+    "positions": {},
     "orders": [
         {
             "symbol": "UAA",
+            "quantity": 34,
+            "side": "buy",
+            "requested_price": 7.305,
+            "issue_dt": "2023-10-20 10:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 222,
             "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.425,
-            "purchase_dt": "2023-07-03 06:00:00"
+            "purchase_dt": "2023-10-20 10:00:00",
+            "purchase_price": 7.305,
+            "take_profit": {
+                "tp_limit": 8.760855278235843,
+                "purchase_dt": "2023-12-14 08:00:00",
+                "purchase_price": 8.8
+            },
+            "stop_loss": {
+                "sl_limit": 6.577072360882078,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         },
         {
             "symbol": "UAA",
+            "quantity": 25,
+            "side": "buy",
+            "requested_price": 7.26,
+            "issue_dt": "2023-11-03 14:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 223,
             "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.13,
-            "purchase_dt": "2023-07-06 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.425,
-            "purchase_dt": "2023-07-07 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.535,
-            "purchase_dt": "2023-07-17 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.73,
-            "purchase_dt": "2023-07-17 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.9,
-            "purchase_dt": "2023-07-25 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.1,
-            "purchase_dt": "2023-07-26 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.89,
-            "purchase_dt": "2023-07-27 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.06,
-            "purchase_dt": "2023-07-31 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.9499,
-            "purchase_dt": "2023-08-01 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.87,
-            "purchase_dt": "2023-08-09 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.755,
-            "purchase_dt": "2023-08-14 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.88,
-            "purchase_dt": "2023-08-14 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.775,
-            "purchase_dt": "2023-08-15 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.905,
-            "purchase_dt": "2023-08-18 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.495,
-            "purchase_dt": "2023-08-21 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.55,
-            "purchase_dt": "2023-08-28 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.46,
-            "purchase_dt": "2023-09-06 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.36,
-            "purchase_dt": "2023-09-15 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.33,
-            "purchase_dt": "2023-09-15 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.9142,
-            "purchase_dt": "2023-09-29 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.495,
-            "purchase_dt": "2023-10-03 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.715,
-            "purchase_dt": "2023-10-09 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.5601,
-            "purchase_dt": "2023-10-12 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.86,
-            "purchase_dt": "2023-10-16 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.685,
-            "purchase_dt": "2023-10-27 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.28,
-            "purchase_dt": "2023-11-03 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.03,
-            "purchase_dt": "2023-11-13 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.645,
-            "purchase_dt": "2023-11-14 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.23,
-            "purchase_dt": "2023-12-12 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.62,
-            "purchase_dt": "2023-12-13 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.805,
-            "purchase_dt": "2023-12-26 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.41,
-            "purchase_dt": "2024-01-10 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.11,
-            "purchase_dt": "2024-01-11 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.78,
-            "purchase_dt": "2024-01-23 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.51,
-            "purchase_dt": "2024-01-24 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.685,
-            "purchase_dt": "2024-01-26 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.66,
-            "purchase_dt": "2024-02-05 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.875,
-            "purchase_dt": "2024-02-06 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.97,
-            "purchase_dt": "2024-02-20 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.13,
-            "purchase_dt": "2024-02-21 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.74,
-            "purchase_dt": "2024-03-05 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
+            "purchase_dt": "2023-11-03 14:00:00",
             "purchase_price": 7.26,
-            "purchase_dt": "2024-03-28 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.02,
-            "purchase_dt": "2024-04-02 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.775,
-            "purchase_dt": "2024-04-19 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.66,
-            "purchase_dt": "2024-04-25 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.805,
-            "purchase_dt": "2024-04-26 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.7199,
-            "purchase_dt": "2024-04-30 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.83,
-            "purchase_dt": "2024-05-03 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.7179,
-            "purchase_dt": "2024-05-06 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.81,
-            "purchase_dt": "2024-05-07 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.73,
-            "purchase_dt": "2024-05-07 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.87,
-            "purchase_dt": "2024-05-08 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.615,
-            "purchase_dt": "2024-05-08 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.81,
-            "purchase_dt": "2024-05-10 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.665,
-            "purchase_dt": "2024-05-10 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.89,
-            "purchase_dt": "2024-05-13 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.75,
-            "purchase_dt": "2024-05-16 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.87,
-            "purchase_dt": "2024-05-21 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.7304,
-            "purchase_dt": "2024-05-23 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.81,
-            "purchase_dt": "2024-05-29 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.885,
-            "purchase_dt": "2024-06-05 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.92,
-            "purchase_dt": "2024-06-17 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.855,
-            "purchase_dt": "2024-06-27 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.8,
-            "purchase_dt": "2024-07-08 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.585,
-            "purchase_dt": "2024-07-15 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.8994,
-            "purchase_dt": "2024-07-17 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.65,
-            "purchase_dt": "2024-07-19 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.76,
-            "purchase_dt": "2024-07-25 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.77,
-            "purchase_dt": "2024-08-01 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.63,
-            "purchase_dt": "2024-08-08 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.31,
-            "purchase_dt": "2024-08-28 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.16,
-            "purchase_dt": "2024-09-04 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.86,
-            "purchase_dt": "2024-09-05 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.65,
-            "purchase_dt": "2024-09-13 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 7.74,
-            "purchase_dt": "2024-09-23 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 7.95,
-            "purchase_dt": "2024-09-24 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.52,
-            "purchase_dt": "2024-10-03 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.86,
-            "purchase_dt": "2024-10-04 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.475,
-            "purchase_dt": "2024-10-07 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.91,
-            "purchase_dt": "2024-10-14 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 9.14,
-            "purchase_dt": "2024-10-21 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.855,
-            "purchase_dt": "2024-11-05 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 9.53,
-            "purchase_dt": "2024-11-12 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 9.8699,
-            "purchase_dt": "2024-11-13 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 9.6,
-            "purchase_dt": "2024-11-19 02:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 9.65,
-            "purchase_dt": "2024-11-25 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 9.64,
-            "purchase_dt": "2024-12-12 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.58,
-            "purchase_dt": "2025-01-06 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.1426,
-            "purchase_dt": "2025-01-08 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.37,
-            "purchase_dt": "2025-01-14 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.21,
-            "purchase_dt": "2025-01-14 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.44,
-            "purchase_dt": "2025-01-15 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.135,
-            "purchase_dt": "2025-01-15 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.25,
-            "purchase_dt": "2025-01-21 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.18,
-            "purchase_dt": "2025-01-27 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.615,
-            "purchase_dt": "2025-01-30 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.1401,
-            "purchase_dt": "2025-02-03 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 8.7,
-            "purchase_dt": "2025-02-06 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 8.075,
-            "purchase_dt": "2025-02-06 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.975,
-            "purchase_dt": "2025-03-06 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.955,
-            "purchase_dt": "2025-03-13 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.55,
-            "purchase_dt": "2025-04-02 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.23,
-            "purchase_dt": "2025-04-02 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 5.73,
-            "purchase_dt": "2025-04-09 18:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 5.125,
-            "purchase_dt": "2025-04-10 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 5.41,
-            "purchase_dt": "2025-04-14 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 5.675,
-            "purchase_dt": "2025-04-25 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 5.8,
-            "purchase_dt": "2025-04-29 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 5.525,
-            "purchase_dt": "2025-04-30 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 5.795,
-            "purchase_dt": "2025-05-01 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 5.7,
-            "purchase_dt": "2025-05-06 14:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 5.95,
-            "purchase_dt": "2025-05-08 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.345,
-            "purchase_dt": "2025-05-23 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.765,
-            "purchase_dt": "2025-05-23 10:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 6.6201,
-            "purchase_dt": "2025-05-30 06:00:00"
-        },
-        {
-            "symbol": "UAA",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 6.765,
-            "purchase_dt": "2025-06-06 10:00:00"
+            "take_profit": {
+                "tp_limit": 8.703893664755341,
+                "purchase_dt": "2023-12-14 08:00:00",
+                "purchase_price": 8.8
+            },
+            "stop_loss": {
+                "sl_limit": 6.538053167622329,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
+        },
+        {
+            "symbol": "UAA",
+            "quantity": 32,
+            "side": "buy",
+            "requested_price": 8.4355,
+            "issue_dt": "2024-01-10 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 226,
+            "status": "filled",
+            "purchase_dt": "2024-01-10 14:00:00",
+            "purchase_price": 8.4355,
+            "take_profit": {
+                "tp_limit": 9.704395039225947,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 7.801052480387026,
+                "purchase_dt": "2024-01-16 12:00:00",
+                "purchase_price": 7.405
+            }
+        },
+        {
+            "symbol": "UAA",
+            "quantity": 38,
+            "side": "buy",
+            "requested_price": 6.94,
+            "issue_dt": "2024-05-30 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 229,
+            "status": "filled",
+            "purchase_dt": "2024-05-30 14:00:00",
+            "purchase_price": 6.94,
+            "take_profit": {
+                "tp_limit": 8.22733448134762,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 6.296332759326191,
+                "purchase_dt": "2024-08-05 04:00:00",
+                "purchase_price": 6.28
+            }
+        },
+        {
+            "symbol": "UAA",
+            "quantity": 28,
+            "side": "buy",
+            "requested_price": 7.025,
+            "issue_dt": "2024-06-20 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 230,
+            "status": "filled",
+            "purchase_dt": "2024-06-20 10:00:00",
+            "purchase_price": 7.025,
+            "take_profit": {
+                "tp_limit": 8.240027763353394,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 6.417486118323303,
+                "purchase_dt": "2024-07-03 12:00:00",
+                "purchase_price": 6.4
+            }
+        },
+        {
+            "symbol": "UAA",
+            "quantity": 33,
+            "side": "buy",
+            "requested_price": 7.7,
+            "issue_dt": "2024-08-08 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 234,
+            "status": "filled",
+            "purchase_dt": "2024-08-08 14:00:00",
+            "purchase_price": 7.7,
+            "take_profit": {
+                "tp_limit": 10.087089497261593,
+                "purchase_dt": "2024-11-07 08:00:00",
+                "purchase_price": 10.77
+            },
+            "stop_loss": {
+                "sl_limit": 6.5064552513692036,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
+        },
+        {
+            "symbol": "UAA",
+            "quantity": 24,
+            "side": "buy",
+            "requested_price": 7.9155,
+            "issue_dt": "2024-09-19 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 235,
+            "status": "filled",
+            "purchase_dt": "2024-09-19 14:00:00",
+            "purchase_price": 7.9155,
+            "take_profit": {
+                "tp_limit": 9.645899688494575,
+                "purchase_dt": "2024-11-07 08:00:00",
+                "purchase_price": 10.77
+            },
+            "stop_loss": {
+                "sl_limit": 7.050300155752712,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         }
     ]
 }

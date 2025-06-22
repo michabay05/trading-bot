@@ -28,31 +28,36 @@ A list of all the TODOs needed to be completed before each release
     - Remove it from the list of positions
 - [ ] (refactor) Change candle csv naming scheme to match that of the portfolios
 - [ ] (feat) Plot P/L of portfolio - probably using matplotlib
-- [ ] (refactor) Ditch lightweight charts and use the samething 'backtesting.py' uses
+- [ ] (refactor) Ditch lightweight charts and use the same thing 'backtesting.py' uses
     - I think it uses bokeh: [CandleStick plotting](https://docs.bokeh.org/en/latest/docs/examples/topics/timeseries/candlestick.html)
 - [ ] (feat) Add market holidays to market open or closed functionality
-- [ ] (refactor) Update the portfolio init from json and save to json functions
+- [ ] (feat) Add time in force for orders (DAY or Good-til-Cancelled)
+- [ ] (feat) Add the notion of a trade and also FYI:
+    - Trade = A completed buy-sell transaction pair
+    - Position = Current market exposure (open trades)
 
 ---
 
 # v0.6
 - [x] (refactor) Fix the timescale issue on lightweight charts
     - It looks like a timezone issue
+- [x] (refactor) Change broker from a list of functions to a class with methods
 - [ ] (feat) Add take-profit and stop-loss
     - [x] Take profit
-    - [ ] Stop loss
+    - [x] Stop loss
 - [x] (feat) Implement checking when market is open or closed
 - [x] (feat) Add ability to buy based on portfolio's capital percentage
-- [ ] (refactor) Change the structure of following classes to use `@dataclass`
-    - Order
-    - Candle
-    - CandleOption
+- [x] (refactor) Change the structure of the `Order` to use `@dataclass`
+- [x] (refactor) Completely restructure the way orders are created
+    - Instead of one order type, there should be one parent order type that contains all the necessary information.
+      However, the user will only interact with its children (MarketOrder, LimitOrder, etc.)
 - [x] (refactor) Remove `bot.py`
     - `run_bot.py` does everything I want `bot.py` to do
 - [x] (feat) Setup script to automatically visualize candles and indicators
 - [x] (refactor) The horizontal axis of the candle visualizer should be human-readable
     - Instead of unix timestamps, it should be human-readable date string
-- [ ] Experiment with alpaca-py
+- [x] Experiment with alpaca-py
+    - Experimenting and probing has been moved over to `alpaca-probe` branch
 
 ## v0.5
 - [x] (refactor) Change Strategy to StrategyTester

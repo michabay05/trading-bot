@@ -1,765 +1,194 @@
 {
-    "capital": 984.4,
-    "pl": -3.6800000000000637,
-    "capital_pct": 99.632,
-    "positions": {
-        "M": {
-            "quantity": -1.0,
-            "price": 11.92
-        }
-    },
+    "capital": 1002.0865788947367,
+    "pl": 2.0865788947367037,
+    "capital_pct": 100.20865788947366,
+    "position_count": 0,
+    "orders_count": 8,
+    "positions": {},
     "orders": [
         {
             "symbol": "M",
+            "quantity": 19,
+            "side": "buy",
+            "requested_price": 12.645,
+            "issue_dt": "2023-11-15 10:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 139,
             "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 15.6,
-            "purchase_dt": "2023-06-27 18:00:00"
+            "purchase_dt": "2023-11-15 10:00:00",
+            "purchase_price": 12.645,
+            "take_profit": {
+                "tp_limit": 15.668124836154064,
+                "purchase_dt": "2023-11-29 12:00:00",
+                "purchase_price": 15.805
+            },
+            "stop_loss": {
+                "sl_limit": 11.133437581922967,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         },
         {
             "symbol": "M",
+            "quantity": 14,
+            "side": "buy",
+            "requested_price": 18.6499,
+            "issue_dt": "2024-01-29 14:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 142,
             "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.825,
-            "purchase_dt": "2023-07-07 06:00:00"
+            "purchase_dt": "2024-01-29 14:00:00",
+            "purchase_price": 18.6499,
+            "take_profit": {
+                "tp_limit": 21.551107631178066,
+                "purchase_dt": "2024-03-14 20:00:00",
+                "purchase_price": 21.56
+            },
+            "stop_loss": {
+                "sl_limit": 17.199296184410965,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         },
         {
             "symbol": "M",
+            "quantity": 10,
+            "side": "buy",
+            "requested_price": 18.63,
+            "issue_dt": "2024-02-02 14:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 143,
             "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 16.225,
-            "purchase_dt": "2023-07-10 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.78,
-            "purchase_dt": "2023-07-13 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 16.225,
-            "purchase_dt": "2023-07-19 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.99,
-            "purchase_dt": "2023-08-02 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 16.31,
-            "purchase_dt": "2023-08-04 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 16.11,
-            "purchase_dt": "2023-08-07 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 11.18,
-            "purchase_dt": "2023-09-25 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 10.75,
-            "purchase_dt": "2023-09-27 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 11.19,
-            "purchase_dt": "2023-09-28 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 11.165,
-            "purchase_dt": "2023-10-05 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 11.227,
-            "purchase_dt": "2023-10-17 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 11.675,
-            "purchase_dt": "2023-11-08 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 11.73,
-            "purchase_dt": "2023-11-15 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 19.92,
-            "purchase_dt": "2024-01-02 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 18.57,
-            "purchase_dt": "2024-01-22 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 18.32,
-            "purchase_dt": "2024-01-31 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 18.61,
-            "purchase_dt": "2024-02-02 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 18.55,
-            "purchase_dt": "2024-02-05 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
+            "purchase_dt": "2024-02-02 14:00:00",
             "purchase_price": 18.63,
-            "purchase_dt": "2024-02-06 18:00:00"
+            "take_profit": {
+                "tp_limit": 21.370070969424987,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 17.259964515287507,
+                "purchase_dt": "2024-02-29 12:00:00",
+                "purchase_price": 17.215
+            }
         },
         {
             "symbol": "M",
+            "quantity": 8,
+            "side": "buy",
+            "requested_price": 19.0,
+            "issue_dt": "2024-02-08 10:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 144,
             "status": "filled",
-            "quantity": -1.0,
+            "purchase_dt": "2024-02-08 10:00:00",
             "purchase_price": 19.0,
-            "purchase_dt": "2024-02-21 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 19.555,
-            "purchase_dt": "2024-02-23 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 18.71,
-            "purchase_dt": "2024-02-27 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 20.1273,
-            "purchase_dt": "2024-02-27 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 18.36,
-            "purchase_dt": "2024-02-28 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 20.56,
-            "purchase_dt": "2024-03-04 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 20.95,
-            "purchase_dt": "2024-03-21 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 19.55,
-            "purchase_dt": "2024-04-08 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 19.28,
-            "purchase_dt": "2024-04-12 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 18.985,
-            "purchase_dt": "2024-05-02 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 19.32,
-            "purchase_dt": "2024-05-16 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 19.545,
-            "purchase_dt": "2024-05-16 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 19.28,
-            "purchase_dt": "2024-05-20 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 19.98,
-            "purchase_dt": "2024-05-21 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 19.71,
-            "purchase_dt": "2024-05-29 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 18.955,
-            "purchase_dt": "2024-06-12 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 18.4699,
-            "purchase_dt": "2024-06-14 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 18.855,
-            "purchase_dt": "2024-06-24 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 18.55,
-            "purchase_dt": "2024-06-27 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 19.04,
-            "purchase_dt": "2024-06-28 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 18.335,
-            "purchase_dt": "2024-07-01 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 19.705,
-            "purchase_dt": "2024-07-05 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 16.345,
-            "purchase_dt": "2024-07-15 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 16.905,
-            "purchase_dt": "2024-07-29 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 16.5,
-            "purchase_dt": "2024-08-02 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 15.82,
-            "purchase_dt": "2024-08-12 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.305,
-            "purchase_dt": "2024-08-21 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 15.14,
-            "purchase_dt": "2024-09-13 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.075,
-            "purchase_dt": "2024-09-24 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 15.1801,
-            "purchase_dt": "2024-09-26 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.1091,
-            "purchase_dt": "2024-10-03 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 15.4499,
-            "purchase_dt": "2024-10-03 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.27,
-            "purchase_dt": "2024-10-08 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 15.475,
-            "purchase_dt": "2024-10-10 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.59,
-            "purchase_dt": "2024-10-22 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 15.615,
-            "purchase_dt": "2024-10-30 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.445,
-            "purchase_dt": "2024-10-30 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 15.65,
-            "purchase_dt": "2024-11-06 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.38,
-            "purchase_dt": "2024-11-11 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 15.5,
-            "purchase_dt": "2024-11-15 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.1698,
-            "purchase_dt": "2024-11-18 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 16.18,
-            "purchase_dt": "2024-11-22 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 14.8699,
-            "purchase_dt": "2024-12-11 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 16.54,
-            "purchase_dt": "2024-12-16 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.97,
-            "purchase_dt": "2024-12-18 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 16.6,
-            "purchase_dt": "2024-12-23 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 16.945,
-            "purchase_dt": "2024-12-31 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 14.575,
-            "purchase_dt": "2025-01-22 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.229,
-            "purchase_dt": "2025-02-04 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 14.8,
-            "purchase_dt": "2025-02-12 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 15.025,
-            "purchase_dt": "2025-02-24 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 14.3371,
-            "purchase_dt": "2025-03-10 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 13.625,
-            "purchase_dt": "2025-03-13 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 13.8,
-            "purchase_dt": "2025-03-18 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 13.5401,
-            "purchase_dt": "2025-03-19 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 13.68,
-            "purchase_dt": "2025-03-20 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 13.48,
-            "purchase_dt": "2025-03-20 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 13.88,
-            "purchase_dt": "2025-03-24 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 13.14,
-            "purchase_dt": "2025-03-26 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 11.62,
-            "purchase_dt": "2025-04-10 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 11.2,
-            "purchase_dt": "2025-04-16 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 11.435,
-            "purchase_dt": "2025-04-23 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 10.8401,
-            "purchase_dt": "2025-04-23 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 11.04,
-            "purchase_dt": "2025-04-25 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 11.68,
-            "purchase_dt": "2025-05-19 02:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 12.29,
-            "purchase_dt": "2025-05-20 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 11.805,
-            "purchase_dt": "2025-05-21 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 12.05,
-            "purchase_dt": "2025-05-27 18:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 11.94,
-            "purchase_dt": "2025-05-30 06:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 12.0,
-            "purchase_dt": "2025-05-30 10:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 11.87,
-            "purchase_dt": "2025-05-30 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 11.9,
-            "purchase_dt": "2025-06-05 14:00:00"
-        },
-        {
-            "symbol": "M",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 11.92,
-            "purchase_dt": "2025-06-12 14:00:00"
+            "take_profit": {
+                "tp_limit": 21.238829328920605,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 17.8805853355397,
+                "purchase_dt": "2024-02-29 12:00:00",
+                "purchase_price": 17.215
+            }
+        },
+        {
+            "symbol": "M",
+            "quantity": 12,
+            "side": "buy",
+            "requested_price": 20.745,
+            "issue_dt": "2024-03-04 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 147,
+            "status": "filled",
+            "purchase_dt": "2024-03-04 10:00:00",
+            "purchase_price": 20.745,
+            "take_profit": {
+                "tp_limit": 27.020361796789025,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 17.607319101605487,
+                "purchase_dt": "2024-07-15 08:00:00",
+                "purchase_price": 16.345
+            }
+        },
+        {
+            "symbol": "M",
+            "quantity": 12,
+            "side": "buy",
+            "requested_price": 19.53,
+            "issue_dt": "2024-05-13 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 149,
+            "status": "filled",
+            "purchase_dt": "2024-05-13 14:00:00",
+            "purchase_price": 19.53,
+            "take_profit": {
+                "tp_limit": 21.981645367620743,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 18.30417731618963,
+                "purchase_dt": "2024-06-04 16:00:00",
+                "purchase_price": 18.27
+            }
+        },
+        {
+            "symbol": "M",
+            "quantity": 14,
+            "side": "buy",
+            "requested_price": 17.805,
+            "issue_dt": "2024-08-20 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 153,
+            "status": "filled",
+            "purchase_dt": "2024-08-20 10:00:00",
+            "purchase_price": 17.805,
+            "take_profit": {
+                "tp_limit": 20.187172433713453,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 16.613913783143275,
+                "purchase_dt": "2024-08-21 08:00:00",
+                "purchase_price": 15.305
+            }
+        },
+        {
+            "symbol": "M",
+            "quantity": 15,
+            "side": "buy",
+            "requested_price": 15.4601,
+            "issue_dt": "2024-10-09 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 156,
+            "status": "filled",
+            "purchase_dt": "2024-10-09 10:00:00",
+            "purchase_price": 15.4601,
+            "take_profit": {
+                "tp_limit": 17.395628116320175,
+                "purchase_dt": "2024-12-26 12:00:00",
+                "purchase_price": 18.04
+            },
+            "stop_loss": {
+                "sl_limit": 14.492335941839913,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         }
     ]
 }

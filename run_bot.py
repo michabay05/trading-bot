@@ -1,40 +1,66 @@
-from trbot import broker
-from trbot.candles import Candle, CandleOption, Timespan
+import time
 from trbot.stockframe import Stockframe
 from trbot.strategy import StrategyTester
 import visualize_candles as vs_cd
+from trbot.portfolio import Order, OrderIntent, OrderType, OrderStatus, OrderSide
 
 
 # ===================== STRATEGY =====================
 class MyStrategy(StrategyTester):
     def setup(self) -> None:
         close = self._sf.close_series
-        self.fast_ma = self.TA_EMA(close, period=8)
-        self.slow_ma = self.TA_EMA(close, period=21)
+        high = self._sf.high_series
+        low = self._sf.low_series
+        self.fast_ma = self.TA_EMA(close, period=50)
+        self.slow_ma = self.TA_EMA(close, period=100)
+        self.atr = self.TA_ATR(high, low, close, period=14)
 
     def on_candle(self) -> None:
+        last_atr = self.last_ind_value(self.atr)
         if self.ind_crossover(self.fast_ma, self.slow_ma):
-            self.close_position()
-            self.market_buy(size=1, take_profit=40.00)
+            self.market_buy(
+                size=0.25,
+                tp_limit=self.last_close + 10*last_atr,
+                sl_limit=self.last_close - 5*last_atr
+            )
 
 
-# tickers: list[str] = vs_cd.valid_tickers("trout/aggs")[0]
-tickers: list[str] = ["GM"]
-sum: float = 0.0
-for t in tickers:
-    sf: Stockframe = Stockframe.from_csv(f"trout/aggs/ohlcv-{t}-4hour.csv")
-    # mys = MyStrategy(sf, start_ind=115, end_ind=139)
-    mys = MyStrategy(sf)
-    try:
-        # mys.run()
-        output = mys.run()
-        print(f"{t}: {output["pl"]}")
-        sum += output["pl"]
-    finally:
-        mys.export_portfolio("trout/pfts")
+# Create an order
+order = Order(
+    symbol="AAPL",
+    quantity=100,
+    side=OrderSide.BUY,
+    requested_price=150.0,
+    requested_dt="2024-01-01",
+    intent=OrderIntent.BUY_TO_OPEN,
+    type=OrderType.MARKET
+)
 
-print("----------------------")
-print(f"Total: {sum}")
+# Try to modify immutable field (should fail)
+order.symbol = "MSFT"  # This should raise AttributeError
+
+# Try to modify mutable field (should work)
+order.status = OrderStatus.FILLED  # This should work
+
+# start_time: float = time.time()
+# # tickers: list[str] = vs_cd.valid_tickers("trout/aggs")[0]
+# tickers: list[str] = ["NKE"]
+# sum: float = 0.0
+# for t in tickers:
+#     sf: Stockframe = Stockframe.from_csv(f"trout/aggs/ohlcv-{t}-4hour.csv")
+#     mys = MyStrategy(sf)
+#     try:
+#         # mys.run()
+#         output = mys.run()
+#         print(f"{t}: {output["pl"]}")
+#         sum += output["pl"]
+#     finally:
+#         mys.export_portfolio("trout/pfts")
+
+# print("----------------------")
+# print(f"Total: {sum}")
+# diff: float = time.time() - start_time
+# print(f"Took {diff:.3f}s to backtest {len(tickers)} symbols")
 
 # ===================== HISTORICAL CANDLES =====================
 # for ticker in [

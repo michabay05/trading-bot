@@ -1,757 +1,102 @@
 {
-    "capital": 962.6299999999999,
-    "pl": 10.704999999999927,
-    "capital_pct": 101.0705,
-    "positions": {
-        "GM": {
-            "quantity": 1.0,
-            "price": 48.075
-        }
-    },
+    "capital": 1034.8928,
+    "pl": 34.89280000000008,
+    "capital_pct": 103.48928000000002,
+    "position_count": 0,
+    "orders_count": 4,
+    "positions": {},
     "orders": [
         {
             "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 37.37,
-            "purchase_dt": "2023-06-27 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 38.9603,
-            "purchase_dt": "2023-07-17 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 39.38,
-            "purchase_dt": "2023-07-24 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 38.065,
-            "purchase_dt": "2023-07-25 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 38.845,
-            "purchase_dt": "2023-07-28 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 37.955,
-            "purchase_dt": "2023-07-28 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 33.59,
-            "purchase_dt": "2023-08-23 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 32.9,
-            "purchase_dt": "2023-08-24 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 33.3286,
-            "purchase_dt": "2023-08-29 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 33.08,
-            "purchase_dt": "2023-09-05 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 33.62,
-            "purchase_dt": "2023-09-12 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 33.18,
-            "purchase_dt": "2023-09-20 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 33.31,
-            "purchase_dt": "2023-09-28 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 32.3001,
-            "purchase_dt": "2023-10-02 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 31.45,
-            "purchase_dt": "2023-10-10 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 30.96,
-            "purchase_dt": "2023-10-12 02:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 28.34,
-            "purchase_dt": "2023-11-02 02:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 28.36,
-            "purchase_dt": "2023-11-07 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 28.26,
-            "purchase_dt": "2023-11-14 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 35.6003,
-            "purchase_dt": "2024-01-02 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 36.5504,
-            "purchase_dt": "2024-01-02 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 35.7,
-            "purchase_dt": "2024-01-03 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 36.07,
-            "purchase_dt": "2024-01-05 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 35.705,
-            "purchase_dt": "2024-01-11 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 35.6,
-            "purchase_dt": "2024-01-22 02:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 35.045,
-            "purchase_dt": "2024-01-24 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 35.18,
-            "purchase_dt": "2024-01-26 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 38.34,
-            "purchase_dt": "2024-02-13 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 38.825,
-            "purchase_dt": "2024-02-15 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 40.2326,
-            "purchase_dt": "2024-03-06 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 40.4,
-            "purchase_dt": "2024-03-13 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 39.31,
-            "purchase_dt": "2024-03-14 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 40.365,
-            "purchase_dt": "2024-03-15 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 43.73,
-            "purchase_dt": "2024-04-04 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 44.79,
-            "purchase_dt": "2024-04-09 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 44.135,
-            "purchase_dt": "2024-04-10 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 43.28,
-            "purchase_dt": "2024-04-22 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 44.26,
-            "purchase_dt": "2024-04-30 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 45.39,
-            "purchase_dt": "2024-05-06 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 45.03,
-            "purchase_dt": "2024-05-14 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 45.425,
-            "purchase_dt": "2024-05-15 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 45.0872,
-            "purchase_dt": "2024-05-20 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 44.72,
-            "purchase_dt": "2024-05-31 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 46.4,
-            "purchase_dt": "2024-06-14 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 47.8,
-            "purchase_dt": "2024-06-18 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 46.0099,
-            "purchase_dt": "2024-06-25 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 46.95,
-            "purchase_dt": "2024-07-01 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 46.265,
-            "purchase_dt": "2024-07-08 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 47.5265,
-            "purchase_dt": "2024-07-11 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 48.33,
-            "purchase_dt": "2024-07-19 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 50.1483,
-            "purchase_dt": "2024-07-22 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 46.31,
-            "purchase_dt": "2024-07-23 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 42.815,
-            "purchase_dt": "2024-08-08 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 48.4,
-            "purchase_dt": "2024-09-03 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 46.25,
-            "purchase_dt": "2024-09-13 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 47.95,
-            "purchase_dt": "2024-09-23 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 48.32,
-            "purchase_dt": "2024-09-24 02:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 47.73,
-            "purchase_dt": "2024-09-24 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 45.66,
-            "purchase_dt": "2024-10-04 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 51.58,
-            "purchase_dt": "2024-10-29 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 51.95,
-            "purchase_dt": "2024-11-05 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 56.19,
-            "purchase_dt": "2024-11-18 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 58.535,
-            "purchase_dt": "2024-11-22 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 54.82,
-            "purchase_dt": "2024-11-26 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 51.68,
-            "purchase_dt": "2024-12-23 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 51.685,
-            "purchase_dt": "2025-01-02 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 53.5401,
-            "purchase_dt": "2025-01-06 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 51.99,
-            "purchase_dt": "2025-01-07 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 52.12,
-            "purchase_dt": "2025-01-15 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 49.8299,
-            "purchase_dt": "2025-01-28 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 47.99,
-            "purchase_dt": "2025-02-13 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 47.6308,
-            "purchase_dt": "2025-02-19 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 48.92,
-            "purchase_dt": "2025-02-26 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 46.49,
-            "purchase_dt": "2025-03-04 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 48.4985,
-            "purchase_dt": "2025-03-05 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 47.21,
-            "purchase_dt": "2025-03-06 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 47.95,
-            "purchase_dt": "2025-03-10 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 47.25,
-            "purchase_dt": "2025-03-13 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 48.27,
-            "purchase_dt": "2025-03-14 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 47.8,
-            "purchase_dt": "2025-03-26 18:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 45.1299,
-            "purchase_dt": "2025-04-14 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 44.2002,
-            "purchase_dt": "2025-04-21 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 44.995,
-            "purchase_dt": "2025-04-22 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 44.8353,
-            "purchase_dt": "2025-04-30 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 45.68,
-            "purchase_dt": "2025-05-07 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 45.22,
-            "purchase_dt": "2025-05-07 10:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 46.63,
-            "purchase_dt": "2025-05-08 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 49.11,
-            "purchase_dt": "2025-05-21 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 49.6953,
-            "purchase_dt": "2025-05-30 14:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 47.83,
-            "purchase_dt": "2025-06-02 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 49.06,
-            "purchase_dt": "2025-06-04 02:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 48.2091,
-            "purchase_dt": "2025-06-04 06:00:00"
-        },
-        {
-            "symbol": "GM",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 48.075,
-            "purchase_dt": "2025-06-10 06:00:00"
+            "quantity": 7,
+            "side": "buy",
+            "requested_price": 31.7,
+            "issue_dt": "2023-11-29 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 54,
+            "status": "filled",
+            "purchase_dt": "2023-11-29 14:00:00",
+            "purchase_price": 31.7,
+            "take_profit": {
+                "tp_limit": 36.53205724594032,
+                "purchase_dt": "2024-01-02 12:00:00",
+                "purchase_price": 36.5504
+            },
+            "stop_loss": {
+                "sl_limit": 29.283971377029836,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
+        },
+        {
+            "symbol": "GM",
+            "quantity": 5,
+            "side": "buy",
+            "requested_price": 45.41,
+            "issue_dt": "2024-06-05 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 56,
+            "status": "filled",
+            "purchase_dt": "2024-06-05 10:00:00",
+            "purchase_price": 45.41,
+            "take_profit": {
+                "tp_limit": 50.26627177361439,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 42.9818641131928,
+                "purchase_dt": "2024-08-02 04:00:00",
+                "purchase_price": 42.75
+            }
+        },
+        {
+            "symbol": "GM",
+            "quantity": 5,
+            "side": "buy",
+            "requested_price": 46.56,
+            "issue_dt": "2024-08-21 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 58,
+            "status": "filled",
+            "purchase_dt": "2024-08-21 10:00:00",
+            "purchase_price": 46.56,
+            "take_profit": {
+                "tp_limit": 51.15217530115464,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 44.26391234942268,
+                "purchase_dt": "2024-09-11 12:00:00",
+                "purchase_price": 44.205
+            }
+        },
+        {
+            "symbol": "GM",
+            "quantity": 5,
+            "side": "buy",
+            "requested_price": 48.195,
+            "issue_dt": "2024-10-11 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 60,
+            "status": "filled",
+            "purchase_dt": "2024-10-11 10:00:00",
+            "purchase_price": 48.195,
+            "take_profit": {
+                "tp_limit": 53.37328971801818,
+                "purchase_dt": "2024-10-22 12:00:00",
+                "purchase_price": 53.398
+            },
+            "stop_loss": {
+                "sl_limit": 45.60585514099091,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         }
     ]
 }

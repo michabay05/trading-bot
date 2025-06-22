@@ -1,4 +1,5 @@
 from enum import Enum
+from dataclasses import dataclass, asdict, field
 import json, os
 
 
@@ -24,50 +25,124 @@ class Position:
 
 class OrderType(Enum):
     MARKET = "market"
-    TP = "take profit"
+
+class OrderSide(Enum):
+    BUY = "buy"
+    SELL = "sell"
+
+    def opposite(self) -> 'OrderSide':
+        if self == OrderSide.BUY:
+            return OrderSide.SELL
+        elif self == OrderSide.SELL:
+            return OrderSide.BUY
+        else:
+            raise ValueError(f"Unknown side: {self.value}")
 
 class OrderStatus(Enum):
     FILLED = "filled"
     EXPIRED = "expired"
     WORKING = "working"
 
+class OrderIntent(Enum):
+    BUY_TO_OPEN = "buy_to_open"
+    SELL_TO_OPEN = "sell_to_open"
+    BUY_TO_CLOSE = "buy_to_close"
+    SELL_TO_CLOSE = "sell_to_close"
 
+    def opp_close(self) -> 'OrderIntent':
+        if self == OrderIntent.BUY_TO_OPEN:
+            return OrderIntent.SELL_TO_CLOSE
+        elif self == OrderIntent.SELL_TO_OPEN:
+            return OrderIntent.BUY_TO_CLOSE
+        else:
+            raise ValueError(f"There is no opposite close for {self.value}")
+
+
+@dataclass
+class TakeProfitRequest:
+    tp_limit: float
+    purchase_dt: str | None = None
+    purchase_price: float | None = None
+
+@dataclass
+class StopLossRequest:
+    sl_limit: float
+    purchase_dt: str | None = None
+    purchase_price: float | None = None
+
+ORDER_ID_COUNTER: int = 0
+
+@dataclass
 class Order:
-    def __init__(self, symbol: str, order_type: OrderType, quantity: float, issue_price: float,
-        issue_dt: str, status: OrderStatus = OrderStatus.WORKING, purchase_dt: str | None = None
-    ):
-        self.symbol: str = symbol
-        self.type: OrderType = order_type
-        self.status: OrderStatus = status
-        self.quantity: float = quantity
-        # This program assumes that the price at which the order was issued is the same as the price
-        # at which the order was purchased (or filled).
-        self.issue_price: float = issue_price
-        self.issue_dt: str = issue_dt
-        self.purchase_dt: str | None = purchase_dt
+    symbol: str
+    quantity: float
+    side: OrderSide
+    requested_price: float
+    requested_dt: str
+    intent: OrderIntent
+    type: OrderType
+    id: int = field(init=False)
+    status: OrderStatus = OrderStatus.WORKING
+    purchase_dt: str | None = None
+    purchase_price: float | None = None
+    take_profit: TakeProfitRequest | None = None
+    stop_loss: StopLossRequest | None = None
 
-    def is_long(self):
-        return self.quantity > 0
+    def __post_init__(self):
+        global ORDER_ID_COUNTER
+        # Use object.__setattr__ to bypass our custom __setattr__ during init
+        # object.__setattr__(self, 'id', ORDER_ID_COUNTER)
+        self.id = ORDER_ID_COUNTER
+        ORDER_ID_COUNTER += 1
+        # Flag used for partial immutability (used in __setattr__())
+        self._initialized: bool = True
+
+    def __setattr__(self, name: str, value) -> None:
+        if not getattr(self, "_initialized", False):
+            super().__setattr__(name, value)
+            return
+
+        # After initialization, enforce immutability
+        mutable_fields = [
+            "status", "take_profit", "stop_loss", "purchase_dt", "purchase_price"
+        ]
+
+        if name not in mutable_fields and name != '_initialized':
+            raise AttributeError(f"Cannot modify immutable attribute: '{name}'")
+
+        super().__setattr__(name, value)
+
+    def is_long(self) -> bool:
+        return self.side == OrderSide.BUY
+
+    def is_to_open(self) -> bool:
+        return (
+            self.intent == OrderIntent.BUY_TO_OPEN or
+            self.intent == OrderIntent.SELL_TO_OPEN
+        )
+
+    def is_to_close(self) -> bool:
+        return (
+            self.intent == OrderIntent.BUY_TO_CLOSE or
+            self.intent == OrderIntent.SELL_TO_CLOSE
+        )
 
     def __repr__(self) -> str:
-        return json.dumps(self.to_dict(), indent=4)
+        return json.dumps(Order.to_dict(self), indent=4)
 
-    def value(self) -> float:
-        return self.quantity * self.issue_price
+    @staticmethod
+    def to_dict(ord: 'Order') -> dict:
+        d = asdict(ord)
+        # Convert enums to their values for JSON serialization
+        d["side"] = ord.side.value
+        d["type"] = ord.type.value
+        d["status"] = ord.status.value
+        d["intent"] = ord.intent.value
+        return d
 
-    def abs_value(self) -> float:
-        return abs(self.value())
-
-    def to_dict(self) -> dict:
-        return {
-            "symbol": self.symbol,
-            "type": self.type.value,
-            "status": self.status.value,
-            "quantity": self.quantity,
-            "purchase_price": self.issue_price,
-            "issue_dt": self.issue_dt,
-            "purchase_dt": self.purchase_dt,
-        }
+@dataclass
+class MarketOrder(Order):
+    type: OrderType = OrderType.MARKET
 
 
 class Portfolio:
@@ -75,10 +150,11 @@ class Portfolio:
         self._initial_capital: float = initial_capital
         self._capital: float = self._initial_capital
         self._positions: dict[str, Position] = {}
-        self._completed_orders: list[Order] = []
-        self._incomplete_orders: list[Order] = []
+        self._orders: list[Order] = []
         self._pl: float = 0.0
         self._capital_pct: float = 0.0
+
+        self.update_pl()
 
     @property
     def pl(self) -> float:
@@ -101,25 +177,25 @@ class Portfolio:
         return self._positions
 
     @property
-    def completed_orders(self) -> list[Order]:
-        return self._completed_orders
+    def orders(self) -> list[Order]:
+        return self._orders
 
-    @property
-    def incomplete_orders(self) -> list[Order]:
-        return self._incomplete_orders
-
-    def add_completed_order(self, order: Order) -> None:
-        self._completed_orders.append(order)
-
-    def add_incomplete_order(self, order: Order) -> None:
-        self._incomplete_orders.append(order)
+    def add_orders(self, order: Order) -> None:
+        self._orders.append(order)
 
     def __repr__(self) -> str:
         return json.dumps(Portfolio.to_dict(self), indent=4)
 
+    def find_order_by_id(self, id: int) -> Order | None:
+        for ord in self._orders:
+            if ord.id == id:
+                return ord
+
+        return None
+
     def save_to_json(self, filepath: str) -> None:
         with open(filepath, "w") as f:
-            json.dump(self, f, indent=4, default=Portfolio.to_dict)
+            json.dump(Portfolio.to_dict(self), f, indent=4)
 
     def init_from_json(self, filepath: str) -> None:
         if not os.path.exists(filepath):
@@ -139,17 +215,10 @@ class Portfolio:
 
             ords: list[Order] = []
             for ord in root["orders"]:
-                ords.append(Order(
-                    symbol=ord["symbol"],
-                    order_type=OrderType(ord["type"]),
-                    status=OrderStatus(ord["status"]),
-                    quantity=ord["quantity"],
-                    issue_price=ord["purchase_price"],
-                    issue_dt=ord["purchase_dt"]
-                ))
+                ords.append(Order(**ord))
 
         self._positions = psts
-        self._completed_orders = ords
+        self._orders = ords
         self.update_pl()
 
     @staticmethod
@@ -159,12 +228,12 @@ class Portfolio:
             "pl": pft.pl,
             "capital_pct": pft._capital_pct,
             "position_count": len(pft.positions),
-            "order_count": len(pft.completed_orders),
+            "orders_count": len(pft.orders),
             "positions": {
                 symbol: Position.to_dict(position)
                 for symbol, position in pft.positions.items()
             },
-            "orders": [ Order.to_dict(ord) for ord in pft.completed_orders ]
+            "orders": [ Order.to_dict(ord) for ord in pft.orders ]
         }
 
     def update_pl(self):

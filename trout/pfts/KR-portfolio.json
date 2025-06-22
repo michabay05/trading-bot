@@ -1,749 +1,102 @@
 {
-    "capital": 953.6299999999998,
-    "pl": 20.95999999999981,
-    "capital_pct": 102.09599999999999,
-    "positions": {
-        "KR": {
-            "quantity": -1.0,
-            "price": 67.33
-        }
-    },
+    "capital": 1064.5369481031137,
+    "pl": 64.53694810311367,
+    "capital_pct": 106.45369481031138,
+    "position_count": 0,
+    "orders_count": 4,
+    "positions": {},
     "orders": [
         {
             "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 46.37,
-            "purchase_dt": "2023-06-23 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 46.82,
-            "purchase_dt": "2023-07-14 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 47.545,
-            "purchase_dt": "2023-07-20 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 48.98,
-            "purchase_dt": "2023-08-11 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 47.14,
-            "purchase_dt": "2023-09-08 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 45.48,
-            "purchase_dt": "2023-09-11 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 46.275,
-            "purchase_dt": "2023-09-15 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 45.64,
-            "purchase_dt": "2023-09-21 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 44.915,
-            "purchase_dt": "2023-10-10 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 44.3,
-            "purchase_dt": "2023-10-11 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 44.5,
-            "purchase_dt": "2023-10-17 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 43.85,
-            "purchase_dt": "2023-10-20 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 44.6,
-            "purchase_dt": "2023-10-26 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 43.59,
-            "purchase_dt": "2023-11-08 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 44.55,
-            "purchase_dt": "2023-11-15 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 42.91,
-            "purchase_dt": "2023-11-16 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 43.8099,
-            "purchase_dt": "2023-11-22 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 43.18,
-            "purchase_dt": "2023-11-30 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 44.455,
-            "purchase_dt": "2023-11-30 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 44.3,
-            "purchase_dt": "2023-12-12 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 44.7499,
-            "purchase_dt": "2023-12-13 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 44.09,
-            "purchase_dt": "2023-12-14 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 45.155,
-            "purchase_dt": "2023-12-18 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 45.6411,
-            "purchase_dt": "2024-01-09 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 46.01,
-            "purchase_dt": "2024-01-09 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 45.61,
-            "purchase_dt": "2024-01-11 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 46.13,
-            "purchase_dt": "2024-01-16 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 45.94,
-            "purchase_dt": "2024-01-19 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 46.36,
-            "purchase_dt": "2024-01-23 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 46.09,
-            "purchase_dt": "2024-02-01 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 46.565,
-            "purchase_dt": "2024-02-01 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 46.15,
-            "purchase_dt": "2024-02-02 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 45.8399,
-            "purchase_dt": "2024-02-12 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 56.03,
-            "purchase_dt": "2024-03-25 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 56.635,
-            "purchase_dt": "2024-03-27 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 56.55,
-            "purchase_dt": "2024-04-08 02:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 56.505,
-            "purchase_dt": "2024-04-19 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 55.615,
-            "purchase_dt": "2024-04-24 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 56.15,
-            "purchase_dt": "2024-04-25 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 55.72,
-            "purchase_dt": "2024-04-25 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 55.36,
-            "purchase_dt": "2024-05-07 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 54.78,
-            "purchase_dt": "2024-05-15 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 52.03,
-            "purchase_dt": "2024-06-18 02:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 50.04,
-            "purchase_dt": "2024-06-20 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 50.29,
-            "purchase_dt": "2024-07-01 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 53.31,
-            "purchase_dt": "2024-07-25 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 54.315,
-            "purchase_dt": "2024-07-29 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 53.9,
-            "purchase_dt": "2024-08-05 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 54.91,
-            "purchase_dt": "2024-08-07 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 53.78,
-            "purchase_dt": "2024-08-07 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 52.795,
-            "purchase_dt": "2024-08-27 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 52.31,
-            "purchase_dt": "2024-09-06 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 54.59,
-            "purchase_dt": "2024-09-12 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 55.53,
-            "purchase_dt": "2024-10-03 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 56.14,
-            "purchase_dt": "2024-10-15 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 55.99,
-            "purchase_dt": "2024-10-29 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 57.279,
-            "purchase_dt": "2024-11-05 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 58.95,
-            "purchase_dt": "2024-11-15 02:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 59.215,
-            "purchase_dt": "2024-11-22 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 59.85,
-            "purchase_dt": "2024-12-03 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 60.7,
-            "purchase_dt": "2024-12-05 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 59.5,
-            "purchase_dt": "2024-12-06 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 60.65,
-            "purchase_dt": "2024-12-11 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 60.88,
-            "purchase_dt": "2024-12-18 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 62.72,
-            "purchase_dt": "2024-12-20 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 60.96,
-            "purchase_dt": "2024-12-23 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 61.83,
-            "purchase_dt": "2024-12-24 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 61.15,
-            "purchase_dt": "2024-12-30 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 62.208,
-            "purchase_dt": "2025-01-02 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 61.46,
-            "purchase_dt": "2025-01-03 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 60.39,
-            "purchase_dt": "2025-01-15 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 59.18,
-            "purchase_dt": "2025-01-15 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 59.77,
-            "purchase_dt": "2025-01-27 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 64.5,
-            "purchase_dt": "2025-02-20 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 65.86,
-            "purchase_dt": "2025-02-25 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 64.18,
-            "purchase_dt": "2025-02-26 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 65.05,
-            "purchase_dt": "2025-03-03 02:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 63.0,
-            "purchase_dt": "2025-03-03 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 67.2,
-            "purchase_dt": "2025-03-07 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 65.1,
-            "purchase_dt": "2025-03-14 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 66.39,
-            "purchase_dt": "2025-03-17 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 65.48,
-            "purchase_dt": "2025-03-19 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 66.21,
-            "purchase_dt": "2025-03-26 14:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 65.71,
-            "purchase_dt": "2025-04-07 02:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 67.96,
-            "purchase_dt": "2025-04-10 18:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 69.32,
-            "purchase_dt": "2025-04-25 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 71.61,
-            "purchase_dt": "2025-04-30 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 71.65,
-            "purchase_dt": "2025-05-09 06:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 68.87,
-            "purchase_dt": "2025-05-19 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 68.36,
-            "purchase_dt": "2025-05-22 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 68.03,
-            "purchase_dt": "2025-06-02 10:00:00"
-        },
-        {
-            "symbol": "KR",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 67.33,
-            "purchase_dt": "2025-06-03 06:00:00"
+            "quantity": 5,
+            "side": "buy",
+            "requested_price": 45.83,
+            "issue_dt": "2024-02-12 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 119,
+            "status": "filled",
+            "purchase_dt": "2024-02-12 14:00:00",
+            "purchase_price": 45.83,
+            "take_profit": {
+                "tp_limit": 48.9172464798239,
+                "purchase_dt": "2024-02-29 12:00:00",
+                "purchase_price": 48.92
+            },
+            "stop_loss": {
+                "sl_limit": 44.28637676008805,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
+        },
+        {
+            "symbol": "KR",
+            "quantity": 4,
+            "side": "buy",
+            "requested_price": 46.5816,
+            "issue_dt": "2024-02-15 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 120,
+            "status": "filled",
+            "purchase_dt": "2024-02-15 10:00:00",
+            "purchase_price": 46.5816,
+            "take_profit": {
+                "tp_limit": 50.36984248667236,
+                "purchase_dt": "2024-03-06 16:00:00",
+                "purchase_price": 50.59
+            },
+            "stop_loss": {
+                "sl_limit": 44.68747875666382,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
+        },
+        {
+            "symbol": "KR",
+            "quantity": 4,
+            "side": "buy",
+            "requested_price": 52.4,
+            "issue_dt": "2024-07-15 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 123,
+            "status": "filled",
+            "purchase_dt": "2024-07-15 10:00:00",
+            "purchase_price": 52.4,
+            "take_profit": {
+                "tp_limit": 56.86970984783277,
+                "purchase_dt": "2024-09-30 08:00:00",
+                "purchase_price": 56.9
+            },
+            "stop_loss": {
+                "sl_limit": 50.16514507608361,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
+        },
+        {
+            "symbol": "KR",
+            "quantity": 4,
+            "side": "buy",
+            "requested_price": 61.64,
+            "issue_dt": "2025-01-31 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 126,
+            "status": "filled",
+            "purchase_dt": "2025-01-31 14:00:00",
+            "purchase_price": 61.64,
+            "take_profit": {
+                "tp_limit": 67.80214434965092,
+                "purchase_dt": "2025-03-10 12:00:00",
+                "purchase_price": 68.06
+            },
+            "stop_loss": {
+                "sl_limit": 58.55892782517454,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         }
     ]
 }

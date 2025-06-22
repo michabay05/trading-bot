@@ -1,653 +1,107 @@
 {
-    "capital": 969.4688999999998,
-    "pl": -0.6611000000001468,
-    "capital_pct": 99.93388999999998,
+    "capital": 761.1274999999998,
+    "pl": -7.552500000000123,
+    "capital_pct": 99.24475,
+    "position_count": 1,
+    "orders_count": 4,
     "positions": {
         "HMC": {
-            "quantity": -1.0,
-            "price": 29.87
+            "quantity": 8,
+            "price": 28.915
         }
     },
     "orders": [
         {
             "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 30.5311,
-            "purchase_dt": "2023-07-13 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 30.08,
-            "purchase_dt": "2023-07-17 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 30.58,
-            "purchase_dt": "2023-07-18 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 30.69,
-            "purchase_dt": "2023-08-03 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 32.19,
-            "purchase_dt": "2023-08-09 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 30.64,
-            "purchase_dt": "2023-08-14 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 31.355,
-            "purchase_dt": "2023-08-23 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 35.36,
-            "purchase_dt": "2023-09-22 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 33.535,
-            "purchase_dt": "2023-10-10 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 33.0453,
-            "purchase_dt": "2023-10-18 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 31.66,
-            "purchase_dt": "2023-11-02 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 31.215,
-            "purchase_dt": "2023-11-09 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 32.15,
-            "purchase_dt": "2023-11-14 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 31.48,
-            "purchase_dt": "2023-11-20 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 31.63,
-            "purchase_dt": "2023-11-24 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 31.26,
-            "purchase_dt": "2023-11-27 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 30.85,
-            "purchase_dt": "2023-12-11 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 30.57,
-            "purchase_dt": "2023-12-11 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 30.73,
-            "purchase_dt": "2023-12-19 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 33.99,
-            "purchase_dt": "2024-02-12 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 34.82,
-            "purchase_dt": "2024-02-15 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 35.25,
-            "purchase_dt": "2024-03-07 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 36.02,
-            "purchase_dt": "2024-03-15 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 36.0171,
-            "purchase_dt": "2024-03-25 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 37.3,
-            "purchase_dt": "2024-03-26 02:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 36.73,
-            "purchase_dt": "2024-04-01 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 37.0,
-            "purchase_dt": "2024-04-08 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 36.58,
-            "purchase_dt": "2024-04-10 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 34.375,
-            "purchase_dt": "2024-05-02 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 33.83,
-            "purchase_dt": "2024-05-08 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 33.84,
-            "purchase_dt": "2024-05-20 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 33.365,
-            "purchase_dt": "2024-05-21 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 33.72,
-            "purchase_dt": "2024-05-31 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 32.8,
-            "purchase_dt": "2024-06-04 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 32.855,
-            "purchase_dt": "2024-06-12 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 32.02,
-            "purchase_dt": "2024-06-13 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 32.27,
-            "purchase_dt": "2024-06-25 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 31.86,
-            "purchase_dt": "2024-07-08 02:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 32.43,
-            "purchase_dt": "2024-07-12 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 31.9399,
-            "purchase_dt": "2024-07-18 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 32.265,
-            "purchase_dt": "2024-07-23 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 31.75,
-            "purchase_dt": "2024-07-24 02:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 31.585,
-            "purchase_dt": "2024-07-30 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 31.0,
-            "purchase_dt": "2024-08-01 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 30.5014,
-            "purchase_dt": "2024-08-14 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 31.88,
-            "purchase_dt": "2024-09-04 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 31.77,
-            "purchase_dt": "2024-09-16 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 32.25,
-            "purchase_dt": "2024-09-27 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 32.618,
-            "purchase_dt": "2024-10-04 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 32.16,
-            "purchase_dt": "2024-10-07 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 31.0,
-            "purchase_dt": "2024-10-28 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 30.32,
-            "purchase_dt": "2024-10-31 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 26.88,
-            "purchase_dt": "2024-11-18 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 26.085,
-            "purchase_dt": "2024-11-20 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 26.605,
-            "purchase_dt": "2024-11-22 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 26.07,
-            "purchase_dt": "2024-11-26 02:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 26.37,
-            "purchase_dt": "2024-12-03 02:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 25.88,
-            "purchase_dt": "2024-12-04 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 26.01,
-            "purchase_dt": "2024-12-09 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 25.95,
-            "purchase_dt": "2024-12-11 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 27.94,
-            "purchase_dt": "2024-12-23 02:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 28.86,
-            "purchase_dt": "2025-01-10 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 28.76,
-            "purchase_dt": "2025-01-21 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 28.05,
-            "purchase_dt": "2025-01-29 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 28.7601,
-            "purchase_dt": "2025-01-30 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 28.24,
-            "purchase_dt": "2025-01-31 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 28.59,
-            "purchase_dt": "2025-02-05 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 28.0,
-            "purchase_dt": "2025-02-10 02:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 29.16,
-            "purchase_dt": "2025-02-13 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 27.555,
-            "purchase_dt": "2025-02-18 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 27.72,
-            "purchase_dt": "2025-02-25 18:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 27.45,
-            "purchase_dt": "2025-03-04 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 28.48,
-            "purchase_dt": "2025-03-05 02:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 29.515,
-            "purchase_dt": "2025-03-26 10:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 27.6,
-            "purchase_dt": "2025-04-09 14:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 30.17,
-            "purchase_dt": "2025-05-08 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 30.885,
-            "purchase_dt": "2025-05-12 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 29.45,
-            "purchase_dt": "2025-05-13 02:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 29.93,
-            "purchase_dt": "2025-05-21 06:00:00"
-        },
-        {
-            "symbol": "HMC",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 29.87,
-            "purchase_dt": "2025-06-04 02:00:00"
+            "quantity": 7,
+            "side": "buy",
+            "requested_price": 31.8625,
+            "issue_dt": "2024-01-08 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 67,
+            "status": "filled",
+            "purchase_dt": "2024-01-08 10:00:00",
+            "purchase_price": 31.8625,
+            "take_profit": {
+                "tp_limit": 34.65008493840385,
+                "purchase_dt": "2024-02-06 20:00:00",
+                "purchase_price": 35.0
+            },
+            "stop_loss": {
+                "sl_limit": 30.468707530798078,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
+        },
+        {
+            "symbol": "HMC",
+            "quantity": 7,
+            "side": "buy",
+            "requested_price": 32.03,
+            "issue_dt": "2024-08-22 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 69,
+            "status": "filled",
+            "purchase_dt": "2024-08-22 10:00:00",
+            "purchase_price": 32.03,
+            "take_profit": {
+                "tp_limit": 35.120529883542275,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 30.484735058228864,
+                "purchase_dt": "2024-10-22 08:00:00",
+                "purchase_price": 30.345
+            }
+        },
+        {
+            "symbol": "HMC",
+            "quantity": 8,
+            "side": "buy",
+            "requested_price": 28.655,
+            "issue_dt": "2025-02-14 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 73,
+            "status": "filled",
+            "purchase_dt": "2025-02-14 10:00:00",
+            "purchase_price": 28.655,
+            "take_profit": {
+                "tp_limit": 33.06463983168184,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 26.450180084159083,
+                "purchase_dt": "2025-04-03 12:00:00",
+                "purchase_price": 26.44
+            }
+        },
+        {
+            "symbol": "HMC",
+            "quantity": 8,
+            "side": "buy",
+            "requested_price": 28.915,
+            "issue_dt": "2025-04-17 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 76,
+            "status": "filled",
+            "purchase_dt": "2025-04-17 14:00:00",
+            "purchase_price": 28.915,
+            "take_profit": {
+                "tp_limit": 33.38264104570902,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 26.681179477145488,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         }
     ]
 }

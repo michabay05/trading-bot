@@ -36,13 +36,14 @@ def valid_tickers(search_dir: str) -> tuple[list[str], list[str]]:
 
 def candle_csv_to_json(csv_path: str, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path)
-    timestamps: list[int] = []
-    for date in sf.date_series:
-        # unix_timestamp = int(datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp())
-        unix = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-        timestamps.append(int(unix.timestamp()))
 
-    sf.df["Date"] = timestamps
+    # timestamps: list[int] = []
+    # for date in sf.date_series:
+    #     # unix_timestamp = int(datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp())
+    #     unix = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+    #     timestamps.append(int(unix.timestamp()))
+    # sf.df["Date"] = timestamps
+
     sf.df.rename(
         columns={"Date": "time", "Open": "open", "High": "high", "Low": "low", "Close": "close"},
         inplace=True
@@ -68,10 +69,11 @@ def calc_save_indicators(csv_path: str, target_path: str) -> None:
         # df.to_json(target_path, orient="records", indent=4)
         output[name] = []
         for row in df.itertuples(index=False):
-            unix_timestamp = int(datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S").timestamp())
+            # unix_timestamp = int(datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S").timestamp())
+            # unix_timestamp = int(datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S").timestamp())
             # v = row[1] if not math.isnan(row[1]) else None
             if not math.isnan(row[1]):
-                output[name].append({"time": unix_timestamp, "value": row[1]})
+                output[name].append({"time": row[0], "value": row[1]})
 
         # Remove column when done
         del df[name]

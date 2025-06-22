@@ -1,893 +1,107 @@
 {
-    "capital": 888.1700000000001,
-    "pl": -49.22919999999988,
-    "capital_pct": 95.07708000000001,
+    "capital": 760.425,
+    "pl": -52.375,
+    "capital_pct": 94.7625,
+    "position_count": 1,
+    "orders_count": 4,
     "positions": {
         "NKE": {
-            "quantity": -1.0,
-            "price": 62.6008
+            "quantity": 3,
+            "price": 62.4
         }
     },
     "orders": [
         {
             "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 111.83,
-            "purchase_dt": "2023-06-26 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 108.65,
-            "purchase_dt": "2023-06-29 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 107.4683,
-            "purchase_dt": "2023-07-11 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 107.5,
-            "purchase_dt": "2023-07-20 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 109.06,
-            "purchase_dt": "2023-07-21 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 107.75,
-            "purchase_dt": "2023-07-24 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 109.25,
-            "purchase_dt": "2023-07-26 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 108.0,
-            "purchase_dt": "2023-07-27 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 109.25,
-            "purchase_dt": "2023-07-31 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 108.095,
-            "purchase_dt": "2023-08-02 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 109.84,
-            "purchase_dt": "2023-08-04 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 108.94,
-            "purchase_dt": "2023-08-11 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 101.585,
-            "purchase_dt": "2023-08-29 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 100.34,
-            "purchase_dt": "2023-09-05 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 97.15,
-            "purchase_dt": "2023-09-28 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 100.7,
-            "purchase_dt": "2023-10-26 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 102.31,
-            "purchase_dt": "2023-10-31 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 101.08,
-            "purchase_dt": "2023-11-01 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 102.62,
-            "purchase_dt": "2023-11-02 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 106.15,
-            "purchase_dt": "2023-11-10 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 107.84,
-            "purchase_dt": "2023-11-15 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 106.14,
-            "purchase_dt": "2023-11-17 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 107.4501,
-            "purchase_dt": "2023-11-22 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 115.92,
-            "purchase_dt": "2023-12-21 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 105.21,
-            "purchase_dt": "2024-01-11 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 102.16,
-            "purchase_dt": "2024-01-16 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 102.825,
-            "purchase_dt": "2024-01-26 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 101.69,
-            "purchase_dt": "2024-01-31 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 102.42,
-            "purchase_dt": "2024-02-07 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 102.88,
-            "purchase_dt": "2024-02-16 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 105.8,
-            "purchase_dt": "2024-02-22 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 104.4,
-            "purchase_dt": "2024-02-27 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 105.15,
-            "purchase_dt": "2024-02-27 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 104.54,
-            "purchase_dt": "2024-02-28 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 101.615,
-            "purchase_dt": "2024-03-11 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 99.6,
-            "purchase_dt": "2024-03-15 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 100.58,
-            "purchase_dt": "2024-03-20 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 93.88,
-            "purchase_dt": "2024-03-21 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 91.0394,
-            "purchase_dt": "2024-04-09 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 89.0153,
-            "purchase_dt": "2024-04-10 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 91.985,
-            "purchase_dt": "2024-04-11 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 94.09,
-            "purchase_dt": "2024-04-23 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 94.54,
-            "purchase_dt": "2024-04-24 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 92.685,
-            "purchase_dt": "2024-04-25 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 95.1,
-            "purchase_dt": "2024-04-26 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 94.12,
-            "purchase_dt": "2024-04-26 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 93.22,
-            "purchase_dt": "2024-05-06 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 91.46,
-            "purchase_dt": "2024-05-10 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 92.7601,
-            "purchase_dt": "2024-05-14 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 92.235,
-            "purchase_dt": "2024-05-15 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 92.73,
-            "purchase_dt": "2024-05-21 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 91.48,
-            "purchase_dt": "2024-05-23 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 92.2,
-            "purchase_dt": "2024-05-28 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 91.51,
-            "purchase_dt": "2024-05-29 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 92.3,
-            "purchase_dt": "2024-05-29 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 91.66,
-            "purchase_dt": "2024-05-29 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 92.85,
-            "purchase_dt": "2024-05-30 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 93.95,
-            "purchase_dt": "2024-06-12 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 94.85,
-            "purchase_dt": "2024-06-18 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 94.91,
-            "purchase_dt": "2024-06-25 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 73.08,
-            "purchase_dt": "2024-07-18 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 72.57,
-            "purchase_dt": "2024-07-18 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 73.655,
-            "purchase_dt": "2024-07-22 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 72.28,
-            "purchase_dt": "2024-07-24 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 73.24,
-            "purchase_dt": "2024-07-29 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 72.7,
-            "purchase_dt": "2024-08-02 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 73.295,
-            "purchase_dt": "2024-08-07 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 72.3401,
-            "purchase_dt": "2024-08-07 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 73.93,
-            "purchase_dt": "2024-08-08 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 82.35,
-            "purchase_dt": "2024-08-28 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 79.63,
-            "purchase_dt": "2024-09-16 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 84.7515,
-            "purchase_dt": "2024-10-01 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 82.4,
-            "purchase_dt": "2024-10-10 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 81.51,
-            "purchase_dt": "2024-10-11 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 82.17,
-            "purchase_dt": "2024-10-15 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 81.735,
-            "purchase_dt": "2024-10-21 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 78.13,
-            "purchase_dt": "2024-11-05 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 77.6,
-            "purchase_dt": "2024-11-06 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 76.79,
-            "purchase_dt": "2024-11-12 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 76.36,
-            "purchase_dt": "2024-11-14 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 77.127,
-            "purchase_dt": "2024-11-15 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 74.59,
-            "purchase_dt": "2024-11-18 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 76.29,
-            "purchase_dt": "2024-11-22 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 78.32,
-            "purchase_dt": "2024-12-04 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 78.7,
-            "purchase_dt": "2024-12-05 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 77.7,
-            "purchase_dt": "2024-12-09 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 78.8,
-            "purchase_dt": "2024-12-12 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 77.7599,
-            "purchase_dt": "2024-12-13 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 78.09,
-            "purchase_dt": "2024-12-17 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 77.2,
-            "purchase_dt": "2024-12-18 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
+            "quantity": 2,
+            "side": "buy",
+            "requested_price": 105.26,
+            "requested_dt": "2024-02-14 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 2,
+            "status": "filled",
+            "purchase_dt": null,
+            "purchase_price": 105.26,
+            "take_profit": {
+                "tp_limit": 115.81345890374115,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 99.98327054812943,
+                "purchase_dt": "2024-03-04 12:00:00",
+                "purchase_price": 99.51
+            }
+        },
+        {
+            "symbol": "NKE",
+            "quantity": 3,
+            "side": "buy",
+            "requested_price": 81.99,
+            "requested_dt": "2024-12-19 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 8,
+            "status": "filled",
+            "purchase_dt": null,
             "purchase_price": 81.99,
-            "purchase_dt": "2024-12-19 14:00:00"
+            "take_profit": {
+                "tp_limit": 96.92529792474583,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 74.52235103762708,
+                "purchase_dt": "2024-12-20 08:00:00",
+                "purchase_price": 73.23
+            }
         },
         {
             "symbol": "NKE",
+            "quantity": 3,
+            "side": "buy",
+            "requested_price": 76.66,
+            "requested_dt": "2025-02-19 14:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 11,
             "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 74.67,
-            "purchase_dt": "2024-12-20 02:00:00"
+            "purchase_dt": null,
+            "purchase_price": 76.66,
+            "take_profit": {
+                "tp_limit": 85.83377189313008,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 72.07311405343495,
+                "purchase_dt": "2025-03-13 12:00:00",
+                "purchase_price": 71.795
+            }
         },
         {
             "symbol": "NKE",
+            "quantity": 3,
+            "side": "buy",
+            "requested_price": 62.4,
+            "requested_dt": "2025-05-12 14:00:00",
+            "intent": "buy_to_open",
             "type": "market",
+            "id": 13,
             "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 72.75,
-            "purchase_dt": "2025-01-21 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 74.61,
-            "purchase_dt": "2025-02-05 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 72.3,
-            "purchase_dt": "2025-02-13 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 78.595,
-            "purchase_dt": "2025-02-28 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 79.89,
-            "purchase_dt": "2025-03-10 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 76.0,
-            "purchase_dt": "2025-03-10 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 57.88,
-            "purchase_dt": "2025-04-10 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 54.435,
-            "purchase_dt": "2025-04-10 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 55.8,
-            "purchase_dt": "2025-04-17 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 57.01,
-            "purchase_dt": "2025-04-30 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 57.64,
-            "purchase_dt": "2025-05-02 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 56.89,
-            "purchase_dt": "2025-05-06 10:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 58.2272,
-            "purchase_dt": "2025-05-06 18:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 61.42,
-            "purchase_dt": "2025-05-21 06:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 62.79,
-            "purchase_dt": "2025-05-27 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 61.37,
-            "purchase_dt": "2025-05-30 02:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": 1.0,
-            "purchase_price": 62.3,
-            "purchase_dt": "2025-06-03 14:00:00"
-        },
-        {
-            "symbol": "NKE",
-            "type": "market",
-            "status": "filled",
-            "quantity": -1.0,
-            "purchase_price": 62.6008,
-            "purchase_dt": "2025-06-12 18:00:00"
+            "purchase_dt": null,
+            "purchase_price": 62.4,
+            "take_profit": {
+                "tp_limit": 73.93486560213923,
+                "purchase_dt": null,
+                "purchase_price": null
+            },
+            "stop_loss": {
+                "sl_limit": 56.63256719893039,
+                "purchase_dt": null,
+                "purchase_price": null
+            }
         }
     ]
 }

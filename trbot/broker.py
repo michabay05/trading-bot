@@ -1,87 +1,148 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 import json, sys, time
 
 import requests
 
-from . import candles
+from . import candles, tbsecrets
 from .candles import Candle, CandleOption, Timespan
-from .portfolio import Portfolio, Order, OrderStatus, OrderType, Position
-import tbsecrets
+from .portfolio import Portfolio, MarketOrder, OrderStatus, Position
 
-
-_BASE_URL: str = "https://api.polygon.io"
-_API_KEY: str = tbsecrets.POLYGON_IO_SECRETS["api_key"]
-_REQ_PER_MIN: int = 4
-_REQUEST_TIMES: list[datetime] = []
-
-def is_market_open(dt_str: str) -> bool:
-    dt: datetime = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
-    # Note: dt.weekday() -> 0-6 where [Monday = 0]
-    return dt.weekday() < 5 and (9 <= dt.hour <= 16)
-
-def market_order(symbol: str, quantity: float, dt_str: str | None = None) -> Order:
-    start = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S") if dt_str is not None else datetime.now()
-    dt: str = (start + timedelta(seconds=1)).strftime("%Y-%m-%d %H:%M:%S")
-    purchase_price: float = _get_quote(symbol, dt)
-
-    return Order(
-        symbol=symbol,
-        order_type=OrderType.MARKET,
-        quantity=quantity,
-        issue_price=purchase_price,
-        issue_dt=dt
-    )
 
 class InsufficientFundsError(Exception):
     pass
 
-def execute_market_order(order: Order, portfolio: Portfolio, curr_dt_str: str) -> None:
-    if order.value() == 0.0:
-        # Nothing is being bought here
-        return
 
-    if order.type != OrderType.MARKET:
-        return
+class Broker:
+    def __init__(self, allow_fractional: bool = False, commission: float = 0.0) -> None:
+        self._allow_fractional: bool = allow_fractional
+        self._commission: float = commission
+        # Contains a list of orders that require checkups, which include orders with
+        #  take profits and stop losses
+        self._checkups: list[int] = []
 
-    if not is_market_open(curr_dt_str):
-        # if market not open, then status won't be executed. that will happen once the market reopens
-        order.status = OrderStatus.WORKING
-        return
+    def is_market_open(self, dt_str: str) -> bool:
+        dt: datetime = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
+        # Note: dt.weekday() -> 0-6 where [Monday = 0]
+        return dt.weekday() < 5 and (9 <= dt.hour <= 16)
 
-    if portfolio.capital < order.abs_value():
-        # Order cancelled due to insufficient funds (Update order status)
-        raise InsufficientFundsError(f"(Capital: ${portfolio.capital:.4f}, order total: {order.abs_value()})")
+    def order_checkup(self, pft: Portfolio, last_close: float, curr_dt_str: str):
+        completed_inds: set[int] = set()
 
-    # Subtract order from total and update portfolio's positions
-    portfolio.capital = portfolio.capital - order.abs_value()
-    # Update order status
-    order.status = OrderStatus.FILLED
-    order.purchase_dt = curr_dt_str
-    portfolio.add_completed_order(order)
+        for index, id in enumerate(self._checkups):
+            order = pft.find_order_by_id(id)
+            if order is None:
+                # Order with matching id has not been found
+                continue
 
-    # Update portfolio position
-    if order.symbol in portfolio.positions.keys():
-        # Position already exists
-        pst: Position = portfolio.positions[order.symbol]
-        new_value = pst.market_value() + order.value()
-        pst.price = order.issue_price
-        pst.quantity = new_value / order.issue_price
-    else:
-        # New position was justed created
-        portfolio.positions[order.symbol] = Position(
-            order.symbol, order.quantity, order.issue_price
-        )
+            if order.take_profit is not None:
+                tp_limit: float = order.take_profit.tp_limit
+                # Temporary assert (will be removed)
+                assert order.is_long()
+                tp_crossed: bool = last_close >= tp_limit
+                if tp_crossed:
+                    tp_order: MarketOrder = MarketOrder(
+                        symbol=order.symbol,
+                        quantity=order.quantity,
+                        side=order.side.opposite(),
+                        requested_price=last_close,
+                        requested_dt=curr_dt_str,
+                        intent=order.intent.opp_close()
+                    )
+                    self.execute_close_order(tp_order, pft, last_close)
+                    assert tp_order.status != OrderStatus.FILLED
+                    # Update info about when and at what price the take profit took place
+                    order.take_profit.purchase_dt = curr_dt_str
+                    order.take_profit.purchase_price = last_close
+                    completed_inds.add(index)
 
-def close_position(portfolio: Portfolio, ticker: str, curr_market_price: float) -> None:
-    if not ticker in portfolio.positions.keys():
-        # There is no position with this ticker to close
-        return
+            if order.stop_loss is not None:
+                # raise NotImplementedError("stop losses are not implemented yet!")
+                sl_limit: float = order.stop_loss.sl_limit
+                # Temporary assert (will be removed)
+                assert order.is_long()
+                sl_crossed: bool = last_close <= sl_limit
+                if sl_crossed:
+                    sl_order: MarketOrder = MarketOrder(
+                        symbol=order.symbol,
+                        quantity=order.quantity,
+                        side=order.side.opposite(),
+                        requested_price=last_close,
+                        requested_dt=curr_dt_str,
+                        intent=order.intent.opp_close()
+                    )
+                    self.execute_close_order(sl_order, pft, last_close)
+                    assert sl_order.status != OrderStatus.FILLED
+                    # Update info about when and at what price the take profit took place
+                    order.stop_loss.purchase_dt = curr_dt_str
+                    order.stop_loss.purchase_price = last_close
+                    completed_inds.add(index)
 
-    position: Position = portfolio.positions[ticker]
-    portfolio.capital += abs(position.quantity) * curr_market_price
-    del portfolio.positions[ticker]
+        for i in sorted(completed_inds, reverse=True):
+            del self._checkups[i]
 
-    portfolio.update_pl()
+    def execute_open_order(self,
+        order: MarketOrder, portfolio: Portfolio, last_close: float, curr_dt_str: str
+    ) -> None:
+        # NOTE: this method only handles orders with the intent of opening a position
+        assert order.is_to_open()
+
+        if order.status != OrderStatus.WORKING:
+            # The order has been completed already
+            return
+
+        if not self.is_market_open(curr_dt_str):
+            # if market not open, then status won't be executed. that will happen once the market reopens
+            order.status = OrderStatus.WORKING
+            return
+
+        requested_value = order.quantity * order.requested_price
+        if portfolio.capital < requested_value:
+            # Order cancelled due to insufficient funds (Update order status)
+            raise InsufficientFundsError(f"(Capital: ${portfolio.capital:.4f}, order total: ${requested_value})")
+
+        # Subtract order from total and update portfolio's positions
+        portfolio.capital = portfolio.capital - requested_value
+        # Update order status
+        order.status = OrderStatus.FILLED
+        order.requested_dt = curr_dt_str
+        order.purchase_price = last_close
+        portfolio.add_orders(order)
+
+        # Update portfolio position
+        if order.symbol in portfolio.positions.keys():
+            # Position already exists
+            pst: Position = portfolio.positions[order.symbol]
+            new_value = pst.market_value() + requested_value
+            pst.price = order.requested_price
+            pst.quantity = new_value / order.requested_price
+        else:
+            # New position was justed created
+            portfolio.positions[order.symbol] = Position(
+                order.symbol, order.quantity, order.requested_price
+            )
+
+        if order.take_profit is not None:
+            self._checkups.append(order.id)
+
+    def execute_close_order(self, order: MarketOrder, portfolio: Portfolio, last_close: float) -> None:
+        assert order.is_to_close()
+
+        if not order.symbol in portfolio.positions.keys():
+            # There is no position with this symbol to close
+            return
+
+        position: Position = portfolio.positions[order.symbol]
+        portfolio.capital += position.quantity * last_close
+        del portfolio.positions[order.symbol]
+
+        portfolio.update_pl()
+
+
+# ============================ POLYGON.IO-specific ============================
+_BASE_URL: str = "https://api.polygon.io"
+_API_KEY: str = tbsecrets.POLYGON_IO_SECRETS["api_key"]
+_REQ_PER_MIN: int = 4
+_REQUEST_TIMES: list[datetime] = []
 
 def get_historical_candles(opt: CandleOption) -> list[Candle]:
     """ Get historical candles for a certain stock as specified in the options """
@@ -115,7 +176,7 @@ def get_historical_candles(opt: CandleOption) -> list[Candle]:
 
     return cnds
 
-def _get_quote(symbol: str, dt_str: str | None = None) -> float:
+def _get_live_quote(symbol: str, dt_str: str | None = None) -> float: # type: ignore
     dt: datetime = datetime.now()
     if dt_str is not None:
         dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
