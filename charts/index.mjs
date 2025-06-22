@@ -1,12 +1,40 @@
 // import { createChart, LineSeries } from "./node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs";
 import {
-    createChart, CandlestickSeries, LineSeries, CrosshairMode
+    createChart, CandlestickSeries, LineSeries, CrosshairMode, LastPriceAnimationMode
 }  from "./node_modules/lightweight-charts/dist/lightweight-charts.standalone.development.mjs";
 
 const w = 0.9 * window.innerWidth;
 const h = 0.9 * window.innerHeight;
 const container = document.getElementById("tv-chart");
-const chart = createChart(container, { width: w, height: h });
+const chart = createChart(container, {
+    width: w,
+    height: h,
+    localization: {
+        timeFormatter: unixTimestampMs => {
+            return new Date(unixTimestampMs).toLocaleString("en-US", {
+                dateStyle: "medium",
+                timeStyle: "medium",
+                hour12: false,
+            });
+        },
+        // This dateFormat ithing does not work
+        dateFormat: "yyyy-MM-dd"
+    },
+    crosshair: {
+        mode: CrosshairMode.Normal,
+    },
+    layout: {
+        attributionLogo: false,
+    },
+    timeScale: {
+        timeVisible: true,
+        ticksVisible: true,
+    },
+    priceScale: {
+        visible: true,
+        ticksVisible: true,
+    }
+});
 
 const candlestickSeries = chart.addSeries(CandlestickSeries, {
     upColor: "#26a69a", downColor: "#ef5350", borderVisible: false,
@@ -16,6 +44,10 @@ const candlestickSeries = chart.addSeries(CandlestickSeries, {
 const candlePath = window.location.href + "/ohlc.json";
 const candleResp = await fetch(candlePath);
 const candleJSON = await candleResp.json();
+for (let i = 0; i < candleJSON.length; i++) {
+    let dateStr = candleJSON[i]["time"];
+    candleJSON[i]["time"] = Date.parse(dateStr);
+}
 candlestickSeries.setData(candleJSON);
 
 const indsPath = window.location.href + "/inds.json";
@@ -25,18 +57,14 @@ const indsJSON = await indsResp.json();
 const colors = ["#2962FF", "#FFA500"];
 let i = 0;
 for (const key in indsJSON) {
-    const lineSeries = chart.addSeries(LineSeries, { color: colors[i++] });
+    const lineSeries = chart.addSeries(LineSeries, {
+        color: colors[i++],
+        lastPriceAnimation: LastPriceAnimationMode.OnDataUpdate,
+    });
+    for (let i = 0; i < indsJSON[key].length; i++) {
+        let dateStr = indsJSON[key][i]["time"];
+        indsJSON[key][i]["time"] = Date.parse(dateStr);
+    }
     lineSeries.setData(indsJSON[key]);
 }
-chart.applyOptions({
-    "crosshair": {
-        "mode": CrosshairMode.Normal,
-    },
-    "layout": {
-        "attributionLogo": false,
-    },
-    "timeScale": {
-        "timeVisible": true,
-    },
-})
 chart.timeScale().resetTimeScale();

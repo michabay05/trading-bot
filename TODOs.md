@@ -36,6 +36,8 @@ A list of all the TODOs needed to be completed before each release
 ---
 
 # v0.6
+- [x] (refactor) Fix the timescale issue on lightweight charts
+    - It looks like a timezone issue
 - [ ] (feat) Add take-profit and stop-loss
     - [x] Take profit
     - [ ] Stop loss
