@@ -60,15 +60,36 @@ class OrderIntent(Enum):
 
 @dataclass
 class TakeProfitRequest:
+    intent: OrderIntent
     tp_limit: float
-    purchase_dt: str | None = None
     purchase_price: float | None = None
+    purchase_dt: str | None = None
+
+    @staticmethod
+    def to_dict(tpr: 'TakeProfitRequest | None') -> dict:
+        if tpr is not None:
+            d = asdict(tpr)
+            d["intent"] = tpr.intent.value
+            return d
+        else:
+            return {}
+
 
 @dataclass
 class StopLossRequest:
+    intent: OrderIntent
     sl_limit: float
-    purchase_dt: str | None = None
     purchase_price: float | None = None
+    purchase_dt: str | None = None
+
+    @staticmethod
+    def to_dict(slr: 'StopLossRequest | None') -> dict:
+        if slr is not None:
+            d = asdict(slr)
+            d["intent"] = slr.intent.value
+            return d
+        else:
+            return {}
 
 ORDER_ID_COUNTER: int = 0
 
@@ -133,11 +154,12 @@ class Order:
     @staticmethod
     def to_dict(ord: 'Order') -> dict:
         d = asdict(ord)
-        # Convert enums to their values for JSON serialization
         d["side"] = ord.side.value
         d["type"] = ord.type.value
         d["status"] = ord.status.value
         d["intent"] = ord.intent.value
+        d["take_profit"] = TakeProfitRequest.to_dict(ord.take_profit)
+        d["stop_loss"] = StopLossRequest.to_dict(ord.stop_loss)
         return d
 
 @dataclass

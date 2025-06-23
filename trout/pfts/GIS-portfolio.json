@@ -1,9 +1,9 @@
 {
-    "capital": 1027.5437345051882,
-    "pl": 27.54373450518824,
-    "capital_pct": 102.75437345051883,
+    "capital": 988.1267353587242,
+    "pl": -11.873264641275796,
+    "capital_pct": 98.81267353587242,
     "position_count": 0,
-    "orders_count": 6,
+    "orders_count": 10,
     "positions": {},
     "orders": [
         {
@@ -11,22 +11,49 @@
             "quantity": 3,
             "side": "buy",
             "requested_price": 66.24,
-            "issue_dt": "2023-11-02 14:00:00",
+            "requested_dt": "2023-11-02 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 41,
+            "id": 90,
             "status": "filled",
             "purchase_dt": "2023-11-02 14:00:00",
             "purchase_price": 66.24,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 72.60099073991209,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 63.059504630043946,
-                "purchase_dt": "2023-11-29 12:00:00",
-                "purchase_price": 62.7808
+                "purchase_price": 62.7808,
+                "purchase_dt": "2023-11-29 12:00:00"
+            }
+        },
+        {
+            "symbol": "GIS",
+            "quantity": 3,
+            "side": "sell",
+            "requested_price": 63.67,
+            "requested_dt": "2023-11-27 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 91,
+            "status": "filled",
+            "purchase_dt": "2023-11-27 10:00:00",
+            "purchase_price": 63.67,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 58.99011135718071,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 66.00994432140965,
+                "purchase_price": 66.08,
+                "purchase_dt": "2023-12-06 12:00:00"
             }
         },
         {
@@ -34,91 +61,149 @@
             "quantity": 3,
             "side": "buy",
             "requested_price": 66.41,
-            "issue_dt": "2023-12-07 10:00:00",
+            "requested_dt": "2023-12-07 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 43,
+            "id": 94,
             "status": "filled",
             "purchase_dt": "2023-12-07 10:00:00",
             "purchase_price": 66.41,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 71.74511929400032,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 63.742440352999836,
-                "purchase_dt": "2023-12-21 12:00:00",
-                "purchase_price": 63.65
+                "purchase_price": 63.65,
+                "purchase_dt": "2023-12-21 12:00:00"
             }
         },
         {
             "symbol": "GIS",
             "quantity": 3,
+            "side": "sell",
+            "requested_price": 64.95,
+            "requested_dt": "2023-12-27 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 96,
+            "status": "filled",
+            "purchase_dt": "2023-12-27 14:00:00",
+            "purchase_price": 64.95,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 59.366960131244085,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 67.74151993437796,
+                "purchase_price": 67.95,
+                "purchase_dt": "2024-03-18 12:00:00"
+            }
+        },
+        {
+            "symbol": "GIS",
+            "quantity": 2,
             "side": "buy",
             "requested_price": 66.75,
-            "issue_dt": "2024-01-02 14:00:00",
+            "requested_dt": "2024-01-02 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 45,
+            "id": 97,
             "status": "filled",
             "purchase_dt": "2024-01-02 14:00:00",
             "purchase_price": 66.75,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 71.66613947658008,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 64.29193026170995,
-                "purchase_dt": "2024-01-09 04:00:00",
-                "purchase_price": 64.24
+                "purchase_price": 64.24,
+                "purchase_dt": "2024-01-09 04:00:00"
             }
         },
         {
             "symbol": "GIS",
             "quantity": 3,
+            "side": "sell",
+            "requested_price": 64.38,
+            "requested_dt": "2024-01-09 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 99,
+            "status": "filled",
+            "purchase_dt": "2024-01-09 14:00:00",
+            "purchase_price": 64.38,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 59.682222296977386,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 66.7288888515113,
+                "purchase_price": 66.99,
+                "purchase_dt": "2024-03-15 16:00:00"
+            }
+        },
+        {
+            "symbol": "GIS",
+            "quantity": 2,
             "side": "buy",
             "requested_price": 65.32,
-            "issue_dt": "2024-02-23 14:00:00",
+            "requested_dt": "2024-02-23 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 47,
+            "id": 100,
             "status": "filled",
             "purchase_dt": "2024-02-23 14:00:00",
             "purchase_price": 65.32,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 72.24860181081642,
-                "purchase_dt": "2024-08-30 16:00:00",
-                "purchase_price": 72.29
+                "purchase_price": 72.29,
+                "purchase_dt": "2024-08-30 16:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 61.85569909459178,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
             "symbol": "GIS",
-            "quantity": 3,
+            "quantity": 2,
             "side": "buy",
             "requested_price": 64.57,
-            "issue_dt": "2024-03-05 10:00:00",
+            "requested_dt": "2024-03-05 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 48,
+            "id": 102,
             "status": "filled",
             "purchase_dt": "2024-03-05 10:00:00",
             "purchase_price": 64.57,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 70.51709650955517,
-                "purchase_dt": "2024-03-20 08:00:00",
-                "purchase_price": 71.16
+                "purchase_price": 71.16,
+                "purchase_dt": "2024-03-20 08:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 61.5964517452224,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
@@ -126,22 +211,49 @@
             "quantity": 3,
             "side": "buy",
             "requested_price": 67.6361,
-            "issue_dt": "2024-07-30 14:00:00",
+            "requested_dt": "2024-07-30 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 50,
+            "id": 107,
             "status": "filled",
             "purchase_dt": "2024-07-30 14:00:00",
             "purchase_price": 67.6361,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 74.82109487956069,
-                "purchase_dt": "2024-09-06 08:00:00",
-                "purchase_price": 75.05
+                "purchase_price": 75.05,
+                "purchase_dt": "2024-09-06 08:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 64.04360256021965,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "GIS",
+            "quantity": 3,
+            "side": "sell",
+            "requested_price": 70.83,
+            "requested_dt": "2024-10-14 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 110,
+            "status": "filled",
+            "purchase_dt": "2024-10-14 14:00:00",
+            "purchase_price": 70.83,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 65.66745630718552,
+                "purchase_price": 65.25,
+                "purchase_dt": "2024-11-07 12:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 73.41127184640725,
+                "purchase_price": null,
+                "purchase_dt": null
             }
         }
     ]

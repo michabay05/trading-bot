@@ -1,9 +1,9 @@
 {
-    "capital": 1064.5369481031137,
-    "pl": 64.53694810311367,
-    "capital_pct": 106.45369481031138,
+    "capital": 1023.27307526147,
+    "pl": 23.273075261470012,
+    "capital_pct": 102.32730752614701,
     "position_count": 0,
-    "orders_count": 4,
+    "orders_count": 8,
     "positions": {},
     "orders": [
         {
@@ -11,45 +11,99 @@
             "quantity": 5,
             "side": "buy",
             "requested_price": 45.83,
-            "issue_dt": "2024-02-12 14:00:00",
+            "requested_dt": "2024-02-12 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 119,
+            "id": 243,
             "status": "filled",
             "purchase_dt": "2024-02-12 14:00:00",
             "purchase_price": 45.83,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 48.9172464798239,
-                "purchase_dt": "2024-02-29 12:00:00",
-                "purchase_price": 48.92
+                "purchase_price": 48.92,
+                "purchase_dt": "2024-02-29 12:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 44.28637676008805,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
             "symbol": "KR",
             "quantity": 4,
+            "side": "sell",
+            "requested_price": 45.55,
+            "requested_dt": "2024-02-13 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 244,
+            "status": "filled",
+            "purchase_dt": "2024-02-13 10:00:00",
+            "purchase_price": 45.55,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 42.312963004310085,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 47.16851849784495,
+                "purchase_price": 47.55,
+                "purchase_dt": "2024-02-16 12:00:00"
+            }
+        },
+        {
+            "symbol": "KR",
+            "quantity": 3,
             "side": "buy",
             "requested_price": 46.5816,
-            "issue_dt": "2024-02-15 10:00:00",
+            "requested_dt": "2024-02-15 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 120,
+            "id": 245,
             "status": "filled",
             "purchase_dt": "2024-02-15 10:00:00",
             "purchase_price": 46.5816,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 50.36984248667236,
-                "purchase_dt": "2024-03-06 16:00:00",
-                "purchase_price": 50.59
+                "purchase_price": 50.59,
+                "purchase_dt": "2024-03-06 16:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 44.68747875666382,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "KR",
+            "quantity": 4,
+            "side": "sell",
+            "requested_price": 54.3625,
+            "requested_dt": "2024-05-15 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 249,
+            "status": "filled",
+            "purchase_dt": "2024-05-15 14:00:00",
+            "purchase_price": 54.3625,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 49.61287774980127,
+                "purchase_price": 49.6123,
+                "purchase_dt": "2024-06-25 20:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 56.73731112509936,
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
@@ -57,45 +111,99 @@
             "quantity": 4,
             "side": "buy",
             "requested_price": 52.4,
-            "issue_dt": "2024-07-15 10:00:00",
+            "requested_dt": "2024-07-15 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 123,
+            "id": 251,
             "status": "filled",
             "purchase_dt": "2024-07-15 10:00:00",
             "purchase_price": 52.4,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 56.86970984783277,
-                "purchase_dt": "2024-09-30 08:00:00",
-                "purchase_price": 56.9
+                "purchase_price": 56.9,
+                "purchase_dt": "2024-09-30 08:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 50.16514507608361,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "KR",
+            "quantity": 3,
+            "side": "sell",
+            "requested_price": 51.83,
+            "requested_dt": "2024-08-20 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 252,
+            "status": "filled",
+            "purchase_dt": "2024-08-20 10:00:00",
+            "purchase_price": 51.83,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 46.65724314827601,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 54.41637842586199,
+                "purchase_price": 54.59,
+                "purchase_dt": "2024-09-12 12:00:00"
             }
         },
         {
             "symbol": "KR",
             "quantity": 4,
+            "side": "sell",
+            "requested_price": 59.69,
+            "requested_dt": "2025-01-13 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 256,
+            "status": "filled",
+            "purchase_dt": "2025-01-13 10:00:00",
+            "purchase_price": 59.69,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 53.117917307595036,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 62.97604134620248,
+                "purchase_price": 63.295,
+                "purchase_dt": "2025-02-03 12:00:00"
+            }
+        },
+        {
+            "symbol": "KR",
+            "quantity": 3,
             "side": "buy",
             "requested_price": 61.64,
-            "issue_dt": "2025-01-31 14:00:00",
+            "requested_dt": "2025-01-31 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 126,
+            "id": 257,
             "status": "filled",
             "purchase_dt": "2025-01-31 14:00:00",
             "purchase_price": 61.64,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 67.80214434965092,
-                "purchase_dt": "2025-03-10 12:00:00",
-                "purchase_price": 68.06
+                "purchase_price": 68.06,
+                "purchase_dt": "2025-03-10 12:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 58.55892782517454,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         }
     ]

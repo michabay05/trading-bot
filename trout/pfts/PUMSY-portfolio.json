@@ -1,152 +1,314 @@
 {
-    "capital": 510.4621971830986,
-    "pl": -96.07780281690134,
-    "capital_pct": 90.39221971830986,
+    "capital": 411.2515569000791,
+    "pl": -33.29844309992086,
+    "capital_pct": 96.67015569000792,
     "position_count": 1,
-    "orders_count": 6,
+    "orders_count": 12,
     "positions": {
         "PUMSY": {
-            "quantity": 151.33076923076925,
+            "quantity": 213.6346153846154,
             "price": 2.6
         }
     },
     "orders": [
         {
             "symbol": "PUMSY",
-            "quantity": 40,
+            "quantity": 41,
+            "side": "sell",
+            "requested_price": 5.995,
+            "requested_dt": "2023-09-26 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 357,
+            "status": "filled",
+            "purchase_dt": "2023-09-26 10:00:00",
+            "purchase_price": 5.995,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 5.074159350373788,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 6.455420324813106,
+                "purchase_price": 6.5,
+                "purchase_dt": "2023-11-30 16:00:00"
+            }
+        },
+        {
+            "symbol": "PUMSY",
+            "quantity": 30,
             "side": "buy",
             "requested_price": 6.12,
-            "issue_dt": "2023-11-28 14:00:00",
+            "requested_dt": "2023-11-28 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 176,
+            "id": 358,
             "status": "filled",
             "purchase_dt": "2023-11-28 14:00:00",
             "purchase_price": 6.12,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 7.679203846621732,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 5.340398076689134,
-                "purchase_dt": "2024-01-03 12:00:00",
-                "purchase_price": 5.3301
+                "purchase_price": 5.3301,
+                "purchase_dt": "2024-01-03 12:00:00"
             }
         },
         {
             "symbol": "PUMSY",
-            "quantity": 50,
+            "quantity": 46,
+            "side": "sell",
+            "requested_price": 5.48,
+            "requested_dt": "2023-12-22 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 360,
+            "status": "filled",
+            "purchase_dt": "2023-12-22 14:00:00",
+            "purchase_price": 5.48,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 4.000114254848606,
+                "purchase_price": 3.99,
+                "purchase_dt": "2024-01-31 12:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 6.219942872575698,
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "PUMSY",
+            "quantity": 53,
             "side": "buy",
             "requested_price": 4.775,
-            "issue_dt": "2024-05-03 10:00:00",
+            "requested_dt": "2024-05-03 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 178,
+            "id": 363,
             "status": "filled",
             "purchase_dt": "2024-05-03 10:00:00",
             "purchase_price": 4.775,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 5.654914661649425,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 4.335042669175288,
-                "purchase_dt": "2024-08-07 08:00:00",
-                "purchase_price": 3.96
+                "purchase_price": 3.96,
+                "purchase_dt": "2024-08-07 08:00:00"
             }
         },
         {
             "symbol": "PUMSY",
-            "quantity": 36,
+            "quantity": 41,
+            "side": "sell",
+            "requested_price": 4.665,
+            "requested_dt": "2024-06-21 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 364,
+            "status": "filled",
+            "purchase_dt": "2024-06-21 10:00:00",
+            "purchase_price": 4.665,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 3.8112101037485617,
+                "purchase_price": 3.718,
+                "purchase_dt": "2024-08-09 08:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 5.091894948125719,
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "PUMSY",
+            "quantity": 28,
             "side": "buy",
             "requested_price": 4.97,
-            "issue_dt": "2024-07-31 10:00:00",
+            "requested_dt": "2024-07-31 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 179,
+            "id": 365,
             "status": "filled",
             "purchase_dt": "2024-07-31 10:00:00",
             "purchase_price": 4.97,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 5.653293198606119,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 4.62835340069694,
-                "purchase_dt": "2024-08-05 08:00:00",
-                "purchase_price": 4.452
+                "purchase_price": 4.452,
+                "purchase_dt": "2024-08-05 08:00:00"
             }
         },
         {
             "symbol": "PUMSY",
-            "quantity": 50,
+            "quantity": 22,
+            "side": "sell",
+            "requested_price": 4.75,
+            "requested_dt": "2024-08-02 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 366,
+            "status": "filled",
+            "purchase_dt": "2024-08-02 14:00:00",
+            "purchase_price": 4.75,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 3.9622360445237454,
+                "purchase_price": 3.96,
+                "purchase_dt": "2024-08-07 08:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 5.143881977738127,
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "PUMSY",
+            "quantity": 53,
             "side": "buy",
             "requested_price": 4.54,
-            "issue_dt": "2024-10-25 14:00:00",
+            "requested_dt": "2024-10-25 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 182,
+            "id": 371,
             "status": "filled",
             "purchase_dt": "2024-10-25 14:00:00",
             "purchase_price": 4.54,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 5.318168543672893,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 4.150915728163553,
-                "purchase_dt": "2025-01-16 12:00:00",
-                "purchase_price": 4.121
+                "purchase_price": 4.121,
+                "purchase_dt": "2025-01-16 12:00:00"
             }
         },
         {
             "symbol": "PUMSY",
-            "quantity": 87,
+            "quantity": 43,
+            "side": "sell",
+            "requested_price": 4.22,
+            "requested_dt": "2025-01-13 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 372,
+            "status": "filled",
+            "purchase_dt": "2025-01-13 14:00:00",
+            "purchase_price": 4.22,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 3.2439346656274712,
+                "purchase_price": 3.24,
+                "purchase_dt": "2025-01-28 12:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 4.708032667186264,
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "PUMSY",
+            "quantity": 93,
             "side": "buy",
             "requested_price": 2.58,
-            "issue_dt": "2025-05-19 14:00:00",
+            "requested_dt": "2025-05-19 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 184,
+            "id": 375,
             "status": "filled",
             "purchase_dt": "2025-05-19 14:00:00",
             "purchase_price": 2.58,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 3.0487615760225206,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 2.34561921198874,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
             "symbol": "PUMSY",
-            "quantity": 65,
+            "quantity": 73,
+            "side": "sell",
+            "requested_price": 2.47,
+            "requested_dt": "2025-05-23 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 376,
+            "status": "filled",
+            "purchase_dt": "2025-05-23 10:00:00",
+            "purchase_price": 2.47,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 1.971773086288209,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 2.719113456855896,
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "PUMSY",
+            "quantity": 52,
             "side": "buy",
             "requested_price": 2.6,
-            "issue_dt": "2025-05-27 14:00:00",
+            "requested_dt": "2025-05-27 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 185,
+            "id": 377,
             "status": "filled",
             "purchase_dt": "2025-05-27 14:00:00",
             "purchase_price": 2.6,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 3.1146126323022303,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 2.3426936838488848,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         }
     ]

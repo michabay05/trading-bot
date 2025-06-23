@@ -84,8 +84,8 @@ def calc_save_indicators(csv_path: str, target_path: str) -> None:
 
 DEFAULT_PORT: int = 8080
 INDICATORS: dict = {
-    "EMA_8": [talib.EMA, {"timeperiod": 8}],
-    "EMA_21": [talib.EMA, {"timeperiod": 21}]
+    "EMA_1": [talib.EMA, {"timeperiod": 50}],
+    "EMA_2": [talib.EMA, {"timeperiod": 100}]
 }
 
 def main():

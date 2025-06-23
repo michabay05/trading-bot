@@ -1,129 +1,239 @@
 {
-    "capital": 524.7469691315563,
-    "pl": -80.82973086844368,
-    "capital_pct": 91.91702691315562,
+    "capital": 600.1195427343077,
+    "pl": 36.083142734307785,
+    "capital_pct": 103.60831427343078,
     "position_count": 1,
-    "orders_count": 5,
+    "orders_count": 9,
     "positions": {
         "INTC": {
-            "quantity": 18.926261996161227,
+            "quantity": 20.919558541266795,
             "price": 20.84
         }
     },
     "orders": [
         {
             "symbol": "INTC",
+            "quantity": 7,
+            "side": "sell",
+            "requested_price": 32.86,
+            "requested_dt": "2023-08-17 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 182,
+            "status": "filled",
+            "purchase_dt": "2023-08-17 10:00:00",
+            "purchase_price": 32.86,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 28.080765671919984,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 35.24961716404001,
+                "purchase_price": 35.25,
+                "purchase_dt": "2023-08-31 16:00:00"
+            }
+        },
+        {
+            "symbol": "INTC",
+            "quantity": 7,
+            "side": "sell",
+            "requested_price": 34.87,
+            "requested_dt": "2023-10-20 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 187,
+            "status": "filled",
+            "purchase_dt": "2023-10-20 14:00:00",
+            "purchase_price": 34.87,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 29.791241700470245,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 37.409379149764874,
+                "purchase_price": 37.43,
+                "purchase_dt": "2023-11-02 04:00:00"
+            }
+        },
+        {
+            "symbol": "INTC",
             "quantity": 5,
             "side": "buy",
             "requested_price": 46.4,
-            "issue_dt": "2024-03-07 10:00:00",
+            "requested_dt": "2024-03-07 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 93,
+            "id": 191,
             "status": "filled",
             "purchase_dt": "2024-03-07 10:00:00",
             "purchase_price": 46.4,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 54.633178856350035,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 42.28341057182498,
-                "purchase_dt": "2024-03-19 08:00:00",
-                "purchase_price": 41.805
-            }
-        },
-        {
-            "symbol": "INTC",
-            "quantity": 10,
-            "side": "buy",
-            "requested_price": 22.76,
-            "issue_dt": "2024-09-23 10:00:00",
-            "intent": "buy_to_open",
-            "type": "market",
-            "id": 96,
-            "status": "filled",
-            "purchase_dt": "2024-09-23 10:00:00",
-            "purchase_price": 22.76,
-            "take_profit": {
-                "tp_limit": 29.708824817220957,
-                "purchase_dt": null,
-                "purchase_price": null
-            },
-            "stop_loss": {
-                "sl_limit": 19.285587591389522,
-                "purchase_dt": "2024-12-19 12:00:00",
-                "purchase_price": 19.1965
-            }
-        },
-        {
-            "symbol": "INTC",
-            "quantity": 8,
-            "side": "buy",
-            "requested_price": 23.26,
-            "issue_dt": "2024-10-31 14:00:00",
-            "intent": "buy_to_open",
-            "type": "market",
-            "id": 98,
-            "status": "filled",
-            "purchase_dt": "2024-10-31 14:00:00",
-            "purchase_price": 23.26,
-            "take_profit": {
-                "tp_limit": 29.589426275871993,
-                "purchase_dt": null,
-                "purchase_price": null
-            },
-            "stop_loss": {
-                "sl_limit": 20.095286862064004,
-                "purchase_dt": "2024-12-11 12:00:00",
-                "purchase_price": 20.007
+                "purchase_price": 41.805,
+                "purchase_dt": "2024-03-19 08:00:00"
             }
         },
         {
             "symbol": "INTC",
             "quantity": 11,
             "side": "buy",
-            "requested_price": 20.7003,
-            "issue_dt": "2025-06-11 14:00:00",
+            "requested_price": 22.76,
+            "requested_dt": "2024-09-23 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 105,
+            "id": 196,
             "status": "filled",
-            "purchase_dt": "2025-06-11 14:00:00",
-            "purchase_price": 20.7003,
+            "purchase_dt": "2024-09-23 10:00:00",
+            "purchase_price": 22.76,
             "take_profit": {
-                "tp_limit": 25.062073394264765,
-                "purchase_dt": null,
-                "purchase_price": null
+                "intent": "sell_to_close",
+                "tp_limit": 29.708824817220957,
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
-                "sl_limit": 18.519413302867616,
-                "purchase_dt": null,
-                "purchase_price": null
+                "intent": "sell_to_close",
+                "sl_limit": 19.285587591389522,
+                "purchase_price": 19.1965,
+                "purchase_dt": "2024-12-19 12:00:00"
             }
         },
         {
             "symbol": "INTC",
             "quantity": 8,
+            "side": "sell",
+            "requested_price": 21.5999,
+            "requested_dt": "2024-10-31 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 199,
+            "status": "filled",
+            "purchase_dt": "2024-10-31 10:00:00",
+            "purchase_price": 21.5999,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 18.022056318291703,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 23.388821840854153,
+                "purchase_price": 23.51,
+                "purchase_dt": "2024-11-05 20:00:00"
+            }
+        },
+        {
+            "symbol": "INTC",
+            "quantity": 6,
             "side": "buy",
-            "requested_price": 20.84,
-            "issue_dt": "2025-06-12 10:00:00",
+            "requested_price": 23.26,
+            "requested_dt": "2024-10-31 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 106,
+            "id": 200,
+            "status": "filled",
+            "purchase_dt": "2024-10-31 14:00:00",
+            "purchase_price": 23.26,
+            "take_profit": {
+                "intent": "sell_to_close",
+                "tp_limit": 29.589426275871993,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "sell_to_close",
+                "sl_limit": 20.095286862064004,
+                "purchase_price": 20.007,
+                "purchase_dt": "2024-12-11 12:00:00"
+            }
+        },
+        {
+            "symbol": "INTC",
+            "quantity": 12,
+            "side": "sell",
+            "requested_price": 20.585,
+            "requested_dt": "2025-05-27 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 212,
+            "status": "filled",
+            "purchase_dt": "2025-05-27 10:00:00",
+            "purchase_price": 20.585,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 17.566932191434525,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 22.09403390428274,
+                "purchase_price": 22.115,
+                "purchase_dt": "2025-06-10 12:00:00"
+            }
+        },
+        {
+            "symbol": "INTC",
+            "quantity": 12,
+            "side": "buy",
+            "requested_price": 20.7003,
+            "requested_dt": "2025-06-11 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 214,
+            "status": "filled",
+            "purchase_dt": "2025-06-11 14:00:00",
+            "purchase_price": 20.7003,
+            "take_profit": {
+                "intent": "sell_to_close",
+                "tp_limit": 25.062073394264765,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "sell_to_close",
+                "sl_limit": 18.519413302867616,
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "INTC",
+            "quantity": 9,
+            "side": "buy",
+            "requested_price": 20.84,
+            "requested_dt": "2025-06-12 10:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 216,
             "status": "filled",
             "purchase_dt": "2025-06-12 10:00:00",
             "purchase_price": 20.84,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 24.787719958183985,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 18.86614002090801,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         }
     ]

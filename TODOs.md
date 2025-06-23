@@ -17,34 +17,38 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Factor risk tolerance into strategy
 - [ ] (feat) Send email to notify of a trading signal
     - At some point, the bot itself will be able to execute trades (not sure how at the moment though).
-- [ ] (feat) Add id system for orders and portfolio (seems like a good idea)
-- [ ] (feat) Research and develop list of tickers for bot to trade
+- [ ] (rsch) Develop list of tickers for bot to trade
 - [ ] (feat) Add a limit order
 - [ ] (feat) Add stop order
 - [ ] (feat) Bring back MACD and BBANDS indicators
 - [ ] (feat) Implement indicator warm up
-- [ ] (fix) Check close position logic
 - [ ] (refactor) Handle edge case where position has zero quantity
     - Remove it from the list of positions
 - [ ] (refactor) Change candle csv naming scheme to match that of the portfolios
-- [ ] (feat) Plot P/L of portfolio - probably using matplotlib
-- [ ] (refactor) Ditch lightweight charts and use the same thing 'backtesting.py' uses
-    - I think it uses bokeh: [CandleStick plotting](https://docs.bokeh.org/en/latest/docs/examples/topics/timeseries/candlestick.html)
 - [ ] (feat) Add market holidays to market open or closed functionality
 - [ ] (feat) Add time in force for orders (DAY or Good-til-Cancelled)
 - [ ] (feat) Add the notion of a trade and also FYI:
     - Trade = A completed buy-sell transaction pair
     - Position = Current market exposure (open trades)
+- [ ] (feat) Add RSI rendering into candle visualizer
 
 ---
+
+# v0.7
+- [ ] (rsch) Experiment with Interactive Brokers
+- [ ] (feat) Implement brokers settings
+    - [ ] Fractional Trading
+    - [ ] Commissions
+- [ ] (feat) Plot P/L of portfolio - probably using matplotlib
 
 # v0.6
 - [x] (refactor) Fix the timescale issue on lightweight charts
     - It looks like a timezone issue
 - [x] (refactor) Change broker from a list of functions to a class with methods
-- [ ] (feat) Add take-profit and stop-loss
+- [x] (feat) Add take-profit and stop-loss
     - [x] Take profit
     - [x] Stop loss
+- [x] (feat) Add id system for orders and portfolio (seems like a good idea)
 - [x] (feat) Implement checking when market is open or closed
 - [x] (feat) Add ability to buy based on portfolio's capital percentage
 - [x] (refactor) Change the structure of the `Order` to use `@dataclass`
@@ -56,7 +60,7 @@ A list of all the TODOs needed to be completed before each release
 - [x] (feat) Setup script to automatically visualize candles and indicators
 - [x] (refactor) The horizontal axis of the candle visualizer should be human-readable
     - Instead of unix timestamps, it should be human-readable date string
-- [x] Experiment with alpaca-py
+- [x] (rsch) Experiment with alpaca-py
     - Experimenting and probing has been moved over to `alpaca-probe` branch
 
 ## v0.5

@@ -1,9 +1,9 @@
 {
-    "capital": 1006.96,
-    "pl": 6.960000000000036,
-    "capital_pct": 100.69600000000001,
+    "capital": 1025.6487160208433,
+    "pl": 25.648716020843267,
+    "capital_pct": 102.56487160208432,
     "position_count": 0,
-    "orders_count": 5,
+    "orders_count": 10,
     "positions": {},
     "orders": [
         {
@@ -11,91 +11,199 @@
             "quantity": 7,
             "side": "buy",
             "requested_price": 34.34,
-            "issue_dt": "2023-09-22 14:00:00",
+            "requested_dt": "2023-09-22 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 107,
+            "id": 218,
             "status": "filled",
             "purchase_dt": "2023-09-22 14:00:00",
             "purchase_price": 34.34,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 36.678913291080185,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 33.170543354459916,
-                "purchase_dt": "2023-10-02 12:00:00",
-                "purchase_price": 33.065
+                "purchase_price": 33.065,
+                "purchase_dt": "2023-10-02 12:00:00"
             }
         },
         {
             "symbol": "KHC",
             "quantity": 7,
+            "side": "sell",
+            "requested_price": 33.11,
+            "requested_dt": "2023-10-02 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 220,
+            "status": "filled",
+            "purchase_dt": "2023-10-02 14:00:00",
+            "purchase_price": 33.11,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 30.62648474782192,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 34.35175762608904,
+                "purchase_price": 34.495,
+                "purchase_dt": "2023-11-22 12:00:00"
+            }
+        },
+        {
+            "symbol": "KHC",
+            "quantity": 5,
             "side": "buy",
             "requested_price": 33.41,
-            "issue_dt": "2023-11-06 10:00:00",
+            "requested_dt": "2023-11-06 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 109,
+            "id": 221,
             "status": "filled",
             "purchase_dt": "2023-11-06 10:00:00",
             "purchase_price": 33.41,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 37.05877522730638,
-                "purchase_dt": "2023-12-12 12:00:00",
-                "purchase_price": 37.395
+                "purchase_price": 37.395,
+                "purchase_dt": "2023-12-12 12:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 31.585612386346806,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
             "symbol": "KHC",
             "quantity": 6,
+            "side": "sell",
+            "requested_price": 36.47,
+            "requested_dt": "2024-02-08 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 224,
+            "status": "filled",
+            "purchase_dt": "2024-02-08 14:00:00",
+            "purchase_price": 36.47,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 33.61551994145603,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 37.897240029271984,
+                "purchase_price": 38.175,
+                "purchase_dt": "2024-04-22 12:00:00"
+            }
+        },
+        {
+            "symbol": "KHC",
+            "quantity": 5,
             "side": "buy",
             "requested_price": 36.4,
-            "issue_dt": "2024-03-26 14:00:00",
+            "requested_dt": "2024-03-26 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 111,
+            "id": 225,
             "status": "filled",
             "purchase_dt": "2024-03-26 14:00:00",
             "purchase_price": 36.4,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 38.77803190691835,
-                "purchase_dt": "2024-04-24 16:00:00",
-                "purchase_price": 38.94
+                "purchase_price": 38.94,
+                "purchase_dt": "2024-04-24 16:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 35.21098404654082,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
             "symbol": "KHC",
             "quantity": 7,
+            "side": "sell",
+            "requested_price": 35.61,
+            "requested_dt": "2024-05-07 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 228,
+            "status": "filled",
+            "purchase_dt": "2024-05-07 10:00:00",
+            "purchase_price": 35.61,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 31.734416749998097,
+                "purchase_price": 30.94,
+                "purchase_dt": "2024-11-15 12:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 37.54779162500095,
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "KHC",
+            "quantity": 5,
+            "side": "sell",
+            "requested_price": 34.6597,
+            "requested_dt": "2024-09-23 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 230,
+            "status": "filled",
+            "purchase_dt": "2024-09-23 14:00:00",
+            "purchase_price": 34.6597,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 31.730611529647994,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 36.12424423517601,
+                "purchase_price": 36.2195,
+                "purchase_dt": "2024-10-21 08:00:00"
+            }
+        },
+        {
+            "symbol": "KHC",
+            "quantity": 4,
             "side": "buy",
             "requested_price": 35.78,
-            "issue_dt": "2024-10-15 14:00:00",
+            "requested_dt": "2024-10-15 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 114,
+            "id": 231,
             "status": "filled",
             "purchase_dt": "2024-10-15 14:00:00",
             "purchase_price": 35.78,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 38.232106933381466,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 34.55394653330927,
-                "purchase_dt": "2024-10-30 08:00:00",
-                "purchase_price": 33.59
+                "purchase_price": 33.59,
+                "purchase_dt": "2024-10-30 08:00:00"
             }
         },
         {
@@ -103,22 +211,49 @@
             "quantity": 8,
             "side": "buy",
             "requested_price": 30.93,
-            "issue_dt": "2025-02-21 10:00:00",
+            "requested_dt": "2025-02-21 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 116,
+            "id": 236,
             "status": "filled",
             "purchase_dt": "2025-02-21 10:00:00",
             "purchase_price": 30.93,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 33.88051986813161,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 29.454740065934196,
-                "purchase_dt": "2025-03-24 04:00:00",
-                "purchase_price": 29.44
+                "purchase_price": 29.44,
+                "purchase_dt": "2025-03-24 04:00:00"
+            }
+        },
+        {
+            "symbol": "KHC",
+            "quantity": 6,
+            "side": "sell",
+            "requested_price": 29.7805,
+            "requested_dt": "2025-03-20 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 237,
+            "status": "filled",
+            "purchase_dt": "2025-03-20 14:00:00",
+            "purchase_price": 29.7805,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 26.870147771881584,
+                "purchase_price": 26.7,
+                "purchase_dt": "2025-05-21 16:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 31.235676114059206,
+                "purchase_price": null,
+                "purchase_dt": null
             }
         }
     ]

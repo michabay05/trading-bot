@@ -17,7 +17,7 @@ const chart = createChart(container, {
                 hour12: false,
             });
         },
-        // This dateFormat ithing does not work
+        // This dateFormat thing does not work
         dateFormat: "yyyy-MM-dd"
     },
     crosshair: {

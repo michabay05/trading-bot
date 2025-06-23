@@ -84,6 +84,10 @@ class StrategyTester(metaclass=ABCMeta):
         size: float, tp_limit: float | None = None, sl_limit: float | None = None
     ) -> None:
         assert size > 0, "Negative size provided. (size > 0)"
+        if tp_limit is not None and sl_limit is not None:
+            assert sl_limit < self.last_close < tp_limit, (
+                f"SL(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < TP(${sl_limit:.3f})"
+            )
 
         qty: float = 0.0
         if size < 1.0:
@@ -104,9 +108,55 @@ class StrategyTester(metaclass=ABCMeta):
             intent=OrderIntent.BUY_TO_OPEN
         )
         if tp_limit is not None:
-            mkt_ord.take_profit = TakeProfitRequest(tp_limit=tp_limit)
+            mkt_ord.take_profit = TakeProfitRequest(
+                tp_limit=tp_limit,
+                intent=mkt_ord.intent.opp_close()
+            )
         if sl_limit is not None:
-            mkt_ord.stop_loss = StopLossRequest(sl_limit=sl_limit)
+            mkt_ord.stop_loss = StopLossRequest(
+                sl_limit=sl_limit,
+                intent=mkt_ord.intent.opp_close()
+            )
+
+        self._broker.execute_open_order(mkt_ord, self._portfolio, self.last_close, self.curr_dt_str)
+
+    def market_sell(self,
+        size: float, tp_limit: float | None = None, sl_limit: float | None = None
+    ) -> None:
+        assert size > 0, "Negative size provided. (size > 0)"
+        if tp_limit is not None and sl_limit is not None:
+            assert tp_limit < self.last_close < sl_limit, (
+                f"TP(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < SL(${sl_limit:.3f})"
+            )
+
+        qty: float = 0.0
+        if size < 1.0:
+            # In essence, buy as much shares as possible with this amount:
+            #   >> size * portfolio.capital
+            pct: float = size
+            max_ord_value: float = pct * self._portfolio.capital
+            qty = math.floor(max_ord_value / self.last_close)
+        else:
+            qty = int(size)
+
+        mkt_ord: MarketOrder = MarketOrder(
+            symbol=self._sf.ticker,
+            side=OrderSide.SELL,
+            quantity=qty,
+            requested_price=self.last_close,
+            requested_dt=self.curr_dt_str,
+            intent=OrderIntent.SELL_TO_OPEN
+        )
+        if tp_limit is not None:
+            mkt_ord.take_profit = TakeProfitRequest(
+                tp_limit=tp_limit,
+                intent=mkt_ord.intent.opp_close()
+            )
+        if sl_limit is not None:
+            mkt_ord.stop_loss = StopLossRequest(
+                sl_limit=sl_limit,
+                intent=mkt_ord.intent.opp_close()
+            )
 
         self._broker.execute_open_order(mkt_ord, self._portfolio, self.last_close, self.curr_dt_str)
 

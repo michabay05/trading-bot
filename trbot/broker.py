@@ -36,9 +36,7 @@ class Broker:
 
             if order.take_profit is not None:
                 tp_limit: float = order.take_profit.tp_limit
-                # Temporary assert (will be removed)
-                assert order.is_long()
-                tp_crossed: bool = last_close >= tp_limit
+                tp_crossed: bool = last_close >= tp_limit if order.is_long() else last_close <= tp_limit
                 if tp_crossed:
                     tp_order: MarketOrder = MarketOrder(
                         symbol=order.symbol,
@@ -46,7 +44,7 @@ class Broker:
                         side=order.side.opposite(),
                         requested_price=last_close,
                         requested_dt=curr_dt_str,
-                        intent=order.intent.opp_close()
+                        intent=order.take_profit.intent
                     )
                     self.execute_close_order(tp_order, pft, last_close)
                     assert tp_order.status != OrderStatus.FILLED
@@ -58,9 +56,7 @@ class Broker:
             if order.stop_loss is not None:
                 # raise NotImplementedError("stop losses are not implemented yet!")
                 sl_limit: float = order.stop_loss.sl_limit
-                # Temporary assert (will be removed)
-                assert order.is_long()
-                sl_crossed: bool = last_close <= sl_limit
+                sl_crossed: bool = last_close <= sl_limit if order.is_long() else last_close >= sl_limit
                 if sl_crossed:
                     sl_order: MarketOrder = MarketOrder(
                         symbol=order.symbol,
@@ -68,7 +64,7 @@ class Broker:
                         side=order.side.opposite(),
                         requested_price=last_close,
                         requested_dt=curr_dt_str,
-                        intent=order.intent.opp_close()
+                        intent=order.stop_loss.intent
                     )
                     self.execute_close_order(sl_order, pft, last_close)
                     assert sl_order.status != OrderStatus.FILLED
@@ -104,7 +100,7 @@ class Broker:
         portfolio.capital = portfolio.capital - requested_value
         # Update order status
         order.status = OrderStatus.FILLED
-        order.requested_dt = curr_dt_str
+        order.purchase_dt = curr_dt_str
         order.purchase_price = last_close
         portfolio.add_orders(order)
 

@@ -1,32 +1,109 @@
 {
-    "capital": 1023.302575,
-    "pl": 23.302575000000047,
-    "capital_pct": 102.3302575,
+    "capital": 998.715363448801,
+    "pl": -1.2846365511990143,
+    "capital_pct": 99.8715363448801,
     "position_count": 0,
-    "orders_count": 4,
+    "orders_count": 7,
     "positions": {},
     "orders": [
         {
             "symbol": "BBY",
             "quantity": 3,
+            "side": "sell",
+            "requested_price": 79.65,
+            "requested_dt": "2023-08-10 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 507,
+            "status": "filled",
+            "purchase_dt": "2023-08-10 10:00:00",
+            "purchase_price": 79.65,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 71.62389553365463,
+                "purchase_price": 70.55,
+                "purchase_dt": "2023-09-18 08:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 83.66305223317269,
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "BBY",
+            "quantity": 3,
+            "side": "sell",
+            "requested_price": 71.0,
+            "requested_dt": "2024-01-19 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 510,
+            "status": "filled",
+            "purchase_dt": "2024-01-19 14:00:00",
+            "purchase_price": 71.0,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 61.94643823051452,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 75.52678088474275,
+                "purchase_price": 75.68,
+                "purchase_dt": "2024-02-01 20:00:00"
+            }
+        },
+        {
+            "symbol": "BBY",
+            "quantity": 3,
             "side": "buy",
             "requested_price": 75.69,
-            "issue_dt": "2024-02-02 14:00:00",
+            "requested_dt": "2024-02-02 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 254,
+            "id": 512,
             "status": "filled",
             "purchase_dt": "2024-02-02 14:00:00",
             "purchase_price": 75.69,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 87.9327461308606,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 69.56862693456969,
-                "purchase_dt": "2024-05-23 08:00:00",
-                "purchase_price": 69.55
+                "purchase_price": 69.55,
+                "purchase_dt": "2024-05-23 08:00:00"
+            }
+        },
+        {
+            "symbol": "BBY",
+            "quantity": 2,
+            "side": "sell",
+            "requested_price": 75.49,
+            "requested_dt": "2024-04-16 14:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 513,
+            "status": "filled",
+            "purchase_dt": "2024-04-16 14:00:00",
+            "purchase_price": 75.49,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 64.50450861190541,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 80.98274569404728,
+                "purchase_price": 81.02,
+                "purchase_dt": "2024-05-30 12:00:00"
             }
         },
         {
@@ -34,22 +111,24 @@
             "quantity": 2,
             "side": "buy",
             "requested_price": 83.105,
-            "issue_dt": "2024-05-31 10:00:00",
+            "requested_dt": "2024-05-31 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 256,
+            "id": 516,
             "status": "filled",
             "purchase_dt": "2024-05-31 10:00:00",
             "purchase_price": 83.105,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 99.89727811318826,
-                "purchase_dt": "2024-08-29 12:00:00",
-                "purchase_price": 101.46
+                "purchase_price": 101.46,
+                "purchase_dt": "2024-08-29 12:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 74.70886094340587,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
@@ -57,22 +136,24 @@
             "quantity": 2,
             "side": "buy",
             "requested_price": 88.0,
-            "issue_dt": "2024-08-23 14:00:00",
+            "requested_dt": "2024-08-23 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 257,
+            "id": 518,
             "status": "filled",
             "purchase_dt": "2024-08-23 14:00:00",
             "purchase_price": 88.0,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 99.09566758686051,
-                "purchase_dt": "2024-08-29 12:00:00",
-                "purchase_price": 101.46
+                "purchase_price": 101.46,
+                "purchase_dt": "2024-08-29 12:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 82.45216620656974,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
@@ -80,22 +161,24 @@
             "quantity": 2,
             "side": "buy",
             "requested_price": 88.01,
-            "issue_dt": "2025-02-11 14:00:00",
+            "requested_dt": "2025-02-11 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 260,
+            "id": 522,
             "status": "filled",
             "purchase_dt": "2025-02-11 14:00:00",
             "purchase_price": 88.01,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 97.89085610721905,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 83.06957194639048,
-                "purchase_dt": "2025-03-04 08:00:00",
-                "purchase_price": 82.7
+                "purchase_price": 82.7,
+                "purchase_dt": "2025-03-04 08:00:00"
             }
         }
     ]

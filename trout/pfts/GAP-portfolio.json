@@ -1,55 +1,139 @@
 {
-    "capital": 1015.1969173859434,
-    "pl": 15.19691738594338,
-    "capital_pct": 101.51969173859435,
-    "position_count": 0,
-    "orders_count": 3,
-    "positions": {},
+    "capital": 781.9510559274454,
+    "pl": 34.37105592744547,
+    "capital_pct": 103.43710559274454,
+    "position_count": 1,
+    "orders_count": 7,
+    "positions": {
+        "GAP": {
+            "quantity": 12,
+            "price": 21.035
+        }
+    },
     "orders": [
         {
             "symbol": "GAP",
-            "quantity": 10,
-            "side": "buy",
-            "requested_price": 24.93,
-            "issue_dt": "2024-11-21 14:00:00",
-            "intent": "buy_to_open",
+            "quantity": 11,
+            "side": "sell",
+            "requested_price": 21.28,
+            "requested_dt": "2024-11-06 10:00:00",
+            "intent": "sell_to_open",
             "type": "market",
-            "id": 34,
+            "id": 73,
             "status": "filled",
-            "purchase_dt": "2024-11-21 14:00:00",
-            "purchase_price": 24.93,
+            "purchase_dt": "2024-11-06 10:00:00",
+            "purchase_price": 21.28,
             "take_profit": {
-                "tp_limit": 32.547074397239264,
-                "purchase_dt": null,
-                "purchase_price": null
+                "intent": "buy_to_close",
+                "tp_limit": 16.49169020193609,
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
-                "sl_limit": 21.121462801380368,
-                "purchase_dt": "2025-03-04 08:00:00",
-                "purchase_price": 20.98
+                "intent": "buy_to_close",
+                "sl_limit": 23.674154899031954,
+                "purchase_price": 24.93,
+                "purchase_dt": "2024-11-21 16:00:00"
             }
         },
         {
             "symbol": "GAP",
-            "quantity": 7,
+            "quantity": 9,
+            "side": "sell",
+            "requested_price": 20.535,
+            "requested_dt": "2024-11-20 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 75,
+            "status": "filled",
+            "purchase_dt": "2024-11-20 10:00:00",
+            "purchase_price": 20.535,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 16.51945478561688,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 22.54277260719156,
+                "purchase_price": 24.93,
+                "purchase_dt": "2024-11-21 16:00:00"
+            }
+        },
+        {
+            "symbol": "GAP",
+            "quantity": 5,
             "side": "buy",
-            "requested_price": 24.33,
-            "issue_dt": "2025-01-03 14:00:00",
+            "requested_price": 24.93,
+            "requested_dt": "2024-11-21 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 35,
+            "id": 76,
+            "status": "filled",
+            "purchase_dt": "2024-11-21 14:00:00",
+            "purchase_price": 24.93,
+            "take_profit": {
+                "intent": "sell_to_close",
+                "tp_limit": 32.547074397239264,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "sell_to_close",
+                "sl_limit": 21.121462801380368,
+                "purchase_price": 20.98,
+                "purchase_dt": "2025-03-04 08:00:00"
+            }
+        },
+        {
+            "symbol": "GAP",
+            "quantity": 10,
+            "side": "buy",
+            "requested_price": 24.33,
+            "requested_dt": "2025-01-03 14:00:00",
+            "intent": "buy_to_open",
+            "type": "market",
+            "id": 80,
             "status": "filled",
             "purchase_dt": "2025-01-03 14:00:00",
             "purchase_price": 24.33,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 28.226583132154637,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 22.38170843392268,
-                "purchase_dt": "2025-03-03 12:00:00",
-                "purchase_price": 22.29
+                "purchase_price": 22.29,
+                "purchase_dt": "2025-03-03 12:00:00"
+            }
+        },
+        {
+            "symbol": "GAP",
+            "quantity": 8,
+            "side": "sell",
+            "requested_price": 23.155,
+            "requested_dt": "2025-02-04 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 83,
+            "status": "filled",
+            "purchase_dt": "2025-02-04 10:00:00",
+            "purchase_price": 23.155,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 19.131889549590152,
+                "purchase_price": 19.115,
+                "purchase_dt": "2025-03-05 12:00:00"
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 25.166555225204924,
+                "purchase_price": null,
+                "purchase_dt": null
             }
         },
         {
@@ -57,22 +141,49 @@
             "quantity": 11,
             "side": "buy",
             "requested_price": 21.48,
-            "issue_dt": "2025-04-28 14:00:00",
+            "requested_dt": "2025-04-28 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 39,
+            "id": 87,
             "status": "filled",
             "purchase_dt": "2025-04-28 14:00:00",
             "purchase_price": 21.48,
             "take_profit": {
+                "intent": "sell_to_close",
                 "tp_limit": 25.948327497314605,
-                "purchase_dt": "2025-05-14 12:00:00",
-                "purchase_price": 26.06
+                "purchase_price": 26.06,
+                "purchase_dt": "2025-05-14 12:00:00"
             },
             "stop_loss": {
+                "intent": "sell_to_close",
                 "sl_limit": 19.2458362513427,
-                "purchase_dt": null,
-                "purchase_price": null
+                "purchase_price": null,
+                "purchase_dt": null
+            }
+        },
+        {
+            "symbol": "GAP",
+            "quantity": 12,
+            "side": "sell",
+            "requested_price": 21.035,
+            "requested_dt": "2025-06-04 10:00:00",
+            "intent": "sell_to_open",
+            "type": "market",
+            "id": 89,
+            "status": "filled",
+            "purchase_dt": "2025-06-04 10:00:00",
+            "purchase_price": 21.035,
+            "take_profit": {
+                "intent": "buy_to_close",
+                "tp_limit": 15.193970280266168,
+                "purchase_price": null,
+                "purchase_dt": null
+            },
+            "stop_loss": {
+                "intent": "buy_to_close",
+                "sl_limit": 23.955514859866916,
+                "purchase_price": null,
+                "purchase_dt": null
             }
         }
     ]
