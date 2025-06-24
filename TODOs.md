@@ -37,7 +37,10 @@ A list of all the TODOs needed to be completed before each release
 # v0.7
 - [x] (feat) Add rendering for non-overlayed indicators like RSI, MACD
 - [x] (feat) Add volume at the bottom of the main chart
-- [ ] (rsch) Experiment with Interactive Brokers
+- [ ] (rsch) Continue experimenting with Alpaca
+- [x] (feat) Get ~7 years worth of data using Alpaca for 30+ stocks
+- [ ] (refactor) Fix the naming scheme for candles
+    - [ ] (refactor) Update stockframe import and export of candles from csv
 - [ ] (feat) Implement brokers settings
     - [ ] Fractional Trading
     - [ ] Commissions

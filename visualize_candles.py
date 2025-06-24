@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 from time import timezone
 import http.server, json, math, os, shutil, socketserver, sys, webbrowser
 
@@ -8,6 +9,7 @@ import pandas as pd
 import talib
 
 from trbot import candles
+from trbot.candles import Timespan
 from trbot.stockframe import Stockframe
 
 def start_server(port: int) -> None:
@@ -34,8 +36,8 @@ def valid_tickers(search_dir: str) -> tuple[list[str], list[str]]:
 
     return (tickers, filenames)
 
-def candle_csv_to_json(csv_path: str, target_path: str) -> None:
-    sf: Stockframe = Stockframe.from_csv(csv_path)
+def candle_csv_to_json(csv_path: str, ticker: str, target_path: str) -> None:
+    sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)
 
     # sf.df.rename(
     #     columns={
@@ -46,12 +48,12 @@ def candle_csv_to_json(csv_path: str, target_path: str) -> None:
     # )
     sf.df.to_json(target_path, orient="records", indent=4)
 
-def calc_save_indicators(csv_path: str, target_path: str) -> None:
-    sf: Stockframe = Stockframe.from_csv(csv_path)
+def calc_save_indicators(csv_path: str, ticker: str, target_path: str) -> None:
+    sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)
     df: pd.DataFrame = pd.DataFrame()
     data: NDArray[np.float64] = sf.close_series
-    dates: list[str] = sf.date_series
-    df["Date"] = dates
+    dates: list[str] = sf.datetime_series
+    df["datetime"] = dates
 
     # Calculate indicator values
     output = {}
@@ -87,35 +89,31 @@ INDICATORS: dict = {
 
 def main():
     print(f"[INFO] Currently in '{os.getcwd()}'")
-    (tickers, filenames) = valid_tickers(os.path.join(os.getcwd(), "trout/aggs"))
 
     program_name: str = sys.argv[0]
-    value: str = ""
+    ticker: str = ""
     if len(sys.argv) > 1:
-        value = sys.argv[1]
+        ticker = sys.argv[1]
     else:
         usage(program_name)
         print("[ERROR] Please provide a valid ticker")
         sys.exit(1)
 
-    fname: str = ""
-    if '.' in value:
-        fname = value
-    else:
-        t = value
-        i: int = tickers.index(t)
-        if i < 0:
-            print(f"[ERROR] Ticker '{t}' is not valid. Look through trout/aggs/ to find a valid ticker.")
-            sys.exit(1)
-        fname = filenames[i]
+    fname: str = f"./ohlcv-1hr/{ticker}.csv"
+    if not os.path.exists(fname):
+        print(f"[ERROR] File does not exist: {fname}")
+        sys.exit(1)
 
     print(f"[INFO] Found aggregate csv: '{fname}'")
 
+    start_time: float = time.time()
     # Copy necessary candle csv over to 'charts/' as a json
-    candle_csv_to_json(fname, "charts/ohlcv.json")
+    candle_csv_to_json(fname, ticker, "charts/ohlcv.json")
 
     # Calculate and save necessary indicators
-    calc_save_indicators(fname, "charts/inds.json")
+    calc_save_indicators(fname, ticker, "charts/inds.json")
+    diff: float = time.time() - start_time
+    print(f"Took {diff:.3}s copy over the ohlcv and indicator data.")
 
     # start_server(DEFAULT_PORT)
 
