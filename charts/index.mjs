@@ -4,7 +4,7 @@ import {
     HistogramSeries
 }  from "./node_modules/lightweight-charts/dist/lightweight-charts.standalone.development.mjs";
 
-let candlestickSeries, volumeSeries, baselineSeries;
+let candlestickSeries, volumeSeries, baselineSeries, datapointsCount;
 let lineSeriesArr = []
 
 async function renderMainChart(chart) {
@@ -29,20 +29,21 @@ async function renderMainChart(chart) {
     const ohlcvPath = window.location.href + "/ohlcv.json";
     const ohlcvResp = await fetch(ohlcvPath);
     const ohlcvJSON = await ohlcvResp.json();
+    datapointsCount = ohlcvJSON.length;
     for (let i = 0; i < ohlcvJSON.length; i++) {
-        let timeValue = Date.parse(ohlcvJSON[i]["Date"]);
+        let timeValue = Date.parse(ohlcvJSON[i]["datetime"]);
 
         candlestickData.push({
             time: timeValue,
-            open: ohlcvJSON[i]["Open"],
-            high: ohlcvJSON[i]["High"],
-            low: ohlcvJSON[i]["Low"],
-            close: ohlcvJSON[i]["Close"],
+            open: ohlcvJSON[i]["open"],
+            high: ohlcvJSON[i]["high"],
+            low: ohlcvJSON[i]["low"],
+            close: ohlcvJSON[i]["close"],
         });
 
         volumeData.push({
             time: timeValue,
-            value: ohlcvJSON[i]["Volume"],
+            value: ohlcvJSON[i]["volume"],
             // color: ,
         })
     }
@@ -84,7 +85,7 @@ async function renderMainChart(chart) {
 
 async function renderSecondaryChart(chart) {
     baselineSeries = chart.addSeries(BaselineSeries, {
-        baseValue: { type: "price", price: 47.25 },
+        baseValue: { type: "price", price: 215 },
         topLineColor: "rgba(38, 166, 154, 1)",
         topFillColor1: "rgba(38, 166, 154, 0.28)",
         topFillColor2: "rgba(38, 166, 154, 0.05)",
@@ -200,3 +201,12 @@ secondaryChart.subscribeCrosshairMove(param => {
 
 renderMainChart(mainChart);
 renderSecondaryChart(secondaryChart);
+
+document.addEventListener("keypress", e => {
+    if (e.key === "0") {
+        mainChart.timeScale().scrollToRealTime();
+    } else if (e.key >= '1' && e.key <= '9') {
+        const pct = 1 - (Number.parseInt(e.key) / 10);
+        mainChart.timeScale().scrollToPosition(-pct * datapointsCount);
+    }
+})
