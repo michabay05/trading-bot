@@ -3,15 +3,29 @@
     <head>
         <title>trbot: candle visualizer</title>
         <style>
-            #tv-chart {
-                border: solid 2px #555;
-                width: fit-content;
-                margin-inline: auto;
+            body {
+                height: 100vh;
+                padding: 0;
+                margin: 0;
+            }
+            #tv-charts {
+                height: 100%;
+                margin-block: auto;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            #main-chart {
+                margin-bottom: 2em;
             }
         </style>
     </head>
     <body>
-        <div id="tv-chart"></div>
+        <div id="tv-charts">
+            <div id="main-chart"></div>
+            <div id="secondary-chart"></div>
+        </div>
 
         <script type="module" src="./index.mjs"></script>
     </body>

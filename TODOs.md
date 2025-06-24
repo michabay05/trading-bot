@@ -35,6 +35,8 @@ A list of all the TODOs needed to be completed before each release
 ---
 
 # v0.7
+- [x] (feat) Add rendering for non-overlayed indicators like RSI, MACD
+- [x] (feat) Add volume at the bottom of the main chart
 - [ ] (rsch) Experiment with Interactive Brokers
 - [ ] (feat) Implement brokers settings
     - [ ] Fractional Trading

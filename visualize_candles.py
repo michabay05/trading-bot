@@ -37,18 +37,13 @@ def valid_tickers(search_dir: str) -> tuple[list[str], list[str]]:
 def candle_csv_to_json(csv_path: str, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path)
 
-    # timestamps: list[int] = []
-    # for date in sf.date_series:
-    #     # unix_timestamp = int(datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp())
-    #     unix = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-    #     timestamps.append(int(unix.timestamp()))
-    # sf.df["Date"] = timestamps
-
-    sf.df.rename(
-        columns={"Date": "time", "Open": "open", "High": "high", "Low": "low", "Close": "close"},
-        inplace=True
-    )
-    del sf.df["Volume"]
+    # sf.df.rename(
+    #     columns={
+    #         "Date": "time", "Open": "open", "High": "high", "Low": "low", "Close": "close",
+    #         "Volume": "volume"
+    #     },
+    #     inplace=True
+    # )
     sf.df.to_json(target_path, orient="records", indent=4)
 
 def calc_save_indicators(csv_path: str, target_path: str) -> None:
@@ -74,6 +69,8 @@ def calc_save_indicators(csv_path: str, target_path: str) -> None:
             # v = row[1] if not math.isnan(row[1]) else None
             if not math.isnan(row[1]):
                 output[name].append({"time": row[0], "value": row[1]})
+            else:
+                output[name].append({"time": row[0], "value": 0.0})
 
         # Remove column when done
         del df[name]
@@ -115,12 +112,12 @@ def main():
     print(f"[INFO] Found aggregate csv: '{fname}'")
 
     # Copy necessary candle csv over to 'charts/' as a json
-    candle_csv_to_json(fname, "charts/ohlc.json")
+    candle_csv_to_json(fname, "charts/ohlcv.json")
 
     # Calculate and save necessary indicators
     calc_save_indicators(fname, "charts/inds.json")
 
-    start_server(DEFAULT_PORT)
+    # start_server(DEFAULT_PORT)
 
 if __name__ == "__main__":
     main()
