@@ -1,25 +1,20 @@
 {
-    "capital": 780.2973999999999,
-    "pl": -32.50260000000003,
-    "capital_pct": 96.74973999999999,
-    "position_count": 1,
+    "capital": 997.86,
+    "pl": -2.1399999999999864,
+    "capital_pct": 99.786,
+    "position_count": 0,
     "orders_count": 7,
-    "positions": {
-        "NKE": {
-            "quantity": 3,
-            "price": 62.4
-        }
-    },
+    "positions": {},
     "orders": [
         {
             "symbol": "NKE",
-            "quantity": 2,
+            "quantity": 0,
             "side": "sell",
             "requested_price": 108.12,
             "requested_dt": "2023-08-11 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 331,
+            "id": 339,
             "status": "filled",
             "purchase_dt": "2023-08-11 10:00:00",
             "purchase_price": 108.12,
@@ -31,20 +26,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 113.67026529183778,
+                "sl_limit": 109.23005305836756,
                 "purchase_price": null,
                 "purchase_dt": null
             }
         },
         {
             "symbol": "NKE",
-            "quantity": 2,
+            "quantity": 0,
             "side": "buy",
             "requested_price": 105.26,
             "requested_dt": "2024-02-14 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 335,
+            "id": 343,
             "status": "filled",
             "purchase_dt": "2024-02-14 10:00:00",
             "purchase_price": 105.26,
@@ -56,20 +51,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 99.98327054812943,
-                "purchase_price": 99.51,
-                "purchase_dt": "2024-03-04 12:00:00"
+                "sl_limit": 104.20465410962589,
+                "purchase_price": 102.88,
+                "purchase_dt": "2024-02-16 12:00:00"
             }
         },
         {
             "symbol": "NKE",
-            "quantity": 3,
+            "quantity": 1,
             "side": "sell",
             "requested_price": 76.8669,
             "requested_dt": "2024-12-19 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 345,
+            "id": 353,
             "status": "filled",
             "purchase_dt": "2024-12-19 10:00:00",
             "purchase_price": 76.8669,
@@ -81,20 +76,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 80.98132965178623,
+                "sl_limit": 77.68978593035725,
                 "purchase_price": 81.99,
                 "purchase_dt": "2024-12-19 16:00:00"
             }
         },
         {
             "symbol": "NKE",
-            "quantity": 2,
+            "quantity": 1,
             "side": "buy",
             "requested_price": 81.99,
             "requested_dt": "2024-12-19 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 346,
+            "id": 354,
             "status": "filled",
             "purchase_dt": "2024-12-19 14:00:00",
             "purchase_price": 81.99,
@@ -106,20 +101,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 74.52235103762708,
-                "purchase_price": 73.23,
-                "purchase_dt": "2024-12-20 08:00:00"
+                "sl_limit": 80.4964702075254,
+                "purchase_price": 76.68,
+                "purchase_dt": "2024-12-19 20:00:00"
             }
         },
         {
             "symbol": "NKE",
-            "quantity": 3,
+            "quantity": 1,
             "side": "sell",
             "requested_price": 68.88,
             "requested_dt": "2025-02-07 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 351,
+            "id": 359,
             "status": "filled",
             "purchase_dt": "2025-02-07 14:00:00",
             "purchase_price": 68.88,
@@ -131,20 +126,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 74.25569930455129,
-                "purchase_price": 74.3,
-                "purchase_dt": "2025-02-18 08:00:00"
+                "sl_limit": 69.95513986091025,
+                "purchase_price": 70.54,
+                "purchase_dt": "2025-02-10 12:00:00"
             }
         },
         {
             "symbol": "NKE",
-            "quantity": 3,
+            "quantity": 1,
             "side": "buy",
             "requested_price": 76.66,
             "requested_dt": "2025-02-19 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 353,
+            "id": 361,
             "status": "filled",
             "purchase_dt": "2025-02-19 14:00:00",
             "purchase_price": 76.66,
@@ -156,20 +151,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 72.07311405343495,
-                "purchase_price": 71.795,
-                "purchase_dt": "2025-03-13 12:00:00"
+                "sl_limit": 75.74262281068698,
+                "purchase_price": 74.86,
+                "purchase_dt": "2025-03-11 08:00:00"
             }
         },
         {
             "symbol": "NKE",
-            "quantity": 3,
+            "quantity": 1,
             "side": "buy",
             "requested_price": 62.4,
             "requested_dt": "2025-05-12 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 356,
+            "id": 364,
             "status": "filled",
             "purchase_dt": "2025-05-12 14:00:00",
             "purchase_price": 62.4,
@@ -181,9 +176,9 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 56.63256719893039,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 61.24651343978608,
+                "purchase_price": 60.4,
+                "purchase_dt": "2025-05-21 12:00:00"
             }
         }
     ]

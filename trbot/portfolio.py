@@ -91,6 +91,7 @@ class StopLossRequest:
         else:
             return {}
 
+
 ORDER_ID_COUNTER: int = 0
 
 @dataclass

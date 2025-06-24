@@ -1,25 +1,20 @@
 {
-    "capital": 777.7492286272319,
-    "pl": 26.649228627231878,
-    "capital_pct": 102.6649228627232,
-    "position_count": 1,
+    "capital": 1005.9911999999999,
+    "pl": 5.991199999999935,
+    "capital_pct": 100.59912,
+    "position_count": 0,
     "orders_count": 7,
-    "positions": {
-        "HPQ": {
-            "quantity": 10,
-            "price": 24.89
-        }
-    },
+    "positions": {},
     "orders": [
         {
             "symbol": "HPQ",
-            "quantity": 8,
+            "quantity": 3,
             "side": "sell",
             "requested_price": 28.565,
             "requested_dt": "2024-01-18 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 160,
+            "id": 166,
             "status": "filled",
             "purchase_dt": "2024-01-18 10:00:00",
             "purchase_price": 28.565,
@@ -31,20 +26,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 29.875783889262003,
-                "purchase_price": 30.0,
-                "purchase_dt": "2024-01-26 12:00:00"
+                "sl_limit": 28.8271567778524,
+                "purchase_price": 28.98,
+                "purchase_dt": "2024-01-19 08:00:00"
             }
         },
         {
             "symbol": "HPQ",
-            "quantity": 8,
+            "quantity": 3,
             "side": "buy",
             "requested_price": 29.685,
             "requested_dt": "2024-05-10 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 164,
+            "id": 170,
             "status": "filled",
             "purchase_dt": "2024-05-10 10:00:00",
             "purchase_price": 29.685,
@@ -56,20 +51,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 28.364918409176806,
+                "sl_limit": 29.42098368183536,
                 "purchase_price": null,
                 "purchase_dt": null
             }
         },
         {
             "symbol": "HPQ",
-            "quantity": 7,
+            "quantity": 2,
             "side": "sell",
             "requested_price": 33.74,
             "requested_dt": "2024-08-28 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 168,
+            "id": 174,
             "status": "filled",
             "purchase_dt": "2024-08-28 14:00:00",
             "purchase_price": 33.74,
@@ -81,20 +76,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 36.686767693592465,
-                "purchase_price": 36.85,
-                "purchase_dt": "2024-09-26 16:00:00"
+                "sl_limit": 34.32935353871849,
+                "purchase_price": 35.635,
+                "purchase_dt": "2024-08-29 08:00:00"
             }
         },
         {
             "symbol": "HPQ",
-            "quantity": 5,
+            "quantity": 2,
             "side": "buy",
             "requested_price": 35.825,
             "requested_dt": "2024-08-30 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 169,
+            "id": 176,
             "status": "filled",
             "purchase_dt": "2024-08-30 10:00:00",
             "purchase_price": 35.825,
@@ -106,45 +101,45 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 32.28035740838413,
-                "purchase_price": 32.28,
-                "purchase_dt": "2024-12-20 04:00:00"
+                "sl_limit": 35.116071481676826,
+                "purchase_price": 34.698,
+                "purchase_dt": "2024-09-03 20:00:00"
             }
         },
         {
             "symbol": "HPQ",
-            "quantity": 4,
+            "quantity": 2,
             "side": "buy",
             "requested_price": 35.84,
             "requested_dt": "2024-09-24 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 171,
+            "id": 179,
             "status": "filled",
             "purchase_dt": "2024-09-24 14:00:00",
             "purchase_price": 35.84,
             "take_profit": {
                 "intent": "sell_to_close",
                 "tp_limit": 39.02257665192213,
-                "purchase_price": 39.245,
-                "purchase_dt": "2024-11-25 12:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 34.24871167403894,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 35.52174233480779,
+                "purchase_price": 35.45,
+                "purchase_dt": "2024-09-27 08:00:00"
             }
         },
         {
             "symbol": "HPQ",
-            "quantity": 9,
+            "quantity": 3,
             "side": "buy",
             "requested_price": 26.4,
             "requested_dt": "2025-05-08 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 178,
+            "id": 184,
             "status": "filled",
             "purchase_dt": "2025-05-08 10:00:00",
             "purchase_price": 26.4,
@@ -156,20 +151,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 24.631828897009093,
+                "sl_limit": 26.046365779401818,
                 "purchase_price": 23.7184,
                 "purchase_dt": "2025-05-28 16:00:00"
             }
         },
         {
             "symbol": "HPQ",
-            "quantity": 10,
+            "quantity": 4,
             "side": "sell",
             "requested_price": 24.89,
             "requested_dt": "2025-05-30 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 180,
+            "id": 186,
             "status": "filled",
             "purchase_dt": "2025-05-30 14:00:00",
             "purchase_price": 24.89,
@@ -181,9 +176,9 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 28.44401142580654,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 25.600802285161308,
+                "purchase_price": 25.69,
+                "purchase_dt": "2025-06-10 20:00:00"
             }
         }
     ]

@@ -14,22 +14,37 @@ class MyStrategy(StrategyTester):
         self.slow_ma = self.TA_EMA(close, period=100)
         self.atr = self.TA_ATR(high, low, close, period=14)
 
+        self.rr_ratio = 10
+
+    def calc_tp_sl(self, last_atr: float, long: bool) -> tuple[float, float]:
+        sl: float = 0.0
+        tp: float = 0.0
+        diff: float = last_atr
+        if long:
+            sl = self.last_close - diff
+            tp = self.last_close + (self.rr_ratio * diff)
+        else:
+            sl = self.last_close + diff
+            tp = self.last_close - (self.rr_ratio * diff)
+
+        return (tp, sl)
+
     def on_candle(self) -> None:
         last_atr = self.last_ind_value(self.atr)
-        sz = 0.25
+        sz = 0.1
+        tp: float
+        sl: float
         if self.ind_crossover(self.fast_ma, self.slow_ma):
-            self.market_buy(
-                size=sz,
-                tp_limit=self.last_close + 10*last_atr,
-                sl_limit=self.last_close - 5*last_atr
-            )
-        if self.ind_crossover(self.slow_ma, self.fast_ma):
-            self.market_sell(
-                size=sz,
-                tp_limit=self.last_close - 10*last_atr,
-                sl_limit=self.last_close + 5*last_atr
-            )
+            (tp, sl) = self.calc_tp_sl(last_atr, long=True)
+            # sl = self.last_close - 5*last_atr
+            # tp = self.last_close + 10*last_atr
+            self.market_buy(size=sz, tp_limit=tp, sl_limit=sl)
 
+        if self.ind_crossover(self.slow_ma, self.fast_ma):
+            (tp, sl) = self.calc_tp_sl(last_atr, long=False)
+            # sl = self.last_close + 5*last_atr
+            # tp = self.last_close - 10*last_atr
+            self.market_sell(size=sz, tp_limit=tp, sl_limit=sl)
 
 start_time: float = time.time()
 tickers: list[str] = vs_cd.valid_tickers("trout/aggs")[0]
@@ -49,6 +64,8 @@ print("----------------------")
 print(f"Total: {sum}")
 diff: float = time.time() - start_time
 print(f"Took {diff:.3f}s to backtest {len(tickers)} symbols")
+
+
 
 # ===================== HISTORICAL CANDLES =====================
 # for ticker in [

@@ -1,14 +1,14 @@
 {
-    "capital": 1516.4672876331588,
-    "pl": 516.4672876331588,
-    "capital_pct": 151.64672876331588,
+    "capital": 987.9049999999999,
+    "pl": -12.095000000000141,
+    "capital_pct": 98.79049999999998,
     "position_count": 0,
     "orders_count": 11,
     "positions": {},
     "orders": [
         {
             "symbol": "BYND",
-            "quantity": 29,
+            "quantity": 11,
             "side": "sell",
             "requested_price": 8.41,
             "requested_dt": "2024-01-04 14:00:00",
@@ -26,39 +26,39 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 9.770425805310271,
-                "purchase_price": 13.8581,
-                "purchase_dt": "2024-02-27 16:00:00"
+                "sl_limit": 8.682085161062055,
+                "purchase_price": 8.7,
+                "purchase_dt": "2024-01-09 04:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 24,
+            "quantity": 13,
             "side": "buy",
             "requested_price": 7.67,
             "requested_dt": "2024-02-23 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 3,
+            "id": 4,
             "status": "filled",
             "purchase_dt": "2024-02-23 10:00:00",
             "purchase_price": 7.67,
             "take_profit": {
                 "intent": "sell_to_close",
                 "tp_limit": 10.122510708667813,
-                "purchase_price": 13.8581,
-                "purchase_dt": "2024-02-27 16:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 6.443744645666094,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 7.4247489291332185,
+                "purchase_price": 7.39,
+                "purchase_dt": "2024-02-26 20:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 42,
+            "quantity": 12,
             "side": "sell",
             "requested_price": 7.955,
             "requested_dt": "2024-03-22 10:00:00",
@@ -76,20 +76,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 9.076653691393544,
-                "purchase_price": 9.1268,
-                "purchase_dt": "2024-05-14 08:00:00"
+                "sl_limit": 8.17933073827871,
+                "purchase_price": 8.365,
+                "purchase_dt": "2024-03-26 12:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 32,
+            "quantity": 12,
             "side": "sell",
             "requested_price": 7.79,
             "requested_dt": "2024-04-01 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 8,
+            "id": 9,
             "status": "filled",
             "purchase_dt": "2024-04-01 14:00:00",
             "purchase_price": 7.79,
@@ -101,14 +101,14 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 8.915059051449486,
-                "purchase_price": 9.1268,
-                "purchase_dt": "2024-05-14 08:00:00"
+                "sl_limit": 8.015011810289897,
+                "purchase_price": 8.11,
+                "purchase_dt": "2024-05-03 16:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 50,
+            "quantity": 14,
             "side": "sell",
             "requested_price": 7.15,
             "requested_dt": "2024-05-28 14:00:00",
@@ -121,25 +121,25 @@
             "take_profit": {
                 "intent": "buy_to_close",
                 "tp_limit": 5.030655234717889,
-                "purchase_price": 4.95,
-                "purchase_dt": "2024-11-18 12:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 8.209672382641056,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 7.361934476528211,
+                "purchase_price": 7.5,
+                "purchase_dt": "2024-05-31 12:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 45,
+            "quantity": 16,
             "side": "sell",
             "requested_price": 5.98,
             "requested_dt": "2024-07-17 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 16,
+            "id": 17,
             "status": "filled",
             "purchase_dt": "2024-07-17 14:00:00",
             "purchase_price": 5.98,
@@ -151,20 +151,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 8.272433290777261,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 6.438486658155453,
+                "purchase_price": 6.5299,
+                "purchase_dt": "2024-07-18 08:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 29,
+            "quantity": 14,
             "side": "buy",
             "requested_price": 6.83,
             "requested_dt": "2024-08-23 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 17,
+            "id": 19,
             "status": "filled",
             "purchase_dt": "2024-08-23 10:00:00",
             "purchase_price": 6.83,
@@ -176,20 +176,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 5.7758712207457465,
-                "purchase_price": 5.545,
-                "purchase_dt": "2024-11-08 12:00:00"
+                "sl_limit": 6.619174244149149,
+                "purchase_price": 6.535,
+                "purchase_dt": "2024-08-26 12:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 25,
+            "quantity": 17,
             "side": "sell",
             "requested_price": 5.98,
             "requested_dt": "2024-09-04 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 18,
+            "id": 21,
             "status": "filled",
             "purchase_dt": "2024-09-04 14:00:00",
             "purchase_price": 5.98,
@@ -201,45 +201,45 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 6.801598678892152,
-                "purchase_price": 6.878,
-                "purchase_dt": "2024-09-24 12:00:00"
+                "sl_limit": 6.1443197357784305,
+                "purchase_price": 6.1898,
+                "purchase_dt": "2024-09-05 12:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 64,
+            "quantity": 16,
             "side": "sell",
             "requested_price": 6.205,
             "requested_dt": "2024-10-21 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 21,
+            "id": 24,
             "status": "filled",
             "purchase_dt": "2024-10-21 10:00:00",
             "purchase_price": 6.205,
             "take_profit": {
                 "intent": "buy_to_close",
                 "tp_limit": 5.017836894327905,
-                "purchase_price": 4.95,
-                "purchase_dt": "2024-11-18 12:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 6.798581552836048,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 6.323716310567209,
+                "purchase_price": 6.36,
+                "purchase_dt": "2024-10-22 12:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 93,
+            "quantity": 24,
             "side": "buy",
             "requested_price": 4.13,
             "requested_dt": "2025-01-27 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 25,
+            "id": 26,
             "status": "filled",
             "purchase_dt": "2025-01-27 14:00:00",
             "purchase_price": 4.13,
@@ -251,20 +251,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 3.4749817813249155,
-                "purchase_price": 3.4,
-                "purchase_dt": "2025-02-26 16:00:00"
+                "sl_limit": 3.998996356264983,
+                "purchase_price": 3.965,
+                "purchase_dt": "2025-01-28 12:00:00"
             }
         },
         {
             "symbol": "BYND",
-            "quantity": 81,
+            "quantity": 28,
             "side": "sell",
             "requested_price": 3.575,
             "requested_dt": "2025-02-26 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 28,
+            "id": 30,
             "status": "filled",
             "purchase_dt": "2025-02-26 10:00:00",
             "purchase_price": 3.575,
@@ -276,7 +276,7 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 4.145399618403107,
+                "sl_limit": 3.6890799236806218,
                 "purchase_price": null,
                 "purchase_dt": null
             }

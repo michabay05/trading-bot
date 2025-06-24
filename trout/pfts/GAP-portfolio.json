@@ -1,25 +1,20 @@
 {
-    "capital": 781.9510559274454,
-    "pl": 34.37105592744547,
-    "capital_pct": 103.43710559274454,
-    "position_count": 1,
+    "capital": 983.94,
+    "pl": -16.059999999999945,
+    "capital_pct": 98.394,
+    "position_count": 0,
     "orders_count": 7,
-    "positions": {
-        "GAP": {
-            "quantity": 12,
-            "price": 21.035
-        }
-    },
+    "positions": {},
     "orders": [
         {
             "symbol": "GAP",
-            "quantity": 11,
+            "quantity": 4,
             "side": "sell",
             "requested_price": 21.28,
             "requested_dt": "2024-11-06 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 73,
+            "id": 75,
             "status": "filled",
             "purchase_dt": "2024-11-06 10:00:00",
             "purchase_price": 21.28,
@@ -31,20 +26,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 23.674154899031954,
-                "purchase_price": 24.93,
-                "purchase_dt": "2024-11-21 16:00:00"
+                "sl_limit": 21.75883097980639,
+                "purchase_price": 21.815,
+                "purchase_dt": "2024-11-07 12:00:00"
             }
         },
         {
             "symbol": "GAP",
-            "quantity": 9,
+            "quantity": 4,
             "side": "sell",
             "requested_price": 20.535,
             "requested_dt": "2024-11-20 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 75,
+            "id": 78,
             "status": "filled",
             "purchase_dt": "2024-11-20 10:00:00",
             "purchase_price": 20.535,
@@ -56,20 +51,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 22.54277260719156,
-                "purchase_price": 24.93,
-                "purchase_dt": "2024-11-21 16:00:00"
+                "sl_limit": 20.93655452143831,
+                "purchase_price": 21.1,
+                "purchase_dt": "2024-11-21 04:00:00"
             }
         },
         {
             "symbol": "GAP",
-            "quantity": 5,
+            "quantity": 4,
             "side": "buy",
             "requested_price": 24.93,
             "requested_dt": "2024-11-21 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 76,
+            "id": 80,
             "status": "filled",
             "purchase_dt": "2024-11-21 14:00:00",
             "purchase_price": 24.93,
@@ -81,20 +76,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 21.121462801380368,
-                "purchase_price": 20.98,
-                "purchase_dt": "2025-03-04 08:00:00"
+                "sl_limit": 24.168292560276072,
+                "purchase_price": 24.12,
+                "purchase_dt": "2024-11-26 16:00:00"
             }
         },
         {
             "symbol": "GAP",
-            "quantity": 10,
+            "quantity": 4,
             "side": "buy",
             "requested_price": 24.33,
             "requested_dt": "2025-01-03 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 80,
+            "id": 83,
             "status": "filled",
             "purchase_dt": "2025-01-03 14:00:00",
             "purchase_price": 24.33,
@@ -106,20 +101,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 22.38170843392268,
-                "purchase_price": 22.29,
-                "purchase_dt": "2025-03-03 12:00:00"
+                "sl_limit": 23.940341686784535,
+                "purchase_price": 23.86,
+                "purchase_dt": "2025-01-07 20:00:00"
             }
         },
         {
             "symbol": "GAP",
-            "quantity": 8,
+            "quantity": 4,
             "side": "sell",
             "requested_price": 23.155,
             "requested_dt": "2025-02-04 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 83,
+            "id": 87,
             "status": "filled",
             "purchase_dt": "2025-02-04 10:00:00",
             "purchase_price": 23.155,
@@ -131,45 +126,45 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 25.166555225204924,
+                "sl_limit": 23.557311045040986,
                 "purchase_price": null,
                 "purchase_dt": null
             }
         },
         {
             "symbol": "GAP",
-            "quantity": 11,
+            "quantity": 4,
             "side": "buy",
             "requested_price": 21.48,
             "requested_dt": "2025-04-28 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 87,
+            "id": 89,
             "status": "filled",
             "purchase_dt": "2025-04-28 14:00:00",
             "purchase_price": 21.48,
             "take_profit": {
                 "intent": "sell_to_close",
                 "tp_limit": 25.948327497314605,
-                "purchase_price": 26.06,
-                "purchase_dt": "2025-05-14 12:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 19.2458362513427,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 21.03316725026854,
+                "purchase_price": 20.99,
+                "purchase_dt": "2025-04-30 08:00:00"
             }
         },
         {
             "symbol": "GAP",
-            "quantity": 12,
+            "quantity": 4,
             "side": "sell",
             "requested_price": 21.035,
             "requested_dt": "2025-06-04 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 89,
+            "id": 91,
             "status": "filled",
             "purchase_dt": "2025-06-04 10:00:00",
             "purchase_price": 21.035,
@@ -181,9 +176,9 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 23.955514859866916,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 21.619102971973383,
+                "purchase_price": 21.73,
+                "purchase_dt": "2025-06-05 12:00:00"
             }
         }
     ]

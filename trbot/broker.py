@@ -131,9 +131,6 @@ class Broker:
         portfolio.capital += position.quantity * last_close
         del portfolio.positions[order.symbol]
 
-        portfolio.update_pl()
-
-
 # ============================ POLYGON.IO-specific ============================
 _BASE_URL: str = "https://api.polygon.io"
 _API_KEY: str = tbsecrets.POLYGON_IO_SECRETS["api_key"]

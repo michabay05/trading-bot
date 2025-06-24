@@ -1,25 +1,20 @@
 {
-    "capital": 728.9778655492153,
-    "pl": -37.92213445078471,
-    "capital_pct": 96.20778655492153,
-    "position_count": 1,
+    "capital": 1003.2509999999997,
+    "pl": 3.250999999999749,
+    "capital_pct": 100.32509999999996,
+    "position_count": 0,
     "orders_count": 8,
-    "positions": {
-        "LNVGY": {
-            "quantity": 10,
-            "price": 23.31
-        }
-    },
+    "positions": {},
     "orders": [
         {
             "symbol": "LNVGY",
-            "quantity": 12,
+            "quantity": 4,
             "side": "sell",
             "requested_price": 20.67,
             "requested_dt": "2023-09-15 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 263,
+            "id": 270,
             "status": "filled",
             "purchase_dt": "2023-09-15 14:00:00",
             "purchase_price": 20.67,
@@ -31,20 +26,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 21.78449570671269,
-                "purchase_price": 21.95,
-                "purchase_dt": "2023-10-10 08:00:00"
+                "sl_limit": 20.89289914134254,
+                "purchase_price": 20.905,
+                "purchase_dt": "2023-09-22 08:00:00"
             }
         },
         {
             "symbol": "LNVGY",
-            "quantity": 11,
+            "quantity": 4,
             "side": "buy",
             "requested_price": 21.992,
             "requested_dt": "2023-10-11 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 265,
+            "id": 272,
             "status": "filled",
             "purchase_dt": "2023-10-11 10:00:00",
             "purchase_price": 21.992,
@@ -56,20 +51,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 20.522230136462305,
-                "purchase_price": 19.61,
-                "purchase_dt": "2023-10-18 08:00:00"
+                "sl_limit": 21.698046027292463,
+                "purchase_price": 21.33,
+                "purchase_dt": "2023-10-16 08:00:00"
             }
         },
         {
             "symbol": "LNVGY",
-            "quantity": 11,
+            "quantity": 4,
             "side": "sell",
             "requested_price": 20.94,
             "requested_dt": "2024-01-31 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 267,
+            "id": 274,
             "status": "filled",
             "purchase_dt": "2024-01-31 14:00:00",
             "purchase_price": 20.94,
@@ -81,20 +76,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 23.778219069188424,
-                "purchase_price": 24.712,
-                "purchase_dt": "2024-03-04 12:00:00"
+                "sl_limit": 21.507643813837685,
+                "purchase_price": 21.751,
+                "purchase_dt": "2024-02-06 12:00:00"
             }
         },
         {
             "symbol": "LNVGY",
-            "quantity": 10,
+            "quantity": 4,
             "side": "buy",
             "requested_price": 25.02,
             "requested_dt": "2024-03-13 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 269,
+            "id": 276,
             "status": "filled",
             "purchase_dt": "2024-03-13 14:00:00",
             "purchase_price": 25.02,
@@ -106,20 +101,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 22.89888856551002,
-                "purchase_price": 22.72,
-                "purchase_dt": "2024-03-25 08:00:00"
+                "sl_limit": 24.595777713102002,
+                "purchase_price": 24.29,
+                "purchase_dt": "2024-03-14 08:00:00"
             }
         },
         {
             "symbol": "LNVGY",
-            "quantity": 9,
+            "quantity": 3,
             "side": "sell",
             "requested_price": 25.69,
             "requested_dt": "2024-11-11 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 275,
+            "id": 282,
             "status": "filled",
             "purchase_dt": "2024-11-11 10:00:00",
             "purchase_price": 25.69,
@@ -131,20 +126,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 28.16865285477448,
-                "purchase_price": 29.415,
-                "purchase_dt": "2025-02-06 12:00:00"
+                "sl_limit": 26.185730570954895,
+                "purchase_price": 27.015,
+                "purchase_dt": "2024-12-27 12:00:00"
             }
         },
         {
             "symbol": "LNVGY",
-            "quantity": 6,
+            "quantity": 3,
             "side": "buy",
             "requested_price": 28.04,
             "requested_dt": "2025-02-05 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 276,
+            "id": 284,
             "status": "filled",
             "purchase_dt": "2025-02-05 14:00:00",
             "purchase_price": 28.04,
@@ -156,20 +151,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 24.894870966603076,
+                "sl_limit": 27.410974193320616,
                 "purchase_price": null,
                 "purchase_dt": null
             }
         },
         {
             "symbol": "LNVGY",
-            "quantity": 9,
+            "quantity": 3,
             "side": "sell",
             "requested_price": 27.42,
             "requested_dt": "2025-04-01 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 279,
+            "id": 286,
             "status": "filled",
             "purchase_dt": "2025-04-01 14:00:00",
             "purchase_price": 27.42,
@@ -181,20 +176,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 29.97197729366926,
+                "sl_limit": 27.93039545873385,
                 "purchase_price": null,
                 "purchase_dt": null
             }
         },
         {
             "symbol": "LNVGY",
-            "quantity": 10,
+            "quantity": 4,
             "side": "sell",
             "requested_price": 23.31,
             "requested_dt": "2025-05-28 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 282,
+            "id": 289,
             "status": "filled",
             "purchase_dt": "2025-05-28 10:00:00",
             "purchase_price": 23.31,
@@ -206,9 +201,9 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 26.13586406978429,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 23.87517281395686,
+                "purchase_price": 23.91,
+                "purchase_dt": "2025-05-29 16:00:00"
             }
         }
     ]

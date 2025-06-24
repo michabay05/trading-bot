@@ -1,20 +1,20 @@
 {
-    "capital": 1105.013312827681,
-    "pl": 105.01331282768092,
-    "capital_pct": 110.50133128276809,
+    "capital": 1020.3411999999998,
+    "pl": 20.341199999999844,
+    "capital_pct": 102.03411999999999,
     "position_count": 0,
     "orders_count": 8,
     "positions": {},
     "orders": [
         {
             "symbol": "GM",
-            "quantity": 7,
+            "quantity": 3,
             "side": "buy",
             "requested_price": 31.7,
             "requested_dt": "2023-11-29 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 115,
+            "id": 118,
             "status": "filled",
             "purchase_dt": "2023-11-29 14:00:00",
             "purchase_price": 31.7,
@@ -26,20 +26,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 29.283971377029836,
+                "sl_limit": 31.216794275405967,
                 "purchase_price": null,
                 "purchase_dt": null
             }
         },
         {
             "symbol": "GM",
-            "quantity": 5,
+            "quantity": 2,
             "side": "buy",
             "requested_price": 45.41,
             "requested_dt": "2024-06-05 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 118,
+            "id": 121,
             "status": "filled",
             "purchase_dt": "2024-06-05 10:00:00",
             "purchase_price": 45.41,
@@ -51,20 +51,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 42.9818641131928,
-                "purchase_price": 42.75,
-                "purchase_dt": "2024-08-02 04:00:00"
+                "sl_limit": 44.92437282263856,
+                "purchase_price": 44.585,
+                "purchase_dt": "2024-07-25 08:00:00"
             }
         },
         {
             "symbol": "GM",
-            "quantity": 5,
+            "quantity": 2,
             "side": "buy",
             "requested_price": 46.56,
             "requested_dt": "2024-08-21 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 121,
+            "id": 124,
             "status": "filled",
             "purchase_dt": "2024-08-21 10:00:00",
             "purchase_price": 46.56,
@@ -76,20 +76,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 44.26391234942268,
-                "purchase_price": 44.205,
-                "purchase_dt": "2024-09-11 12:00:00"
+                "sl_limit": 46.100782469884535,
+                "purchase_price": 45.51,
+                "purchase_dt": "2024-09-10 08:00:00"
             }
         },
         {
             "symbol": "GM",
-            "quantity": 5,
+            "quantity": 2,
             "side": "sell",
             "requested_price": 46.48,
             "requested_dt": "2024-09-27 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 123,
+            "id": 126,
             "status": "filled",
             "purchase_dt": "2024-09-27 14:00:00",
             "purchase_price": 46.48,
@@ -101,45 +101,45 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 49.7500167989421,
-                "purchase_price": 52.958,
-                "purchase_dt": "2024-10-22 08:00:00"
+                "sl_limit": 47.134003359788416,
+                "purchase_price": 47.835,
+                "purchase_dt": "2024-10-09 12:00:00"
             }
         },
         {
             "symbol": "GM",
-            "quantity": 4,
+            "quantity": 2,
             "side": "buy",
             "requested_price": 48.195,
             "requested_dt": "2024-10-11 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 124,
+            "id": 128,
             "status": "filled",
             "purchase_dt": "2024-10-11 10:00:00",
             "purchase_price": 48.195,
             "take_profit": {
                 "intent": "sell_to_close",
                 "tp_limit": 53.37328971801818,
-                "purchase_price": 53.398,
-                "purchase_dt": "2024-10-22 12:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 45.60585514099091,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 47.67717102819818,
+                "purchase_price": 47.51,
+                "purchase_dt": "2024-10-11 20:00:00"
             }
         },
         {
             "symbol": "GM",
-            "quantity": 5,
+            "quantity": 2,
             "side": "sell",
             "requested_price": 49.805,
             "requested_dt": "2025-01-29 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 129,
+            "id": 132,
             "status": "filled",
             "purchase_dt": "2025-01-29 10:00:00",
             "purchase_price": 49.805,
@@ -151,20 +151,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 55.29149590573684,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 50.90229918114737,
+                "purchase_price": 51.28,
+                "purchase_dt": "2025-01-31 12:00:00"
             }
         },
         {
             "symbol": "GM",
-            "quantity": 4,
+            "quantity": 2,
             "side": "sell",
             "requested_price": 46.72,
             "requested_dt": "2025-03-31 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 131,
+            "id": 135,
             "status": "filled",
             "purchase_dt": "2025-03-31 10:00:00",
             "purchase_price": 46.72,
@@ -176,20 +176,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 51.49531547564436,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 47.67506309512887,
+                "purchase_price": 47.915,
+                "purchase_dt": "2025-04-02 12:00:00"
             }
         },
         {
             "symbol": "GM",
-            "quantity": 3,
+            "quantity": 2,
             "side": "sell",
             "requested_price": 45.2,
             "requested_dt": "2025-04-30 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 133,
+            "id": 138,
             "status": "filled",
             "purchase_dt": "2025-04-30 14:00:00",
             "purchase_price": 45.2,
@@ -201,9 +201,9 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 49.47217630300646,
-                "purchase_price": 49.48,
-                "purchase_dt": "2025-05-12 16:00:00"
+                "sl_limit": 46.054435260601295,
+                "purchase_price": 46.63,
+                "purchase_dt": "2025-05-08 08:00:00"
             }
         }
     ]

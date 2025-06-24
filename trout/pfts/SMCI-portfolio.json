@@ -1,45 +1,45 @@
 {
-    "capital": 1141.8950115999999,
-    "pl": 141.89501159999986,
-    "capital_pct": 114.18950115999999,
+    "capital": 1020.2307,
+    "pl": 20.230699999999956,
+    "capital_pct": 102.02306999999999,
     "position_count": 0,
     "orders_count": 4,
     "positions": {},
     "orders": [
         {
             "symbol": "SMCI",
-            "quantity": 2,
+            "quantity": 1,
             "side": "sell",
             "requested_price": 92.5,
             "requested_dt": "2024-04-08 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 405,
+            "id": 418,
             "status": "filled",
             "purchase_dt": "2024-04-08 14:00:00",
             "purchase_price": 92.5,
             "take_profit": {
                 "intent": "buy_to_close",
                 "tp_limit": 65.02824513580049,
-                "purchase_price": 64.81,
-                "purchase_dt": "2024-08-02 04:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 106.23587743209976,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 95.24717548641995,
+                "purchase_price": 98.4665,
+                "purchase_dt": "2024-04-16 16:00:00"
             }
         },
         {
             "symbol": "SMCI",
-            "quantity": 7,
+            "quantity": 3,
             "side": "sell",
             "requested_price": 32.5098,
             "requested_dt": "2024-10-30 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 412,
+            "id": 425,
             "status": "filled",
             "purchase_dt": "2024-10-30 14:00:00",
             "purchase_price": 32.5098,
@@ -51,45 +51,45 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 44.68781129877884,
-                "purchase_price": 45.21,
-                "purchase_dt": "2024-12-03 04:00:00"
+                "sl_limit": 34.94540225975577,
+                "purchase_price": 35.71,
+                "purchase_dt": "2024-11-25 04:00:00"
             }
         },
         {
             "symbol": "SMCI",
-            "quantity": 5,
+            "quantity": 2,
             "side": "buy",
             "requested_price": 35.0,
             "requested_dt": "2024-11-27 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 413,
+            "id": 427,
             "status": "filled",
             "purchase_dt": "2024-11-27 14:00:00",
             "purchase_price": 35.0,
             "take_profit": {
                 "intent": "sell_to_close",
                 "tp_limit": 54.349072302783554,
-                "purchase_price": 55.8505,
-                "purchase_dt": "2025-02-18 16:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 25.325463848608223,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 33.065092769721645,
+                "purchase_price": 32.6518,
+                "purchase_dt": "2024-11-29 12:00:00"
             }
         },
         {
             "symbol": "SMCI",
-            "quantity": 8,
+            "quantity": 3,
             "side": "sell",
             "requested_price": 31.2,
             "requested_dt": "2024-12-19 14:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 415,
+            "id": 429,
             "status": "filled",
             "purchase_dt": "2024-12-19 14:00:00",
             "purchase_price": 31.2,
@@ -101,9 +101,9 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 39.2509234550982,
-                "purchase_price": 41.18,
-                "purchase_dt": "2025-02-10 12:00:00"
+                "sl_limit": 32.81018469101964,
+                "purchase_price": 34.32,
+                "purchase_dt": "2024-12-24 12:00:00"
             }
         }
     ]

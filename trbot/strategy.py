@@ -16,7 +16,7 @@ TripleIndValues = tuple[IndValues, IndValues, IndValues]
 
 class StrategyTester(metaclass=ABCMeta):
     def __init__(self,
-        sf: Stockframe, start_ind: int = 0, end_ind: int = -1, sleep: bool = False
+        sf: Stockframe, start_ind: int = 0, end_ind: int = -1, sleep: bool = False,
     ) -> None:
         self._portfolio: Portfolio = Portfolio()
         self._broker: Broker = Broker()
@@ -69,6 +69,7 @@ class StrategyTester(metaclass=ABCMeta):
 
             # TODO: Check up on any orders that have a take profit or stop loss
             self._broker.order_checkup(self._portfolio, self.last_close, self.curr_dt_str)
+            self._portfolio.update_pl()
 
             if self._repl.is_candle_available():
                 self.get_next_candle()
@@ -85,8 +86,8 @@ class StrategyTester(metaclass=ABCMeta):
     ) -> None:
         assert size > 0, "Negative size provided. (size > 0)"
         if tp_limit is not None and sl_limit is not None:
-            assert sl_limit < self.last_close < tp_limit, (
-                f"SL(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < TP(${sl_limit:.3f})"
+            assert 0.0 < sl_limit < self.last_close < tp_limit, (
+                f"$0.00 < SL(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < TP(${sl_limit:.3f})"
             )
 
         qty: float = 0.0
@@ -125,8 +126,8 @@ class StrategyTester(metaclass=ABCMeta):
     ) -> None:
         assert size > 0, "Negative size provided. (size > 0)"
         if tp_limit is not None and sl_limit is not None:
-            assert tp_limit < self.last_close < sl_limit, (
-                f"TP(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < SL(${sl_limit:.3f})"
+            assert 0.0 < tp_limit < self.last_close < sl_limit, (
+                f"TP(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < SL(${sl_limit:.3f}), {self._sf.ticker}"
             )
 
         qty: float = 0.0
@@ -159,6 +160,7 @@ class StrategyTester(metaclass=ABCMeta):
             )
 
         self._broker.execute_open_order(mkt_ord, self._portfolio, self.last_close, self.curr_dt_str)
+
 
     def ind_crossover(self, val1: str | float, val2: str | float) -> bool:
         s1: list[float] | IndValues = (

@@ -1,20 +1,20 @@
 {
-    "capital": 994.6933272734968,
-    "pl": -5.306672726503166,
-    "capital_pct": 99.46933272734968,
+    "capital": 990.8935,
+    "pl": -9.106499999999983,
+    "capital_pct": 99.08935,
     "position_count": 0,
     "orders_count": 10,
     "positions": {},
     "orders": [
         {
             "symbol": "UAA",
-            "quantity": 34,
+            "quantity": 13,
             "side": "sell",
             "requested_price": 7.165,
             "requested_dt": "2023-08-22 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 449,
+            "id": 465,
             "status": "filled",
             "purchase_dt": "2023-08-22 10:00:00",
             "purchase_price": 7.165,
@@ -26,45 +26,45 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 7.94662065351789,
-                "purchase_price": 8.02,
-                "purchase_dt": "2023-11-27 12:00:00"
+                "sl_limit": 7.321324130703578,
+                "purchase_price": 7.36,
+                "purchase_dt": "2023-08-28 08:00:00"
             }
         },
         {
             "symbol": "UAA",
-            "quantity": 25,
+            "quantity": 13,
             "side": "buy",
             "requested_price": 7.305,
             "requested_dt": "2023-10-20 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 450,
+            "id": 467,
             "status": "filled",
             "purchase_dt": "2023-10-20 10:00:00",
             "purchase_price": 7.305,
             "take_profit": {
                 "intent": "sell_to_close",
                 "tp_limit": 8.760855278235843,
-                "purchase_price": 8.8,
-                "purchase_dt": "2023-12-14 08:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 6.577072360882078,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 7.159414472176415,
+                "purchase_price": 7.11,
+                "purchase_dt": "2023-10-27 08:00:00"
             }
         },
         {
             "symbol": "UAA",
-            "quantity": 20,
+            "quantity": 14,
             "side": "sell",
             "requested_price": 6.84,
             "requested_dt": "2023-10-31 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 451,
+            "id": 469,
             "status": "filled",
             "purchase_dt": "2023-10-31 10:00:00",
             "purchase_price": 6.84,
@@ -76,45 +76,45 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 7.566082030950417,
-                "purchase_price": 7.645,
-                "purchase_dt": "2023-11-14 12:00:00"
+                "sl_limit": 6.985216406190084,
+                "purchase_price": 7.005,
+                "purchase_dt": "2023-11-02 12:00:00"
             }
         },
         {
             "symbol": "UAA",
-            "quantity": 15,
+            "quantity": 13,
             "side": "buy",
             "requested_price": 7.26,
             "requested_dt": "2023-11-03 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 452,
+            "id": 471,
             "status": "filled",
             "purchase_dt": "2023-11-03 14:00:00",
             "purchase_price": 7.26,
             "take_profit": {
                 "intent": "sell_to_close",
                 "tp_limit": 8.703893664755341,
-                "purchase_price": 8.8,
-                "purchase_dt": "2023-12-14 08:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 6.538053167622329,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 7.115610633524466,
+                "purchase_price": 7.09,
+                "purchase_dt": "2023-11-06 16:00:00"
             }
         },
         {
             "symbol": "UAA",
-            "quantity": 30,
+            "quantity": 11,
             "side": "buy",
             "requested_price": 8.4355,
             "requested_dt": "2024-01-10 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 458,
+            "id": 474,
             "status": "filled",
             "purchase_dt": "2024-01-10 14:00:00",
             "purchase_price": 8.4355,
@@ -126,20 +126,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 7.801052480387026,
-                "purchase_price": 7.405,
-                "purchase_dt": "2024-01-16 12:00:00"
+                "sl_limit": 8.308610496077405,
+                "purchase_price": 8.29,
+                "purchase_dt": "2024-01-11 08:00:00"
             }
         },
         {
             "symbol": "UAA",
-            "quantity": 35,
+            "quantity": 14,
             "side": "sell",
             "requested_price": 7.075,
             "requested_dt": "2024-03-14 10:00:00",
             "intent": "sell_to_open",
             "type": "market",
-            "id": 462,
+            "id": 478,
             "status": "filled",
             "purchase_dt": "2024-03-14 10:00:00",
             "purchase_price": 7.075,
@@ -151,20 +151,20 @@
             },
             "stop_loss": {
                 "intent": "buy_to_close",
-                "sl_limit": 8.679206911978397,
-                "purchase_price": 8.72,
-                "purchase_dt": "2024-09-26 12:00:00"
+                "sl_limit": 7.3958413823956795,
+                "purchase_price": 7.49,
+                "purchase_dt": "2024-03-20 04:00:00"
             }
         },
         {
             "symbol": "UAA",
-            "quantity": 27,
+            "quantity": 14,
             "side": "buy",
             "requested_price": 6.94,
             "requested_dt": "2024-05-30 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 463,
+            "id": 480,
             "status": "filled",
             "purchase_dt": "2024-05-30 14:00:00",
             "purchase_price": 6.94,
@@ -176,20 +176,20 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 6.296332759326191,
-                "purchase_price": 6.28,
-                "purchase_dt": "2024-08-05 04:00:00"
+                "sl_limit": 6.811266551865239,
+                "purchase_price": 6.81,
+                "purchase_dt": "2024-06-10 16:00:00"
             }
         },
         {
             "symbol": "UAA",
-            "quantity": 20,
+            "quantity": 14,
             "side": "buy",
             "requested_price": 7.025,
             "requested_dt": "2024-06-20 10:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 465,
+            "id": 483,
             "status": "filled",
             "purchase_dt": "2024-06-20 10:00:00",
             "purchase_price": 7.025,
@@ -201,59 +201,59 @@
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 6.417486118323303,
-                "purchase_price": 6.4,
-                "purchase_dt": "2024-07-03 12:00:00"
+                "sl_limit": 6.903497223664661,
+                "purchase_price": 6.9,
+                "purchase_dt": "2024-06-21 20:00:00"
             }
         },
         {
             "symbol": "UAA",
-            "quantity": 30,
+            "quantity": 12,
             "side": "buy",
             "requested_price": 7.7,
             "requested_dt": "2024-08-08 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 471,
+            "id": 488,
             "status": "filled",
             "purchase_dt": "2024-08-08 14:00:00",
             "purchase_price": 7.7,
             "take_profit": {
                 "intent": "sell_to_close",
                 "tp_limit": 10.087089497261593,
-                "purchase_price": 10.77,
-                "purchase_dt": "2024-11-07 08:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 6.5064552513692036,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 7.461291050273841,
+                "purchase_price": 7.24,
+                "purchase_dt": "2024-09-09 16:00:00"
             }
         },
         {
             "symbol": "UAA",
-            "quantity": 22,
+            "quantity": 12,
             "side": "buy",
             "requested_price": 7.9155,
             "requested_dt": "2024-09-19 14:00:00",
             "intent": "buy_to_open",
             "type": "market",
-            "id": 473,
+            "id": 491,
             "status": "filled",
             "purchase_dt": "2024-09-19 14:00:00",
             "purchase_price": 7.9155,
             "take_profit": {
                 "intent": "sell_to_close",
                 "tp_limit": 9.645899688494575,
-                "purchase_price": 10.77,
-                "purchase_dt": "2024-11-07 08:00:00"
+                "purchase_price": null,
+                "purchase_dt": null
             },
             "stop_loss": {
                 "intent": "sell_to_close",
-                "sl_limit": 7.050300155752712,
-                "purchase_price": null,
-                "purchase_dt": null
+                "sl_limit": 7.742460031150542,
+                "purchase_price": 7.555,
+                "purchase_dt": "2024-09-23 08:00:00"
             }
         }
     ]
