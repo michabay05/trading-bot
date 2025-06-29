@@ -1,16 +1,24 @@
-import { createChart, CandlestickSeries, LineSeries, BaselineSeries, HistogramSeries, } from "./node_modules/lightweight-charts/dist/lightweight-charts.standalone.development.mjs";
-let candlestickSeries, baselineSeries, datapointsCount;
-let lineSeriesArr = [];
-async function fetchJSONData() {
-    const ohlcvPath = window.location.href + "/ohlcv.json";
+import {
+    createChart, CandlestickSeries, LineSeries, BaselineSeries, HistogramSeries,
+}  from "./node_modules/lightweight-charts/dist/lightweight-charts.standalone.development.mjs";
+
+
+let candlestickSeries: any, baselineSeries: any, datapointsCount: number;
+let lineSeriesArr: any[] = [];
+
+async function fetchJSONData(): Promise<[any, any]> {
+    const ohlcvPath: string = window.location.href + "/ohlcv.json";
     const ohlcvResp = await fetch(ohlcvPath);
     const ohlcvJSON = await ohlcvResp.json();
-    const indsPath = window.location.href + "/inds.json";
+
+    const indsPath: string = window.location.href + "/inds.json";
     const indsResp = await fetch(indsPath);
     const indsJSON = await indsResp.json();
+
     return [ohlcvJSON, indsJSON];
 }
-function createSeriesFromString(chart, seriesType) {
+
+function createSeriesFromString(chart: any, seriesType: string): any {
     switch (seriesType) {
         case "line":
             return chart.addSeries(LineSeries, { color: "#80deea" });
@@ -31,23 +39,53 @@ function createSeriesFromString(chart, seriesType) {
         }
     }
 }
-function renderOhlcv(chart, cndJSON) {
+
+interface _IOhlcvData {
+    datetime: string;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+    trade_count: number;
+    vwap: number;
+}
+
+interface _LWCandleData {
+    time: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+}
+
+interface _LWVolumeData {
+    time: number;
+    value: number;
+    color: string;
+}
+
+function renderOhlcv(chart: any, cndJSON: _IOhlcvData[]): void {
     candlestickSeries = chart.addSeries(CandlestickSeries, {
         upColor: "#26a69a", downColor: "#ef5350", borderVisible: false,
         wickUpColor: "#26a69a", wickDownColor: "#ef5350",
     });
+
     const volumeSeries = chart.addSeries(HistogramSeries, {
         color: "#26a69a",
         priceFormat: {
             type: "volume",
         },
         priceScaleId: "left", // set as an overlay by setting a blank priceScaleId
-    });
-    const candlestickData = [];
-    const volumeData = [];
+    })
+
+    const candlestickData: _LWCandleData[] = [];
+    const volumeData: _LWVolumeData[] = [];
+
     datapointsCount = cndJSON.length;
     for (let i = 0; i < cndJSON.length; i++) {
         let timeValue = Date.parse(cndJSON[i]["datetime"]);
+
         candlestickData.push({
             time: timeValue,
             open: cndJSON[i]["open"],
@@ -55,40 +93,51 @@ function renderOhlcv(chart, cndJSON) {
             low: cndJSON[i]["low"],
             close: cndJSON[i]["close"],
         });
+
         volumeData.push({
             time: timeValue,
             value: cndJSON[i]["volume"],
             color: "#947DC9"
-        });
+        })
     }
+
     candlestickSeries.priceScale().applyOptions({
         scaleMargins: {
             top: 0, // highest point of the series will be 70% away from the top
             bottom: 0.15,
         },
-    });
+    })
+
     volumeSeries.priceScale().applyOptions({
         scaleMargins: {
             top: 0.85, // highest point of the series will be 70% away from the top
             bottom: 0,
         },
-    });
+    })
+
     candlestickSeries.setData(candlestickData);
     volumeSeries.setData(volumeData);
 }
-function renderIndicators(mainChart, secondaryChart, indsJSON) {
+
+interface _IIndsData {
+    name: string;
+    seriesType: string;
+    overlay: boolean;
+    data: any[];
+}
+
+function renderIndicators(mainChart: any, secondaryChart: any, indsJSON: _IIndsData[]) {
     for (const ind of indsJSON) {
         if (ind.overlay) {
-            const colors = ["#2962FF", "#FFA500", "#b39ddb", "#fff59d", "#faa1a4", "#80deea"];
-            const series = createSeriesFromString(mainChart, ind.seriesType);
+            const colors: string[] = ["#2962FF", "#FFA500", "#b39ddb", "#fff59d", "#faa1a4", "#80deea"];
+            const series: any = createSeriesFromString(mainChart, ind.seriesType);
             for (let j = 0; j < ind.data.length; j++) {
                 let dateStr = ind.data[j]["time"];
                 ind.data[j]["time"] = Date.parse(dateStr);
             }
             series.setData(ind.data);
-        }
-        else {
-            const series = createSeriesFromString(secondaryChart, ind.seriesType);
+        } else {
+            const series: any = createSeriesFromString(secondaryChart, ind.seriesType);
             // Render non-overlaid inds
             for (let j = 0; j < ind.data.length; j++) {
                 let dateStr = ind.data[j]["time"];
@@ -98,14 +147,16 @@ function renderIndicators(mainChart, secondaryChart, indsJSON) {
         }
     }
 }
+
 const w = 0.85 * window.innerWidth;
 const mainContainer = document.getElementById("main-chart");
-const body = document.body;
-const backgroundColor = "#181818";
+const body: HTMLBodyElement = document.body as HTMLBodyElement;
+const backgroundColor: string = "#181818";
 body.style.backgroundColor = backgroundColor;
-const textColor = "#F0F0F0";
+const textColor: string = "#F0F0F0";
 // const gridLineColor: string = "#F0F0F044";
-const gridLineColor = "#3e3e3e";
+const gridLineColor: string = "#3e3e3e";
+
 const commonChartConfig = {
     layout: {
         background: {
@@ -128,7 +179,7 @@ const commonChartConfig = {
         },
     },
     localization: {
-        timeFormatter: (unixTimestampMs) => {
+        timeFormatter: (unixTimestampMs: number) => {
             return new Date(unixTimestampMs).toLocaleString("en-US", {
                 dateStyle: "medium",
                 timeStyle: "medium",
@@ -145,7 +196,7 @@ const commonChartConfig = {
         visible: true,
         ticksVisible: true,
     }
-};
+}
 const mainChart = createChart(mainContainer, {
     width: w, height: 0.75 * window.innerHeight,
     timeScale: {
@@ -159,60 +210,68 @@ const mainChart = createChart(mainContainer, {
     },
     ...commonChartConfig
 });
+
 const secondaryContainer = document.getElementById("secondary-chart");
 const secondaryChart = createChart(secondaryContainer, {
     width: w, height: 0.15 * window.innerHeight,
     ...commonChartConfig
 });
+
 /* ===================== Syncing both charts ===================== */
 // Source: https://tradingview.github.io/lightweight-charts/tutorials/how_to/set-crosshair-position
 // Step 1: Sync the currently visible window
-mainChart.timeScale().subscribeVisibleLogicalRangeChange((timeRange) => {
+mainChart.timeScale().subscribeVisibleLogicalRangeChange((timeRange: any) => {
     if (timeRange) {
         secondaryChart.timeScale().setVisibleLogicalRange(timeRange);
     }
 });
-secondaryChart.timeScale().subscribeVisibleLogicalRangeChange((timeRange) => {
+
+secondaryChart.timeScale().subscribeVisibleLogicalRangeChange((timeRange: any) => {
     if (timeRange) {
         mainChart.timeScale().setVisibleLogicalRange(timeRange);
     }
 });
+
 // Step 2: Sync crosshair position
-function getCrosshairDataPoint(series, param) {
+function getCrosshairDataPoint(series: any, param: any) {
     if (!param.time) {
         return null;
     }
     const dataPoint = param.seriesData.get(series);
     return dataPoint || null;
 }
-function syncCrosshair(chart, series, dataPoint) {
+
+function syncCrosshair(chart: any, series: any, dataPoint: any) {
     if (dataPoint) {
         chart.setCrosshairPosition(dataPoint.value, dataPoint.time, series);
         return;
     }
     chart.clearCrosshairPosition();
 }
-mainChart.subscribeCrosshairMove((param) => {
+
+mainChart.subscribeCrosshairMove((param: any) => {
     const dataPointCS = getCrosshairDataPoint(lineSeriesArr[0], param);
     syncCrosshair(secondaryChart, baselineSeries, dataPointCS);
 });
-secondaryChart.subscribeCrosshairMove((param) => {
+secondaryChart.subscribeCrosshairMove((param: any) => {
     const dataPointBS = getCrosshairDataPoint(baselineSeries, param);
     syncCrosshair(mainChart, lineSeriesArr[0], dataPointBS);
     // const dataPointVS = getCrosshairDataPoint(volumeSeries, param);
     // syncCrosshair(mainChart, volumeSeries, dataPointVS);
 });
+
 const [cndJSON, indsJSON] = await fetchJSONData();
+
 // renderMainChart(mainChart);
 // renderSecondaryChart(secondaryChart);
 renderOhlcv(mainChart, cndJSON);
 renderIndicators(mainChart, secondaryChart, indsJSON);
+
 document.addEventListener("keypress", e => {
     if (e.key === "0") {
         mainChart.timeScale().scrollToRealTime();
-    }
-    else if (e.key >= '1' && e.key <= '9') {
+    } else if (e.key >= '1' && e.key <= '9') {
         const pct = 1 - (Number.parseInt(e.key) / 10);
         mainChart.timeScale().scrollToPosition(-pct * datapointsCount, false);
     }
-});
+})
