@@ -1,7 +1,7 @@
 from datetime import datetime
+from typing import Callable
 import time
-from time import timezone
-import http.server, json, math, os, shutil, socketserver, sys, webbrowser
+import enum, http.server, json, math, os, socketserver, sys, webbrowser
 
 import numpy as np
 from numpy.typing import NDArray
@@ -38,53 +38,61 @@ def valid_tickers(search_dir: str) -> tuple[list[str], list[str]]:
 
 def candle_csv_to_json(csv_path: str, ticker: str, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)
-
-    # sf.df.rename(
-    #     columns={
-    #         "Date": "time", "Open": "open", "High": "high", "Low": "low", "Close": "close",
-    #         "Volume": "volume"
-    #     },
-    #     inplace=True
-    # )
     sf.df.to_json(target_path, orient="records", indent=4)
 
 def calc_save_indicators(csv_path: str, ticker: str, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)
-    df: pd.DataFrame = pd.DataFrame()
+    custom_df: pd.DataFrame = pd.DataFrame()
     data: NDArray[np.float64] = sf.close_series
-    dates: list[str] = sf.datetime_series
-    df["datetime"] = dates
+    dates: list[datetime] = sf.datetime_series
+    custom_df["datetime"] = dates
 
     # Calculate indicator values
-    output = {}
+    output: list[dict] = []
     for name, args in INDICATORS.items():
-        func = args[0]
-        params = args[1]
-        vals = func(data, **params)
+        # Call indicator function
+        func: Callable = args[0]
+        func_params: dict = args[1]
+        vals = func(data, **func_params)
+        # Check values are of expected length
         assert len(vals) == len(dates)
-        df[name] = vals
-        # df.to_json(target_path, orient="records", indent=4)
-        output[name] = []
-        for row in df.itertuples(index=False):
-            # unix_timestamp = int(datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S").timestamp())
-            # unix_timestamp = int(datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S").timestamp())
-            # v = row[1] if not math.isnan(row[1]) else None
-            if not math.isnan(row[1]):
-                output[name].append({"time": row[0], "value": row[1]})
-            else:
-                output[name].append({"time": row[0], "value": 0.0})
+        # Append it to the dataframe on its own column
+        custom_df[name] = vals
 
-        # Remove column when done
-        del df[name]
+        render_params: dict = args[2]
+        d = {
+            "name": name,
+            **render_params,
+            "data": []
+        }
+        for row in custom_df.itertuples(index=False):
+            dt: datetime = row[0]
+            v: float = row[1]
+            if math.isnan(v):
+                v = 0.0
+            d["data"].append({"time": str(dt), "value": v})
+
+        output.append(d)
+        # Remove column when done because the loop above only works with a dataframe that only
+        # has a datetime and value column
+        del custom_df[name]
 
     with open(target_path, "w") as f:
         json.dump(output, f, indent=4)
 
 
 DEFAULT_PORT: int = 8080
+# NOTE: all of these functions use the close data of the candles
 INDICATORS: dict = {
-    "EMA_1": [talib.EMA, {"timeperiod": 50}],
-    "EMA_2": [talib.EMA, {"timeperiod": 100}]
+    "EMA_1": [
+        talib.EMA, {"timeperiod": 50}, {"seriesType": "line", "overlay": True}
+    ],
+    "EMA_2": [
+        talib.EMA, {"timeperiod": 100}, {"seriesType": "line", "overlay": True}
+    ],
+    "RSI": [
+        talib.RSI, {"timeperiod": 14}, {"seriesType": "baseline", "overlay": False}
+    ]
 }
 
 def main():
