@@ -30,23 +30,37 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Add the notion of a trade and also FYI:
     - Trade = A completed buy-sell transaction pair
     - Position = Current market exposure (open trades)
-- [ ] (feat) Add RSI rendering into candle visualizer
+- [ ] (feat) Resize charts upon window resize
+- [ ] (feat) Add PDT protection
+- [ ] (feat) Implement commissions setting for Broker
+- [ ] (fix) Deal with timezones when importing stockframe data from csv
+- [ ] (refactor) the broker inside the strategy should handle everything related to orders and their execution
+- [ ] (feat) Add legend for the following items on the candle chart:
+    - [ ] Symbol
+    - [ ] Indicators (also pass in function arguments as seen here: `talib.EMA(close, timeperiod=50)`)
+    - [Legend example from Lightweight Charts](https://tradingview.github.io/lightweight-charts/tutorials/how_to/legends#examples)
+- [ ] (fix) Instead of replacing `NaN` with `0.0` for indicators during their warmup time, use `WhiteSpaceData` in lightweight charts
 
 ---
 
-# v0.7
+## v0.7
 - [x] (feat) Add rendering for non-overlayed indicators like RSI, MACD
 - [x] (feat) Add volume at the bottom of the main chart
-- [ ] (rsch) Continue experimenting with Alpaca
+- [x] (rsch) Continue experimenting with Alpaca
+- [x] (feat) Add ability to consume live data
+- [x] (feat) Create a live bot and run a basic strategy on it
+    - [x] (feat) Add a live broker
+    - [x] (feat) Add a live strategy (analagous to `StrategyTester`)
+- [x] (refactor) Refactored `Candle` and `CandleOption` to use `@dataclass`
+- [x] (fix) Repair replayer as it does not progress forward in some cases
+    - For instance, when the time multiplier is < 1, then it progress at a rate of 0 steps per sec.
 - [x] (feat) Get ~7 years worth of data using Alpaca for 30+ stocks
-- [ ] (refactor) Fix the naming scheme for candles
-    - [ ] (refactor) Update stockframe import and export of candles from csv
-- [ ] (feat) Implement brokers settings
-    - [ ] Fractional Trading
-    - [ ] Commissions
-- [ ] (feat) Plot P/L of portfolio - probably using matplotlib
+- [x] (feat) Implement fractional trading setting for Broker
+- [x] (feat) Plot P/L of portfolio - probably using matplotlib
+- [x] (refactor) Rewrite chart visualizer in typescript
+- [x] (feat) Add RSI rendering into candle visualizer
 
-# v0.6
+## v0.6
 - [x] (refactor) Fix the timescale issue on lightweight charts
     - It looks like a timezone issue
 - [x] (refactor) Change broker from a list of functions to a class with methods
@@ -58,8 +72,8 @@ A list of all the TODOs needed to be completed before each release
 - [x] (feat) Add ability to buy based on portfolio's capital percentage
 - [x] (refactor) Change the structure of the `Order` to use `@dataclass`
 - [x] (refactor) Completely restructure the way orders are created
-    - Instead of one order type, there should be one parent order type that contains all the necessary information.
-      However, the user will only interact with its children (MarketOrder, LimitOrder, etc.)
+    - Instead of one order type, there should be one parent order type that contains all the necessary
+      information. However, the user will only interact with its children (MarketOrder, LimitOrder, etc.)
 - [x] (refactor) Remove `bot.py`
     - `run_bot.py` does everything I want `bot.py` to do
 - [x] (feat) Setup script to automatically visualize candles and indicators

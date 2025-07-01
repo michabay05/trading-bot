@@ -1,20 +1,19 @@
 from datetime import datetime, timedelta
 import time
 
-from . import candles
-from .candles import Candle, Timespan
+from .candles import Timespan
 from .stockframe import Stockframe
 
 class CandleReplayer:
     def __init__(self,
-        sf: Stockframe, steps_per_s: int = -1, start_ind: int = 0,
-        end_ind: int = -1, sleep: bool = False, sleep_time: float = 0.5
+        sf: Stockframe, start_ind: int = 0, end_ind: int = -1, sleep: bool = False,
+        sleep_time: float = 0.5
     ) -> None:
         self._start: int = start_ind
         self._end: int = end_ind if start_ind < end_ind else sf.size
         self._index: int = self._start
 
-        self._dates: list[str] = sf.date_series
+        self._dates: list[datetime] = sf.datetime_series
         assert sf.size == len(self._dates)
 
         # If sleep is enabled, minimum sleep time is 0.25 seconds
@@ -22,11 +21,10 @@ class CandleReplayer:
         self._should_sleep: bool = sleep
 
         self._original_mult: int = sf.mult
-        self._steps_per_s: int = self._original_mult // 2
+        self._steps_per_s: int = max(self._original_mult // 2, 1)
         self._step_unit: Timespan = sf.timespan
 
-        start_dt_str: str = self._dates[self._index]
-        self._start_time: datetime = datetime.strptime(start_dt_str, "%Y-%m-%d %H:%M:%S")
+        self._start_time: datetime = self._dates[self._index]
         self._time: datetime = self._start_time
 
     @property
@@ -56,8 +54,7 @@ class CandleReplayer:
 
         # Once this method is called, a candle is assumed to be consumed
         # and the next candle is now not ready
-        dt_str: str = self._dates[self._index]
-        next_time: datetime = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
+        next_time: datetime = self._dates[self._index]
         if self._time >= next_time:
             self._index += 1
             return True

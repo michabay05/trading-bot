@@ -1,9 +1,16 @@
+from abc import ABC, abstractmethod
 from datetime import datetime
 import json, sys, time
 
+from alpaca.data.live.stock import StockDataStream
+from alpaca.trading.client import TradingClient
+from alpaca.trading.enums import OrderSide, OrderType, PositionIntent, TimeInForce
+from alpaca.trading.models import Clock, TradeAccount
+from alpaca.trading.requests import ClosePositionRequest, MarketOrderRequest, StopLossRequest, TakeProfitRequest
 import requests
 
 from . import candles, tbsecrets
+from .tbsecrets import ALPACA_SECRETS
 from .candles import Candle, CandleOption, Timespan
 from .portfolio import Portfolio, MarketOrder, OrderStatus, Position
 
@@ -12,7 +19,28 @@ class InsufficientFundsError(Exception):
     pass
 
 
-class Broker:
+class Broker(ABC):
+    ## ============= PROPERTIES TO ESTABLISH IN CONSTRUCTOR (BELOW) ============= ##
+    @property
+    @abstractmethod
+    def portfolio(self) -> Portfolio:
+        pass
+    ## ============= PROPERTIES TO ESTABLISH IN CONSTRUCTOR (ABOVE) ============= ##
+
+    @abstractmethod
+    def is_market_open(self, dt_str: str | None) -> bool:
+        pass
+
+    @abstractmethod
+    def execute_open_order(self, order: MarketOrder, last_close: float, curr_dt_str: str) -> None:
+        pass
+
+    @abstractmethod
+    def execute_close_order(self, order: MarketOrder, last_close: float) -> None:
+        pass
+
+
+class HistoricalBroker:
     def __init__(self, allow_fractional: bool = False, commission: float = 0.0) -> None:
         self._allow_fractional: bool = allow_fractional
         self._commission: float = commission
@@ -76,6 +104,19 @@ class Broker:
         for i in sorted(completed_inds, reverse=True):
             del self._checkups[i]
 
+    def _validate_quantity(self, size: float, last_close: float, portfolio: Portfolio) -> float:
+        qty: float = 0.0
+        if size < 1.0:
+            # In essence, buy as much shares as possible with this amount:
+            #   >> size * portfolio.capital
+            pct: float = size
+            order_value: float = pct * portfolio.capital
+            qty = order_value / last_close
+        else:
+            qty = size
+
+        return qty if self._allow_fractional else int(qty)
+
     def execute_open_order(self,
         order: MarketOrder, portfolio: Portfolio, last_close: float, curr_dt_str: str
     ) -> None:
@@ -91,6 +132,7 @@ class Broker:
             order.status = OrderStatus.WORKING
             return
 
+        order.quantity = self._validate_quantity(order.quantity, last_close, portfolio)
         requested_value = order.quantity * order.requested_price
         if portfolio.capital < requested_value:
             # Order cancelled due to insufficient funds (Update order status)
@@ -131,11 +173,67 @@ class Broker:
         portfolio.capital += position.quantity * last_close
         del portfolio.positions[order.symbol]
 
+class LiveBroker(Broker):
+    def __init__(self) -> None:
+        self._api_key: str = ALPACA_SECRETS["api_key"]
+        self._secret_key: str = ALPACA_SECRETS["secret_key"]
+        self._data_stream: StockDataStream = StockDataStream(self._api_key, self._secret_key)
+        self._trade_client: TradingClient = TradingClient(self._api_key, self._secret_key)
+
+        # Initialize portfolio w/ initial cash amount
+        acct = self._trade_client.get_account()
+        if not isinstance(acct, TradeAccount):
+            raise TypeError(f"account was of type {type(acct)} instead of TradeAccount")
+
+        cash: str | None = acct.cash
+        if cash is None:
+            raise ValueError("account.cash(type: str | None) was None.")
+
+        self._portfolio: Portfolio = Portfolio(initial_capital=float(cash))
+
+    @property
+    def portfolio(self) -> Portfolio:
+        return self._portfolio
+
+    def is_market_open(self, dt_str: str | None = None) -> bool:
+        clock = self._trade_client.get_clock()
+
+        if isinstance(clock, Clock):
+            return clock.is_open
+        else:
+            raise TypeError(f"`clock` was type `{type(clock)}` instead of `Clock`.")
+
+    def execute_open_order(self, order: MarketOrder, last_close: float, curr_dt_str: str) -> None:
+        tp = None
+        sl = None
+        if order.take_profit is not None:
+            tp = TakeProfitRequest(limit_price=order.take_profit.tp_limit)
+        if order.stop_loss is not None:
+            sl = StopLossRequest(stop_price=order.stop_loss.sl_limit)
+
+        req = MarketOrderRequest(
+            symbol=order.symbol,
+            qty=order.quantity,
+            side=OrderSide.BUY if order.is_long() else OrderSide.SELL,
+            type=OrderType.MARKET,
+            time_in_force=TimeInForce.DAY,
+            take_profit=tp,
+            stop_loss=sl,
+        )
+        _ = self._trade_client.submit_order(req)
+
+    def execute_close_order(self, order: MarketOrder, last_close: float) -> None:
+        self._trade_client.close_position(
+            order.symbol,
+            close_options=ClosePositionRequest(qty=str(order.quantity))
+        )
+
 # ============================ POLYGON.IO-specific ============================
 _BASE_URL: str = "https://api.polygon.io"
 _API_KEY: str = tbsecrets.POLYGON_IO_SECRETS["api_key"]
 _REQ_PER_MIN: int = 4
 _REQUEST_TIMES: list[datetime] = []
+
 
 def get_historical_candles(opt: CandleOption) -> list[Candle]:
     """ Get historical candles for a certain stock as specified in the options """

@@ -27,14 +27,14 @@ class OrderType(Enum):
     MARKET = "market"
 
 class OrderSide(Enum):
-    BUY = "buy"
-    SELL = "sell"
+    LONG = "long"
+    SHORT = "short"
 
     def opposite(self) -> 'OrderSide':
-        if self == OrderSide.BUY:
-            return OrderSide.SELL
-        elif self == OrderSide.SELL:
-            return OrderSide.BUY
+        if self == OrderSide.LONG:
+            return OrderSide.SHORT
+        elif self == OrderSide.SHORT:
+            return OrderSide.LONG
         else:
             raise ValueError(f"Unknown side: {self.value}")
 
@@ -59,14 +59,14 @@ class OrderIntent(Enum):
 
 
 @dataclass
-class TakeProfitRequest:
+class TakeProfitTrigger:
     intent: OrderIntent
     tp_limit: float
     purchase_price: float | None = None
     purchase_dt: str | None = None
 
     @staticmethod
-    def to_dict(tpr: 'TakeProfitRequest | None') -> dict:
+    def to_dict(tpr: 'TakeProfitTrigger | None') -> dict:
         if tpr is not None:
             d = asdict(tpr)
             d["intent"] = tpr.intent.value
@@ -76,14 +76,14 @@ class TakeProfitRequest:
 
 
 @dataclass
-class StopLossRequest:
+class StopLossTrigger:
     intent: OrderIntent
     sl_limit: float
     purchase_price: float | None = None
     purchase_dt: str | None = None
 
     @staticmethod
-    def to_dict(slr: 'StopLossRequest | None') -> dict:
+    def to_dict(slr: 'StopLossTrigger | None') -> dict:
         if slr is not None:
             d = asdict(slr)
             d["intent"] = slr.intent.value
@@ -95,7 +95,7 @@ class StopLossRequest:
 ORDER_ID_COUNTER: int = 0
 
 @dataclass
-class Order:
+class _Order:
     symbol: str
     quantity: float
     side: OrderSide
@@ -107,8 +107,8 @@ class Order:
     status: OrderStatus = OrderStatus.WORKING
     purchase_dt: str | None = None
     purchase_price: float | None = None
-    take_profit: TakeProfitRequest | None = None
-    stop_loss: StopLossRequest | None = None
+    take_profit: TakeProfitTrigger | None = None
+    stop_loss: StopLossTrigger | None = None
 
     def __post_init__(self):
         global ORDER_ID_COUNTER
@@ -135,7 +135,7 @@ class Order:
         super().__setattr__(name, value)
 
     def is_long(self) -> bool:
-        return self.side == OrderSide.BUY
+        return self.side == OrderSide.LONG
 
     def is_to_open(self) -> bool:
         return (
@@ -150,21 +150,21 @@ class Order:
         )
 
     def __repr__(self) -> str:
-        return json.dumps(Order.to_dict(self), indent=4)
+        return json.dumps(_Order.to_dict(self), indent=4)
 
     @staticmethod
-    def to_dict(ord: 'Order') -> dict:
+    def to_dict(ord: '_Order') -> dict:
         d = asdict(ord)
         d["side"] = ord.side.value
         d["type"] = ord.type.value
         d["status"] = ord.status.value
         d["intent"] = ord.intent.value
-        d["take_profit"] = TakeProfitRequest.to_dict(ord.take_profit)
-        d["stop_loss"] = StopLossRequest.to_dict(ord.stop_loss)
+        d["take_profit"] = TakeProfitTrigger.to_dict(ord.take_profit)
+        d["stop_loss"] = StopLossTrigger.to_dict(ord.stop_loss)
         return d
 
 @dataclass
-class MarketOrder(Order):
+class MarketOrder(_Order):
     type: OrderType = OrderType.MARKET
 
 
@@ -173,7 +173,7 @@ class Portfolio:
         self._initial_capital: float = initial_capital
         self._capital: float = self._initial_capital
         self._positions: dict[str, Position] = {}
-        self._orders: list[Order] = []
+        self._orders: list[_Order] = []
         self._pl: float = 0.0
         self._capital_pct: float = 0.0
 
@@ -200,16 +200,16 @@ class Portfolio:
         return self._positions
 
     @property
-    def orders(self) -> list[Order]:
+    def orders(self) -> list[_Order]:
         return self._orders
 
-    def add_orders(self, order: Order) -> None:
+    def add_orders(self, order: _Order) -> None:
         self._orders.append(order)
 
     def __repr__(self) -> str:
         return json.dumps(Portfolio.to_dict(self), indent=4)
 
-    def find_order_by_id(self, id: int) -> Order | None:
+    def find_order_by_id(self, id: int) -> _Order | None:
         for ord in self._orders:
             if ord.id == id:
                 return ord
@@ -236,9 +236,9 @@ class Portfolio:
                     price=float(v["price"]),
                 )
 
-            ords: list[Order] = []
+            ords: list[_Order] = []
             for ord in root["orders"]:
-                ords.append(Order(**ord))
+                ords.append(_Order(**ord))
 
         self._positions = psts
         self._orders = ords
@@ -256,7 +256,7 @@ class Portfolio:
                 symbol: Position.to_dict(position)
                 for symbol, position in pft.positions.items()
             },
-            "orders": [ Order.to_dict(ord) for ord in pft.orders ]
+            "orders": [ _Order.to_dict(ord) for ord in pft.orders ]
         }
 
     def update_pl(self):

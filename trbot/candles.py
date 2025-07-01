@@ -1,23 +1,29 @@
+from dataclasses import asdict, dataclass
+from zoneinfo import ZoneInfo
 from datetime import datetime
 from enum import Enum
 
 
+@dataclass
 class Candle:
-    def __init__(self, open_: float, high: float, low: float, close: float, volume: float, timestamp: int):
-        self.open: float = open_
-        self.high: float = high
-        self.low: float = low
-        self.close: float = close
-        self.volume: float = volume
-        self.timestamp: int = timestamp
+    datetime: datetime
+    open: float
+    high: float
+    low: float
+    close: float
+    volume: float
+    vwap: float | None = None
+
+    def __post_init__(self):
+        self.datetime = self.datetime.astimezone(tz=ZoneInfo("America/New_York"))
 
     def __repr__(self) -> str:
-        timestamp = timestamp_to_datetime(self.timestamp)
-        return (
-            f"Candle {{\n   open: {self.open:.2f}\n   high: {self.high:.2f}\n"
-            f"   low: {self.low:.2f}\n   close: {self.close:.2f}\n   volume: {self.volume:.1f}\n"
-            f"   timestamp: {timestamp}\n}}"
-        )
+        output = asdict(self)
+        # Format the datetime object a bit better
+        output["datetime"] = str(self.datetime)
+        if output["vwap"] is None:
+            del output["vwap"]
+        return str(output)
 
     def __eq__(self, other) -> bool:
         return (self.open == other.open and
@@ -25,7 +31,7 @@ class Candle:
                 self.low == other.low and
                 self.close == other.close and
                 self.volume == other.volume and
-                self.timestamp == other.timestamp)
+                self.datetime == other.timestamp)
 
 
 class Timespan(Enum):
@@ -61,20 +67,15 @@ class Timespan(Enum):
         return self.value
 
 
-
+@dataclass
 class CandleOption:
-    MAX_LIMIT: int = 50000
-
-    def __init__(self, ticker: str, start: str, end: str, mult: int, timespan: Timespan,
-        adjusted: bool = True, limit: int = MAX_LIMIT
-    ) -> None:
-        self.ticker: str = ticker
-        self.start: str = start
-        self.end: str = end
-        self.mult: int = mult
-        self.timespan: Timespan = timespan
-        self.adjusted: bool = adjusted
-        self.limit: int = limit
+    ticker: str
+    start: str
+    end: str
+    mult: int
+    timespan: Timespan
+    adjusted: bool = True
+    limit: int = 50000 # Maximum limit
 
     def __repr__(self) -> str:
         return (

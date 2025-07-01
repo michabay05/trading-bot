@@ -1,4 +1,5 @@
 import time
+from trbot.candles import Timespan
 from trbot.stockframe import Stockframe
 from trbot.strategy import StrategyTester
 import visualize_candles as vs_cd
@@ -10,8 +11,8 @@ class MyStrategy(StrategyTester):
         close = self._sf.close_series
         high = self._sf.high_series
         low = self._sf.low_series
-        self.fast_ma = self.TA_EMA(close, period=50)
-        self.slow_ma = self.TA_EMA(close, period=100)
+        self.fast_ma = self.TA_EMA(close, period=100)
+        self.slow_ma = self.TA_EMA(close, period=200)
         self.atr = self.TA_ATR(high, low, close, period=14)
 
         self.rr_ratio = 10
@@ -31,7 +32,7 @@ class MyStrategy(StrategyTester):
 
     def on_candle(self) -> None:
         last_atr = self.last_ind_value(self.atr)
-        sz = 0.1
+        sz: float = 0.1
         tp: float
         sl: float
         if self.ind_crossover(self.fast_ma, self.slow_ma):
@@ -46,12 +47,13 @@ class MyStrategy(StrategyTester):
             # tp = self.last_close - 10*last_atr
             self.market_sell(size=sz, tp_limit=tp, sl_limit=sl)
 
+
 start_time: float = time.time()
-tickers: list[str] = vs_cd.valid_tickers("trout/aggs")[0]
-# tickers: list[str] = ["GM"]
+# tickers: list[str] = vs_cd.valid_tickers("trout/aggs")[0]
+tickers: list[str] = ["GOOG"]
 sum: float = 0.0
 for t in tickers:
-    sf: Stockframe = Stockframe.from_csv(f"trout/aggs/ohlcv-{t}-4hour.csv")
+    sf: Stockframe = Stockframe.from_csv(f"ohlcv-1hr/{t}.csv", t, 1, Timespan.HOUR)
     mys = MyStrategy(sf)
     try:
         output = mys.run()
@@ -59,6 +61,7 @@ for t in tickers:
         sum += output["pl"]
     finally:
         mys.export_portfolio("trout/pfts")
+        mys.plot_pl(filepath="overall_pl.png")
 
 print("----------------------")
 print(f"Total: {sum}")
