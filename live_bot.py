@@ -1,5 +1,3 @@
-from trbot.broker import LiveBroker
-from trbot.candles import Candle
 from trbot.strategy import LiveStrategy
 
 class MyLiveStrat(LiveStrategy):
@@ -54,17 +52,8 @@ class MyLiveStrat(LiveStrategy):
             print("Going short...\n\n")
 
 
-# ls = MyLiveStrat()
-# try:
-#     ls.run()
-# finally:
-#     ls.test()
-
-from datetime import datetime
-from zoneinfo import ZoneInfo
-
-test = "2025-07-01 19:59:00+00:00"
-dt = datetime.fromisoformat(test)
-print("     Original:", dt)
-print("   TZ Changed:", dt.replace(tzinfo=ZoneInfo("America/New_York")))
-print("Actual Change:", dt.astimezone(tz=ZoneInfo("America/New_York")))
+ls = MyLiveStrat()
+try:
+    ls.run()
+finally:
+    ls.test()

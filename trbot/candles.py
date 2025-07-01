@@ -6,7 +6,7 @@ from enum import Enum
 
 @dataclass
 class Candle:
-    datetime: datetime
+    timestamp: datetime
     open: float
     high: float
     low: float
@@ -15,12 +15,12 @@ class Candle:
     vwap: float | None = None
 
     def __post_init__(self):
-        self.datetime = self.datetime.astimezone(tz=ZoneInfo("America/New_York"))
+        self.timestamp = self.timestamp.astimezone(tz=ZoneInfo("America/New_York"))
 
     def __repr__(self) -> str:
         output = asdict(self)
         # Format the datetime object a bit better
-        output["datetime"] = str(self.datetime)
+        output["timestamp"] = str(self.timestamp)
         if output["vwap"] is None:
             del output["vwap"]
         return str(output)
@@ -31,7 +31,7 @@ class Candle:
                 self.low == other.low and
                 self.close == other.close and
                 self.volume == other.volume and
-                self.datetime == other.timestamp)
+                self.timestamp == other.timestamp)
 
 
 class Timespan(Enum):

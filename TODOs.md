@@ -43,6 +43,11 @@ A list of all the TODOs needed to be completed before each release
 
 ---
 
+## v0.8
+- [ ] (feat) Handle warmup for live trading
+- [x] (feat) Implement aggregation of dataframe, (specifically 1min to 1hr)
+- [ ] (feat) Add ability to parse and store quote data
+
 ## v0.7
 - [x] (feat) Add rendering for non-overlayed indicators like RSI, MACD
 - [x] (feat) Add volume at the bottom of the main chart

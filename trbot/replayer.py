@@ -13,7 +13,7 @@ class CandleReplayer:
         self._end: int = end_ind if start_ind < end_ind else sf.size
         self._index: int = self._start
 
-        self._dates: list[datetime] = sf.datetime_series
+        self._dates: list[datetime] = sf.timestamp
         assert sf.size == len(self._dates)
 
         # If sleep is enabled, minimum sleep time is 0.25 seconds

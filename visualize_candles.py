@@ -44,8 +44,8 @@ def calc_save_indicators(csv_path: str, ticker: str, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)
     custom_df: pd.DataFrame = pd.DataFrame()
     data: NDArray[np.float64] = sf.close_series
-    dates: list[datetime] = sf.datetime_series
-    custom_df["datetime"] = dates
+    dates: list[datetime] = sf.timestamp
+    custom_df["timestamp"] = dates
 
     # Calculate indicator values
     output: list[dict] = []

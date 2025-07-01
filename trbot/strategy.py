@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import numpy as np
 from numpy.typing import NDArray
@@ -19,10 +21,10 @@ TripleIndValues = tuple[IndValues, IndValues, IndValues]
 
 
 class TBStrategy(ABC):
-    ## ============= PROPERTIES TO ESTABLISH IN CONSTRUCTOR (BELOW) ============= ##
+    ## ============= PROPERTIES USED IN THESE ABSTRACT METHOD (BELOW) ============= ##
     @property
     @abstractmethod
-    def sf(self) -> Stockframe:
+    def symbol(self) -> str:
         pass
 
     @property
@@ -39,7 +41,7 @@ class TBStrategy(ABC):
     @abstractmethod
     def portfolio(self) -> Portfolio:
         pass
-    ## ============= PROPERTIES TO ESTABLISH IN CONSTRUCTOR (ABOVE) ============= ##
+    ## ============= PROPERTIES USED IN THESE ABSTRACT METHOD (ABOVE) ============= ##
 
     @abstractmethod
     def setup(self) -> None:
@@ -92,7 +94,7 @@ class TBStrategy(ABC):
             )
 
         mkt_ord: MarketOrder = MarketOrder(
-            symbol=self.sf.symbol,
+            symbol=self.symbol,
             side=OrderSide.LONG,
             quantity=size,
             requested_price=self.last_close,
@@ -118,11 +120,11 @@ class TBStrategy(ABC):
         assert size > 0, "Negative size provided. (size > 0)"
         if tp_limit is not None and sl_limit is not None:
             assert 0.0 < tp_limit < self.last_close < sl_limit, (
-                f"TP(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < SL(${sl_limit:.3f}), {self.sf.symbol}"
+                f"TP(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < SL(${sl_limit:.3f}), {self.symbol}"
             )
 
         mkt_ord: MarketOrder = MarketOrder(
-            symbol=self.sf.symbol,
+            symbol=self.symbol,
             side=OrderSide.SHORT,
             quantity=size,
             requested_price=self.last_close,
@@ -209,9 +211,9 @@ class StrategyTester(TBStrategy):
         self._sf: Stockframe = sf
 
         assert start_ind != end_ind
-        assert end_ind <= sf.size
+        assert end_ind <= len(sf)
         self._start: int = start_ind
-        self._end: int = end_ind if start_ind < end_ind else sf.size
+        self._end: int = end_ind if start_ind < end_ind else len(sf)
         self._index: int = self._start
 
         self._sleep: bool = sleep
@@ -260,7 +262,7 @@ class StrategyTester(TBStrategy):
             self._repl.step_time()
 
     def plot_pl(self, filepath: str | None = None):
-        dates = self._sf.datetime_series
+        dates = self._sf.timestamp
 
         plt.rcParams['date.converter'] = 'concise'
         _, ax = plt.subplots(figsize=(8, 6), layout='constrained')
@@ -277,14 +279,19 @@ class StrategyTester(TBStrategy):
 class LiveStrategy(TBStrategy):
     def __init__(self) -> None:
         self._broker: LiveBroker = LiveBroker()
-        # self._sf: Stockframe = Stockframe("DELL", mult=1, timespan=Timespan.MINUTE)
-        self._sf: Stockframe = Stockframe.from_csv("restart.csv", "DELL", mult=1, timespan=Timespan.MINUTE)
-        self._sf._df.set_index("datetime", inplace=True)
+        self._symbol: str = "DELL"
+        self._minute_sf: Stockframe = Stockframe(
+            self._symbol, mult=1, timespan=Timespan.MINUTE
+        )
+        self._minute_sf._df.set_index("timestamp", inplace=True)
+        self._hour_sf: Stockframe = Stockframe(self._symbol, mult=1, timespan=Timespan.HOUR)
         self._indicators: dict[str, IndValues] = {}
 
+        self._time: datetime = datetime.now()
+
     @property
-    def sf(self) -> Stockframe:
-        return self._sf
+    def symbol(self) -> str:
+        return self._symbol
 
     @property
     def indicators(self) -> dict[str, IndValues]:
@@ -296,8 +303,7 @@ class LiveStrategy(TBStrategy):
 
     @property
     def last_candle(self) -> Candle:
-        row: pd.Series = self.sf._df.iloc[-1]
-        return Candle(**row.to_dict())
+        return LiveStrategy._df_row_to_candle(self._minute_sf.df, -1)
 
     @property
     def portfolio(self) -> Portfolio:
@@ -305,16 +311,80 @@ class LiveStrategy(TBStrategy):
 
     @property
     def curr_dt_str(self) -> str:
-        return self.last_candle.datetime.strftime("%Y-%m-%d %H:%M:%S")
+        return self.last_candle.timestamp.strftime("%Y-%m-%d %H:%M:%S")
 
     def run(self) -> None:
         self.broker._data_stream.subscribe_bars(
-            self._stock_data_stream_handler, *[self.sf.symbol]
+            self._stock_data_stream_handler, *[self.symbol]
         )
         self.broker._data_stream.run()
 
+    async def _stock_data_stream_handler(self, data: Bar | dict) -> None:
+        if isinstance(data, dict):
+            raise ValueError(f"I have no idea what is inside this dict: {data}")
+
+        cnd = self._bar_to_candle(data)
+        self._minute_sf.append_candle(cnd)
+
+        self.setup()
+        self.on_candle()
+        print(cnd)
+
+        self._time = datetime.now()
+        # TODO: Change this from check the minute to checking the current hour vs the last updated hour
+        if self._time.minute == 00:
+            # Full hour
+            self.update_hourly()
+
+        if not self._broker.is_market_open():
+            self.broker._data_stream.stop()
+
+    @staticmethod
+    def _df_row_to_candle(df: pd.DataFrame, i: int) -> Candle:
+        row = df.iloc[i]
+        return Candle(**row.to_dict())
+
+    def update_hourly(self) -> None:
+        """ Using the ~1minute stockframe, update the 1 hour stockframe"""
+        sf: Stockframe = self._minute_sf
+        now = datetime.now(tz=ZoneInfo("America/New_York"))
+        start_ts = now - timedelta(hours=1)
+        end = now
+
+        # Find starting index
+        start_ind: int = 0
+        while start_ind < len(sf):
+            cnd: Candle = LiveStrategy._df_row_to_candle(sf.df, start_ind)
+            if cnd.timestamp.hour >= start_ts.hour:
+                break
+
+            start_ind += 1
+
+        start_cnd: Candle = LiveStrategy._df_row_to_candle(sf.df, start_ind)
+        hour_cnd: Candle = Candle(
+            timestamp=start_ts,
+            open=start_cnd.open,
+            high=start_cnd.high,
+            low=start_cnd.low,
+            close=start_cnd.close,
+            volume=start_cnd.volume
+        )
+        i: int = start_ind + 1
+        while i < len(sf):
+            row = sf.df.iloc[i]
+            cnd: Candle = Candle(**row.to_dict())
+            if cnd.timestamp > end:
+                break
+
+            hour_cnd.high = max(hour_cnd.high, cnd.high)
+            hour_cnd.low = min(hour_cnd.low, cnd.low)
+            hour_cnd.volume += cnd.volume
+            i += 1
+
+        self._hour_sf.append_candle(hour_cnd)
+
     def test(self) -> None:
-        self.sf._df.to_csv("experimentation.csv")
+        self._minute_sf._df.to_csv("experimentation.csv", index=False)
 
     @abstractmethod
     def setup(self) -> None:
@@ -331,30 +401,19 @@ class LiveStrategy(TBStrategy):
 
     @property
     def close_series(self) -> IndValues:
-        return self.sf.close_series
+        return self._hour_sf.close_series
 
     @property
     def high_series(self) -> IndValues:
-        return self.sf.high_series
+        return self._hour_sf.high_series
 
     @property
     def low_series(self) -> IndValues:
-        return self.sf.low_series
-
-    async def _stock_data_stream_handler(self, data: Bar | dict) -> None:
-        if isinstance(data, dict):
-            raise ValueError(f"I have no idea what is inside this dict: {data}")
-
-        cnd = self._bar_to_candle(data)
-        self.sf.append_candle(cnd)
-
-        self.setup()
-        self.on_candle()
-        print(cnd)
+        return self._hour_sf.low_series
 
     def _bar_to_candle(self, bar: Bar) -> Candle:
         return Candle(
-            datetime=bar.timestamp,
+            timestamp=bar.timestamp,
             open=bar.open,
             high=bar.high,
             low=bar.low,

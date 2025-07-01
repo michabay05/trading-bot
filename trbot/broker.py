@@ -4,7 +4,7 @@ import json, sys, time
 
 from alpaca.data.live.stock import StockDataStream
 from alpaca.trading.client import TradingClient
-from alpaca.trading.enums import OrderSide, OrderType, PositionIntent, TimeInForce
+from alpaca.trading.enums import OrderSide, OrderType, TimeInForce
 from alpaca.trading.models import Clock, TradeAccount
 from alpaca.trading.requests import ClosePositionRequest, MarketOrderRequest, StopLossRequest, TakeProfitRequest
 import requests
@@ -20,12 +20,12 @@ class InsufficientFundsError(Exception):
 
 
 class Broker(ABC):
-    ## ============= PROPERTIES TO ESTABLISH IN CONSTRUCTOR (BELOW) ============= ##
+    ## ============= PROPERTIES USED IN THESE ABSTRACT CLASS (BELOW) ============= ##
     @property
     @abstractmethod
     def portfolio(self) -> Portfolio:
         pass
-    ## ============= PROPERTIES TO ESTABLISH IN CONSTRUCTOR (ABOVE) ============= ##
+    ## ============= PROPERTIES USED IN THESE ABSTRACT CLASS (ABOVE) ============= ##
 
     @abstractmethod
     def is_market_open(self, dt_str: str | None) -> bool:

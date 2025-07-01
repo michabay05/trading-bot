@@ -41,7 +41,7 @@ function createSeriesFromString(chart: any, seriesType: string): any {
 }
 
 interface _IOhlcvData {
-    datetime: string;
+    timestamp: string;
     open: number;
     high: number;
     low: number;
@@ -84,7 +84,7 @@ function renderOhlcv(chart: any, cndJSON: _IOhlcvData[]): void {
 
     datapointsCount = cndJSON.length;
     for (let i = 0; i < cndJSON.length; i++) {
-        let timeValue = Date.parse(cndJSON[i]["datetime"]);
+        let timeValue = Date.parse(cndJSON[i]["timestamp"]);
 
         candlestickData.push({
             time: timeValue,

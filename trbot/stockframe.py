@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import pandas as pd
 import numpy as np
 from numpy.typing import NDArray
@@ -10,7 +11,7 @@ from .candles import Candle, Timespan
 class Stockframe:
     def __init__(self, ticker: str, mult: int, timespan: Timespan):
         self._df: pd.DataFrame = pd.DataFrame(
-            columns=["datetime", "open", "high", "low", "close", "volume"], # type: ignore
+            columns=["timestamp", "open", "high", "low", "close", "volume"], # type: ignore
         )
         self._formatted_dts: list[datetime] = []
         self.symbol: str = ticker
@@ -22,7 +23,7 @@ class Stockframe:
         data: list[list[str]] = []
         for c in cnds:
             data.append([
-                f"{c.datetime}",
+                f"{c.timestamp}",
                 f"{c.open:.4f}",
                 f"{c.high:.4f}",
                 f"{c.low:.4f}",
@@ -33,19 +34,18 @@ class Stockframe:
         sf = cls(ticker, mult, timespan)
         sf._df = pd.DataFrame(
             data,
-            columns=["datetime", "open", "high", "low", "close", "volume"], # type: ignore
+            columns=["timestamp", "open", "high", "low", "close", "volume"], # type: ignore
         )
-        sf.parse_datetime("datetime")
-
+        sf.parse_timestamp("timestamp")
 
     @classmethod
     def from_csv(cls, filepath: str, ticker: str, mult: int, timespan: Timespan) -> 'Stockframe':
         sf = cls(ticker=ticker, mult=mult, timespan=timespan)
-        sf._df = pd.read_csv(filepath)
-        if "timestamp" in sf._df.columns:
-            sf._df.rename(columns={"timestamp": "datetime"}, inplace=True)
+        sf._df = pd.read_csv(filepath, index_col=False)
+        if "datetime" in sf._df.columns:
+            sf._df.rename(columns={"datetime": "timestamp"}, inplace=True)
 
-        sf.parse_datetime("datetime")
+        sf.parse_timestamp("timestamp")
         return sf
 
     def __repr__(self) -> str:
@@ -53,10 +53,15 @@ class Stockframe:
         output += f"{self._df}"
         return output
 
-    def parse_datetime(self, col_name: str) -> None:
+    def parse_timestamp(self, col_name: str, replace: bool = True) -> None:
         self._formatted_dts: list[datetime] = []
         for dt_str in self._df[col_name]:
-            self._formatted_dts.append(datetime.fromisoformat(dt_str))
+            self._formatted_dts.append(
+                datetime.fromisoformat(dt_str).astimezone(ZoneInfo("America/New_York"))
+            )
+
+        if replace:
+            self._df["timestamp"] = self._formatted_dts
 
     def save_to_csv(self, outdir: str) -> None:
         self._df.to_csv(
@@ -65,9 +70,9 @@ class Stockframe:
         )
 
     def append_candle(self, cnd: Candle) -> None:
-        # columns=["datetime", "open", "high", "low", "close", "volume"],
+        # columns=["timestamp", "open", "high", "low", "close", "volume"],
         self._df.loc[len(self._df)] = [
-            cnd.datetime,
+            cnd.timestamp,
             cnd.open,
             cnd.high,
             cnd.low,
@@ -79,8 +84,7 @@ class Stockframe:
     def df(self):
         return self._df
 
-    @property
-    def size(self) -> int:
+    def __len__(self) -> int:
         return len(self._df)
 
     @property
@@ -96,5 +100,5 @@ class Stockframe:
         return self._df["low"].to_numpy()
 
     @property
-    def datetime_series(self) -> list[datetime]:
+    def timestamp(self) -> list[datetime]:
         return self._formatted_dts
