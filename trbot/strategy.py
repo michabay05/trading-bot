@@ -334,7 +334,7 @@ class LiveStrategy(TBStrategy):
         # TODO: Change this from check the minute to checking the current hour vs the last updated hour
         if self._time.minute == 00:
             # Full hour
-            self.update_hourly()
+            self.aggregate_hourly()
 
         if not self._broker.is_market_open():
             self.broker._data_stream.stop()
@@ -344,7 +344,7 @@ class LiveStrategy(TBStrategy):
         row = df.iloc[i]
         return Candle(**row.to_dict())
 
-    def update_hourly(self) -> None:
+    def aggregate_hourly(self) -> None:
         """ Using the ~1minute stockframe, update the 1 hour stockframe"""
         sf: Stockframe = self._minute_sf
         now = datetime.now(tz=ZoneInfo("America/New_York"))
@@ -384,7 +384,8 @@ class LiveStrategy(TBStrategy):
         self._hour_sf.append_candle(hour_cnd)
 
     def test(self) -> None:
-        self._minute_sf._df.to_csv("experimentation.csv", index=False)
+        self._minute_sf._df.to_csv("DELL_minute.csv", index=False)
+        self._hour_sf._df.to_csv("DELL_hour.csv", index=False)
 
     @abstractmethod
     def setup(self) -> None:

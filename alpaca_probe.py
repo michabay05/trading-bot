@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from alpaca.data.models.bars import Bar
 from alpaca.data.historical.stock import StockHistoricalDataClient
-from alpaca.data.requests import StockBarsRequest
+from alpaca.data.requests import StockBarsRequest, StockQuotesRequest
 from alpaca.data.timeframe import TimeFrame, TimeFrameUnit
 from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import MarketOrderRequest
@@ -15,12 +15,12 @@ from alpaca.data.live.stock import StockDataStream
 from trbot import tbsecrets
 
 
-API_KEY: str = tbsecrets.ALPACA_SECRETS["api_key"]
-SECRET_KEY: str = tbsecrets.ALPACA_SECRETS["secret_key"]
+API_KEY: str = tbsecrets.ALPACA_SECRETS[0]["api_key"]
+SECRET_KEY: str = tbsecrets.ALPACA_SECRETS[0]["secret_key"]
 
 trade_client = TradingClient(API_KEY, SECRET_KEY)
-acct = trade_client.get_account()
-print(acct)
+pos = trade_client.get_all_positions()
+print(pos)
 
 # df = pd.read_csv("test1.csv", index_col=["symbol", "timestamp"])
 # print(df)

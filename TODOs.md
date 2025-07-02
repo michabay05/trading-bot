@@ -46,7 +46,22 @@ A list of all the TODOs needed to be completed before each release
 ## v0.8
 - [ ] (feat) Handle warmup for live trading
 - [x] (feat) Implement aggregation of dataframe, (specifically 1min to 1hr)
-- [ ] (feat) Add ability to parse and store quote data
+- [ ] (feat) Sync local portfolio with remote portfolio for live paper trading
+    - [ ] Cash
+    - [ ] Open positions
+    - [ ] Closed positions
+- [x] (feat) Add ability to update historical candle csv
+- [ ] (feat) Implement the following:
+    - [ ] (feat) Add functions that run on market open and market close
+    - [ ] On market open, run the following:
+        - [ ] Load into memory the necessary historical candle csv
+        - [ ] Sync portfolio
+    - [ ] On market close, run the following
+        - [ ] (feat) Add daily hourly candles to the existing list of historical candles
+        - [ ] (feat) Find out the next market open time
+        - [ ] Sync portfolio
+- [ ] (feat) Take advantage of next open and next close from alpaca's Trading clock
+    - Then, I would only have to ping alpaca once a day on market open instead on every new minute bar
 
 ## v0.7
 - [x] (feat) Add rendering for non-overlayed indicators like RSI, MACD

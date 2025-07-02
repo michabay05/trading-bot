@@ -1,3 +1,4 @@
+from trbot.broker import LiveBroker
 from trbot.strategy import LiveStrategy
 
 class MyLiveStrat(LiveStrategy):
@@ -52,8 +53,14 @@ class MyLiveStrat(LiveStrategy):
             print("Going short...\n\n")
 
 
-ls = MyLiveStrat()
-try:
-    ls.run()
-finally:
-    ls.test()
+# ls = MyLiveStrat()
+# try:
+#     ls.run()
+# finally:
+#     ls.test()
+
+from datetime import datetime
+lb = LiveBroker()
+st = datetime.fromisoformat("2025-06-24 09:00:00+00:00")
+lb.get_historical_candles(["DELL"], start=st)
+print(f"[DELL] {st} -> {datetime.now()}")
