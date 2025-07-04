@@ -45,6 +45,9 @@ A list of all the TODOs needed to be completed before each release
     - [ ] Indicators (also pass in function arguments as seen here: `talib.EMA(close, timeperiod=50)`)
     - [Legend example from Lightweight Charts](https://tradingview.github.io/lightweight-charts/tutorials/how_to/legends#examples)
 - [ ] (fix) Instead of replacing `NaN` with `0.0` for indicators during their warmup time, use `WhiteSpaceData` in lightweight charts
+- [ ] (feat) Consider replacing my custom backtester with either one of these python libraries
+    - `backtesting.py`
+    - `vectorbt`
 
 ---
 
@@ -53,17 +56,20 @@ A list of all the TODOs needed to be completed before each release
 - [x] (fix) Restructure indicator value storage mechanism
     - The old system was based on the historical backtester, which caused the live strategy to miss
       trading opportunities.
+- [x] (feat | fix) Live data parsing
+    - Instead of appending to a dataframe, append to a list. Adding the candles to a dataframe will
+      happen on market close.
 - [ ] (feat) Restructure stockframe such that it can adapt to a single or multiple symbols
-- [ ] (feat) Implement aggregation of candle data (specifically 1min to 1hr)
+- [x] (feat) Implement aggregation of candle data (specifically 1min to 1hr)
 - [ ] (feat) Sync local portfolio with remote portfolio for live paper trading
-    - [ ] Cash
+    - [x] Cash
     - [ ] Open positions
     - [ ] Closed positions
 - [x] (feat) Add ability to update historical candle csv
 - [ ] (feat) Implement the following:
     - [ ] (feat) Add functions that run on market open and market close
     - [ ] On market open, run the following:
-        - [ ] Load into memory the necessary historical candle csv
+        - [x] Load into memory the necessary historical candle csv
         - [ ] Sync portfolio
     - [ ] On market close, run the following
         - [ ] (feat) Add daily hourly candles to the existing list of historical candles

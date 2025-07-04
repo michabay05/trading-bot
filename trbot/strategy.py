@@ -1,103 +1,268 @@
-from abc import ABC, abstractmethod
-from datetime import datetime, timedelta
+from dataclasses import dataclass, field
+from abc import abstractmethod
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from typing import Callable, Any, Literal
 from zoneinfo import ZoneInfo
 
 import numpy as np
 from numpy.typing import NDArray
-import pandas as pd
 import talib
 import matplotlib.pyplot as plt
 from alpaca.data.models.bars import Bar
 
 from trbot.candles import Candle, Timespan
-from .broker import Broker, HistoricalBroker, LiveBroker
+from .broker import HistoricalBroker, LiveBroker
 from .replayer import CandleReplayer
 from .portfolio import OrderIntent, OrderSide, Portfolio, MarketOrder, StopLossTrigger, TakeProfitTrigger
 from .stockframe import Stockframe
 
 
 IndValues = NDArray[np.float64]
-TripleIndValues = tuple[IndValues, IndValues, IndValues]
+
+IndicatorKind = Literal["sma", "ema", "rsi", "atr"]
+CandlePart = Literal["close", "low", "high"]
+
+ALL_SYMBOLS = [
+    "AAPL", "ABNB", "BBY", "DASH", "DELL", "EBAY", "F", "GE", "GOOG", "HIMS",
+    "HPQ", "INTC", "LOGI", "NIO", "NVDA", "NVDY", "PANW", "PEP", "PLTR", "QCOM",
+    "ROST", "SHOP", "SMCI", "SPY", "TGT", "WMT", "XLF"
+]
 
 
-class TBStrategy(ABC):
-    ## ============= PROPERTIES USED IN THESE ABSTRACT METHOD (BELOW) ============= ##
+class Indicator:
+    def __init__(self,
+        kind: IndicatorKind,
+        part: list[CandlePart], params: dict[str, Any] = {}
+    ) -> None:
+        self._kind: str = kind
+        self._func: Callable = Indicator._ta_func_from_kind(self._kind)
+        self._parts: list[CandlePart] = part
+        if "timeperiod" not in params.keys():
+            raise KeyError(f"Missing key 'timeperiod' for talib func parameters.\nparams = {params}")
+        self._params: dict[str, Any] = params
+
     @property
-    @abstractmethod
-    def symbol(self) -> str:
-        pass
+    def period(self) -> int:
+        return self._params["timeperiod"]
+
+    def compute_values(self, cnds: list[Candle]) -> IndValues:
+        assert len(cnds) >= self.period
+        data: dict[str, IndValues] = {}
+        sliced_cnds: list[Candle] = cnds[-self.period:]
+        for part in self._parts:
+            vals: list[float] = []
+            match part:
+                case "close":
+                    vals = [cnd.close for cnd in sliced_cnds]
+                case "low":
+                    vals = [cnd.low for cnd in sliced_cnds]
+                case "high":
+                    vals = [cnd.high for cnd in sliced_cnds]
+                case _:
+                    raise ValueError(f"Unknown part of a candle: {self._parts}")
+
+            data[part] = np.array(vals, dtype=np.float64)
+
+        values: IndValues = self._func(**data, **self._params)
+        return values
+
+    def name(self) -> str:
+        return f"{self._kind}_{self.period}"
+
+    @staticmethod
+    def _ta_func_from_kind(kind: str) -> Callable:
+        match kind:
+            case "sma":
+                return talib.SMA
+            case "ema":
+                return talib.EMA
+            case "rsi":
+                return talib.RSI
+            case "atr":
+                return talib.ATR
+            case _:
+                raise ValueError(f"Unknown kind of indicator: {kind}")
+
+
+@dataclass
+class _LiveData:
+    live_cnds: list[Candle] = field(default_factory=list)
+    live_timespan: Timespan = Timespan.MINUTE
+    agg_cnds: list[Candle] = field(default_factory=list)
+    agg_timespan: Timespan = Timespan.HOUR
+    agg_inds: dict[str, IndValues] = field(default_factory=dict)
+
+    def add_live(self, cnd: Candle) -> None:
+        self.live_cnds.append(cnd)
+
+    def add_agg(self, cnd: Candle) -> None:
+        self.agg_cnds.append(cnd)
+
+    def update_indicator(self, name: str, values: IndValues) -> None:
+        self.agg_inds[name] = values
+
+
+class LiveStrategy:
+    def __init__(self) -> None:
+        self._broker: LiveBroker = LiveBroker()
+        self.symbols: list[str] = ["SPY", "AAPL", "GE", "HPQ"]
+        self._live_data: dict[str, _LiveData] = {}
+        for sym in self.symbols:
+            self._live_data[sym] = _LiveData()
+
+        self._indicators: set[Indicator] = set()
+        self._max_period: int = 0
+
+        self._time: datetime = datetime.now()
+        self._current_hour: int = self._time.hour
 
     @property
-    @abstractmethod
-    def indicators(self) -> dict[str, IndValues]:
-        pass
+    def broker(self) -> LiveBroker:
+        return self._broker
 
     @property
-    @abstractmethod
-    def broker(self) -> Broker:
-        pass
-
-    @property
-    @abstractmethod
     def portfolio(self) -> Portfolio:
-        pass
-    ## ============= PROPERTIES USED IN THESE ABSTRACT METHOD (ABOVE) ============= ##
+        return self.broker.portfolio
+
+    def last_close(self, symbol: str) -> float:
+        return self._live_data[symbol].live_cnds[-1].close
+
+    @property
+    def curr_dt_str(self) -> str:
+        return self._time.strftime("%Y-%m-%d %H:%M:%S")
+
+    def last_ind_value(self, symbol: str, ind_name: str) -> float:
+        return self._live_data[symbol].agg_inds[ind_name][-1]
+
+    def _init_all_live_data(self) -> None:
+        assert self._max_period > 0
+
+        print(f"Max period: {self._max_period}")
+        for symbol in self.symbols:
+            ld = self._live_data[symbol]
+            path = f"ohlcv-1hr/{symbol}.csv"
+            sf = Stockframe.from_csv(path, symbol, mult=1, timespan=Timespan.HOUR)
+            n: int = len(sf) - self._max_period
+            for i in range(n, len(sf)):
+                cnd: Candle = sf.row_to_candle(i)
+                ld.add_agg(cnd)
+
+    def _on_market_open(self) -> None:
+        self.setup()
+        self._init_all_live_data()
+        self.broker._data_stream.run()
+        raise NotImplementedError("LiveStrategy.on_market_open")
+
+    def _on_market_close(self) -> None:
+        self.broker._data_stream.stop()
+        print("Market officially closed...")
+        # Bring historical data up to date
+        start = datetime.now() - relativedelta(months=1)
+        self.broker.export_historical_candles(ALL_SYMBOLS, start)
+
+    def run(self) -> None:
+        self.broker._data_stream.subscribe_bars(
+            self._stock_data_stream_handler, *self.symbols
+        )
+        assert self._broker.is_market_open(), (
+            f"[ERROR] Market is not open yet! Rerun this program once it is."
+        )
+
+        self._on_market_open()
+
+    async def _stock_data_stream_handler(self, bar: Bar | dict) -> None:
+        if isinstance(bar, dict):
+            # I have no idea what is inside this dict
+            raise ValueError(f"data is of type {type(bar)}, expected type `Bar`")
+
+        if not self._broker.is_market_open():
+            # Market is closed
+            self._on_market_close()
+
+        def _bar_to_candle(bar: Bar) -> Candle:
+            return Candle(
+                timestamp=bar.timestamp,
+                open=bar.open,
+                high=bar.high,
+                low=bar.low,
+                close=bar.close,
+                volume=bar.volume,
+            )
+
+        cnd: Candle = _bar_to_candle(bar)
+        print("Minute:", cnd)
+
+        ld: _LiveData = self._live_data[bar.symbol]
+        ld.add_live(cnd)
+
+        self._time = datetime.now()
+        if self._time.hour > self._current_hour:
+            self._current_hour = self._time.hour
+
+            # On new target-timespan, do the following ...
+            # ... aggregate the minute candles into a single target-timespan candle, ...
+            hour_cnd: Candle = self._aggregate_min_cnds(bar.symbol)
+            ld.add_agg(hour_cnd)
+            print(f"\n\nHour: {hour_cnd}\n\n")
+            # ... recalculate the indicator values, ...
+            for ind in self._indicators:
+                ld.update_indicator(ind.name(), ind.compute_values(ld.agg_cnds))
+
+            # ... and apply strategy on the new target-timespan candle
+            self.on_candle()
 
     @abstractmethod
     def setup(self) -> None:
-        """ Called once """
+        """ Called once to setup strategy """
         pass
 
     @abstractmethod
     def on_candle(self) -> None:
-        """ Called on each candle """
+        """ Called on each new candle """
         pass
 
-    @property
-    @abstractmethod
-    def close_series(self) -> IndValues:
-        pass
+    def add_indicator(self, indicator: Indicator) -> str:
+        self._indicators.add(indicator)
+        # Find the maximum period among all the indicators added to this strategy
+        self._max_period = max(self._max_period, indicator.period)
+        return indicator.name()
 
-    @property
-    @abstractmethod
-    def high_series(self) -> IndValues:
-        pass
+    def ind_crossover(self, symbol: str, val1: str | float, val2: str | float) -> bool:
+        ld: _LiveData = self._live_data[symbol]
 
-    @property
-    @abstractmethod
-    def low_series(self) -> IndValues:
-        pass
+        s1: list[float] | IndValues = (
+            [ val1, val1 ] if isinstance(val1, float)
+            # else self.series_slice(self._indicators[val1])
+            else ld.agg_inds[str(val1)]
+        )
+        s2: list[float] | IndValues = (
+            [ val2, val2 ] if isinstance(val2, float)
+            else ld.agg_inds[str(val1)]
+        )
 
-    def last_ind_value(self, ind_key: str) -> float:
-        return self.indicators[ind_key][-1]
+        try:
+            return self._crossover(s1, s2)
+        except ValueError:
+            return False
 
-    @property
-    def last_close(self) -> float:
-        return self.close_series[-1]
-
-    @property
-    @abstractmethod
-    def curr_dt_str(self) -> str:
-        pass
-
-    @abstractmethod
-    def run(self) -> None:
-        pass
-
-    def market_buy(self,
+    def market_buy(self, symbol: str,
         size: float, tp_limit: float | None = None, sl_limit: float | None = None
     ) -> None:
         assert size > 0, "Negative size provided. (size > 0)"
+        assert symbol in self.symbols, f"Provided ({symbol}) is not in list of symbols ({self.symbols})"
+
+        last_close: float = self.last_close(symbol)
         if tp_limit is not None and sl_limit is not None:
-            assert 0.0 < sl_limit < self.last_close < tp_limit, (
-                f"$0.00 < SL(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < TP(${sl_limit:.3f})"
+            assert 0.0 < sl_limit < last_close < tp_limit, (
+                f"$0.00 < SL(${tp_limit:.3f}) < Price(${last_close:.3f}) < TP(${sl_limit:.3f})"
             )
 
         mkt_ord: MarketOrder = MarketOrder(
-            symbol=self.symbol,
+            symbol=symbol,
             side=OrderSide.LONG,
             quantity=size,
-            requested_price=self.last_close,
+            requested_price=last_close,
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.BUY_TO_OPEN
         )
@@ -112,22 +277,25 @@ class TBStrategy(ABC):
                 intent=mkt_ord.intent.opp_close()
             )
 
-        self.broker.execute_open_order(mkt_ord, self.last_close, self.curr_dt_str)
+        self.broker.execute_open_order(mkt_ord, last_close, self.curr_dt_str)
 
-    def market_sell(self,
+    def market_sell(self, symbol: str,
         size: float, tp_limit: float | None = None, sl_limit: float | None = None
     ) -> None:
         assert size > 0, "Negative size provided. (size > 0)"
+        assert symbol in self.symbols, f"Provided ({symbol}) is not in list of symbols ({self.symbols})"
+
+        last_close: float = self.last_close(symbol)
         if tp_limit is not None and sl_limit is not None:
-            assert 0.0 < tp_limit < self.last_close < sl_limit, (
-                f"TP(${tp_limit:.3f}) < Price(${self.last_close:.3f}) < SL(${sl_limit:.3f}), {self.symbol}"
+            assert 0.0 < tp_limit < last_close < sl_limit, (
+                f"TP(${tp_limit:.3f}) < Price(${last_close:.3f}) < SL(${sl_limit:.3f})"
             )
 
         mkt_ord: MarketOrder = MarketOrder(
-            symbol=self.symbol,
+            symbol=symbol,
             side=OrderSide.SHORT,
             quantity=size,
-            requested_price=self.last_close,
+            requested_price=last_close,
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.SELL_TO_OPEN
         )
@@ -142,57 +310,45 @@ class TBStrategy(ABC):
                 intent=mkt_ord.intent.opp_close()
             )
 
-        self.broker.execute_open_order(mkt_ord, self.last_close, self.curr_dt_str)
+        self.broker.execute_open_order(mkt_ord, last_close, self.curr_dt_str)
 
-    def TA_SMA(self, data: IndValues, period: int = 30) -> str:
-        key: str = f"SMA_{period}"
-        if not key in self.indicators.keys():
-            values: IndValues = talib.SMA(data, timeperiod=period)
-            self.indicators[key] = values
+    def _aggregate_min_cnds(self, symbol: str) -> Candle:
+        """ Aggregate minute candles into a single candle w/ the target timespan """
+        ld: _LiveData = self._live_data[symbol]
+        now = datetime.now(tz=ZoneInfo("America/New_York"))
+        start_ts = now - timedelta(hours=1)
+        end = now
 
-        return key
+        # Find starting index
+        start_ind: int = 0
+        while start_ind < len(ld.live_cnds):
+            cnd: Candle = ld.live_cnds[start_ind]
+            if cnd.timestamp.hour >= start_ts.hour:
+                break
 
-    def TA_EMA(self, data: IndValues, period: int = 30) -> str:
-        key: str = f"EMA_{period}"
-        if not key in self.indicators.keys():
-            values: IndValues = talib.EMA(data, timeperiod=period)
-            self.indicators[key] = values
+            start_ind += 1
 
-        return key
-
-    def TA_ATR(self,
-        high: NDArray[np.float64], low: NDArray[np.float64], close: NDArray[np.float64],
-        period: int = 14
-    ) -> str:
-        key: str = f"ATR_{period}"
-        if not key in self.indicators.keys():
-            values: IndValues = talib.ATR(high, low, close, timeperiod=period)
-            self.indicators[key] = values
-
-        return key
-
-    def TA_RSI(self, data: IndValues, period: int = 14) -> str:
-        key: str = f"RSI_{period}"
-        if not key in self.indicators.keys():
-            values: IndValues = talib.RSI(data, timeperiod=period)
-            self.indicators[key] = values
-
-        return key
-
-    def ind_crossover(self, val1: str | float, val2: str | float) -> bool:
-        s1: list[float] | IndValues = (
-            [ val1, val1 ] if isinstance(val1, float)
-            else self.series_slice(self._indicators[val1])  # type: ignore
+        start_cnd: Candle = ld.live_cnds[start_ind]
+        hour_cnd: Candle = Candle(
+            timestamp=start_ts,
+            open=start_cnd.open,
+            high=start_cnd.high,
+            low=start_cnd.low,
+            close=start_cnd.close,
+            volume=start_cnd.volume
         )
-        s2: list[float] | IndValues = (
-            [ val2, val2 ] if isinstance(val2, float)
-            else self.series_slice(self._indicators[val2])  # type: ignore
-        )
+        i: int = start_ind + 1
+        while i < len(ld.live_cnds):
+            cnd: Candle = ld.live_cnds[i]
+            if cnd.timestamp > end:
+                break
 
-        try:
-            return self._crossover(s1, s2)
-        except ValueError:
-            return False
+            hour_cnd.high = max(hour_cnd.high, cnd.high)
+            hour_cnd.low = min(hour_cnd.low, cnd.low)
+            hour_cnd.volume += cnd.volume
+            i += 1
+
+        return hour_cnd
 
     def _crossover(self, val1: list[float] | IndValues, val2: list[float] | IndValues) -> bool:
         if len(val1) >= 2 and len(val2) >= 2:
@@ -201,7 +357,7 @@ class TBStrategy(ABC):
             raise ValueError("Both lists should have at least 2 elements")
 
 
-class StrategyTester(TBStrategy):
+class StrategyTester:
     def __init__(self,
         sf: Stockframe, start_ind: int = 0, end_ind: int = -1, sleep: bool = False,
     ) -> None:
@@ -224,6 +380,10 @@ class StrategyTester(TBStrategy):
 
     def series_slice(self, series: NDArray[np.float64]) -> NDArray[np.float64]:
         return series[self._start:self._index]
+
+    @property
+    def last_close(self) -> float:
+        return self._sf.close_series[-1]
 
     @property
     def curr_dt_str(self) -> str:
@@ -262,7 +422,7 @@ class StrategyTester(TBStrategy):
             self._repl.step_time()
 
     def plot_pl(self, filepath: str | None = None):
-        dates = self._sf.timestamp
+        dates = self._sf.timestamp_series
 
         plt.rcParams['date.converter'] = 'concise'
         _, ax = plt.subplots(figsize=(8, 6), layout='constrained')
@@ -274,150 +434,3 @@ class StrategyTester(TBStrategy):
 
     def export_portfolio(self, outdir: str) -> None:
         self._portfolio.save_to_json(f"{outdir}/{self._sf.symbol}-portfolio.json")
-
-
-class LiveStrategy(TBStrategy):
-    def __init__(self) -> None:
-        self._broker: LiveBroker = LiveBroker()
-        self._symbol: str = "DELL"
-        self._minute_sf: Stockframe = Stockframe(
-            self._symbol, mult=1, timespan=Timespan.MINUTE
-        )
-        self._minute_sf._df.set_index("timestamp", inplace=True)
-        self._hour_sf: Stockframe = Stockframe(self._symbol, mult=1, timespan=Timespan.HOUR)
-        self._indicators: dict[str, IndValues] = {}
-
-        self._time: datetime = datetime.now()
-
-    @property
-    def symbol(self) -> str:
-        return self._symbol
-
-    @property
-    def indicators(self) -> dict[str, IndValues]:
-        return self._indicators
-
-    @property
-    def broker(self) -> LiveBroker:
-        return self._broker
-
-    @property
-    def last_candle(self) -> Candle:
-        return LiveStrategy._df_row_to_candle(self._minute_sf.df, -1)
-
-    @property
-    def portfolio(self) -> Portfolio:
-        return self.broker.portfolio
-
-    @property
-    def curr_dt_str(self) -> str:
-        return self.last_candle.timestamp.strftime("%Y-%m-%d %H:%M:%S")
-
-    def run(self) -> None:
-        self.broker._data_stream.subscribe_bars(
-            self._stock_data_stream_handler, *[self.symbol]
-        )
-        self.broker._data_stream.run()
-
-    async def _stock_data_stream_handler(self, data: Bar | dict) -> None:
-        if isinstance(data, dict):
-            raise ValueError(f"I have no idea what is inside this dict: {data}")
-
-        cnd = self._bar_to_candle(data)
-        self._minute_sf.append_candle(cnd)
-
-        self.setup()
-        self.on_candle()
-        print(cnd)
-
-        self._time = datetime.now()
-        # TODO: Change this from check the minute to checking the current hour vs the last updated hour
-        if self._time.minute == 00:
-            # Full hour
-            self.aggregate_hourly()
-
-        if not self._broker.is_market_open():
-            self.broker._data_stream.stop()
-
-    @staticmethod
-    def _df_row_to_candle(df: pd.DataFrame, i: int) -> Candle:
-        row = df.iloc[i]
-        return Candle(**row.to_dict())
-
-    def aggregate_hourly(self) -> None:
-        """ Using the ~1minute stockframe, update the 1 hour stockframe"""
-        sf: Stockframe = self._minute_sf
-        now = datetime.now(tz=ZoneInfo("America/New_York"))
-        start_ts = now - timedelta(hours=1)
-        end = now
-
-        # Find starting index
-        start_ind: int = 0
-        while start_ind < len(sf):
-            cnd: Candle = LiveStrategy._df_row_to_candle(sf.df, start_ind)
-            if cnd.timestamp.hour >= start_ts.hour:
-                break
-
-            start_ind += 1
-
-        start_cnd: Candle = LiveStrategy._df_row_to_candle(sf.df, start_ind)
-        hour_cnd: Candle = Candle(
-            timestamp=start_ts,
-            open=start_cnd.open,
-            high=start_cnd.high,
-            low=start_cnd.low,
-            close=start_cnd.close,
-            volume=start_cnd.volume
-        )
-        i: int = start_ind + 1
-        while i < len(sf):
-            row = sf.df.iloc[i]
-            cnd: Candle = Candle(**row.to_dict())
-            if cnd.timestamp > end:
-                break
-
-            hour_cnd.high = max(hour_cnd.high, cnd.high)
-            hour_cnd.low = min(hour_cnd.low, cnd.low)
-            hour_cnd.volume += cnd.volume
-            i += 1
-
-        self._hour_sf.append_candle(hour_cnd)
-
-    def test(self) -> None:
-        self._minute_sf._df.to_csv("DELL_minute.csv", index=False)
-        self._hour_sf._df.to_csv("DELL_hour.csv", index=False)
-
-    @abstractmethod
-    def setup(self) -> None:
-        """ Called once """
-        pass
-
-    @abstractmethod
-    def on_candle(self) -> None:
-        """ Called on each candle """
-        pass
-
-    def series_slice(self, series: NDArray[np.float64]) -> NDArray[np.float64]:
-        return series[:-1]
-
-    @property
-    def close_series(self) -> IndValues:
-        return self._hour_sf.close_series
-
-    @property
-    def high_series(self) -> IndValues:
-        return self._hour_sf.high_series
-
-    @property
-    def low_series(self) -> IndValues:
-        return self._hour_sf.low_series
-
-    def _bar_to_candle(self, bar: Bar) -> Candle:
-        return Candle(
-            timestamp=bar.timestamp,
-            open=bar.open,
-            high=bar.high,
-            low=bar.low,
-            close=bar.close,
-            volume=bar.volume,
-        )

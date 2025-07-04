@@ -74,6 +74,10 @@ class Stockframe:
             index=False
         )
 
+    def row_to_candle(self, i: int) -> Candle:
+        row: pd.Series = self._df.iloc[i]
+        return Candle(**row.to_dict())
+
     @property
     def df(self):
         return self._df

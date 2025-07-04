@@ -57,7 +57,10 @@ class LiveBroker(Broker):
         self._stock_historical_data_client = StockHistoricalDataClient(
             api_key, secret_key, raw_data=False
         )
+        self._portfolio: Portfolio = Portfolio()
+        self.sync_portfolio()
 
+    def sync_portfolio(self):
         # Initialize portfolio w/ initial cash amount
         acct = self._trade_client.get_account()
         if not isinstance(acct, TradeAccount):
@@ -67,7 +70,7 @@ class LiveBroker(Broker):
         if cash is None:
             raise ValueError("`account.cash: str | None` was None.")
 
-        self._portfolio: Portfolio = Portfolio(initial_capital=float(cash))
+        self._portfolio = Portfolio(initial_capital=float(cash))
 
     @property
     def portfolio(self) -> Portfolio:
@@ -107,7 +110,7 @@ class LiveBroker(Broker):
         )
 
     # NOTE: this could take a while, depending the time range supplied
-    def get_historical_candles(self,
+    def export_historical_candles(self,
         symbols: list[str], start: datetime, end: datetime = datetime.now()
     ) -> None:
         zone = ZoneInfo("America/New_York")
@@ -120,13 +123,10 @@ class LiveBroker(Broker):
 
         df: pd.DataFrame = pd.DataFrame()
         try:
-            t: float = time.time()
             bars: BarSet | RawData = self._stock_historical_data_client.get_stock_bars(req)
             if not isinstance(bars, BarSet):
                 raise TypeError(f"Expected `bars` to be of type BarSet, got {type(bars)}")
 
-            diff: float = time.time() - t
-            print(f"Took {diff:.4f}s to gather bars")
             df = bars.df.copy()
         except Exception as e:
             print(e)
@@ -140,18 +140,14 @@ class LiveBroker(Broker):
 
         uniq_symbols: set[str] = set(df["symbol"])
         for symbol in uniq_symbols:
-            sf = Stockframe.from_csv(f"ohlcv-1hr/{symbol}.csv", symbol, mult=1, timespan=Timespan.HOUR)
-            print("> len(sf) =", len(sf.df))
+            # sf = Stockframe.from_csv(f"ohlcv-1hr/{symbol}.csv", symbol, mult=1, timespan=Timespan.HOUR)
             sliced_df = df[df["symbol"] == symbol].copy()
             sliced_df.drop("symbol", axis=1, inplace=True)
-            new_df = pd.concat([sf.df, sliced_df], ignore_index=True)
-            del new_df["trade_count"]
-            del new_df["vwap"]
-            print(new_df)
-            print("\n\n> len(sf) =", len(sf.df))
-            print("> len(new_df) =", len(new_df))
+            # new_df = pd.concat([sf.df, sliced_df], ignore_index=True)
+            del sliced_df["trade_count"]
+            del sliced_df["vwap"]
 
-            new_df.to_csv(f"ohlcv-1hr/{symbol}_new.csv", index=False)
+            sliced_df.to_csv(f"ohlcv-1hr/{symbol}.csv", index=False)
 
 
 class HistoricalBroker:

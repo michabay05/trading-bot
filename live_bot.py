@@ -1,7 +1,3 @@
-from datetime import datetime
-from trbot.broker import LiveBroker
-from trbot.candles import Candle, Timespan
-from trbot.stockframe import Stockframe
 from trbot.strategy import Indicator, LiveStrategy
 
 class MyLiveStrat(LiveStrategy):
@@ -15,55 +11,40 @@ class MyLiveStrat(LiveStrategy):
         self.atr = self.add_indicator(
             Indicator(kind="atr", part=["high", "low", "close"], params={"timeperiod": 14})
         )
+        self.rr_ratio: int = 10
 
-        # self.fast_ma = self.TA_EMA(close, period=5)
-        # self.slow_ma = self.TA_EMA(close, period=10)
-        # self.atr = self.TA_ATR(high, low, close, period=14)
+    def calc_tp_sl(self, last_close: float, last_atr: float, long: bool) -> tuple[float, float]:
+        sl: float = 0.0
+        tp: float = 0.0
+        diff: float = last_atr
+        if long:
+            sl = last_close - diff
+            tp = last_close + (self.rr_ratio * diff)
+        else:
+            sl = last_close + diff
+            tp = last_close - (self.rr_ratio * diff)
 
-        # self.start: bool = False
-        # if len(close) >= self.max_warmup:
-        #     self.start = True
-
-        # self.rr_ratio = 10
-
-#     def calc_tp_sl(self, last_atr: float, long: bool) -> tuple[float, float]:
-#         sl: float = 0.0
-#         tp: float = 0.0
-#         diff: float = last_atr
-#         if long:
-#             sl = self.last_close - diff
-#             tp = self.last_close + (self.rr_ratio * diff)
-#         else:
-#             sl = self.last_close + diff
-#             tp = self.last_close - (self.rr_ratio * diff)
-
-#         return (tp, sl)
+        return (tp, sl)
 
     def on_candle(self) -> None:
-        pass
-#         if not self.start:
-#             print("Still in warm up phase")
-#             return
+        for symbol in self.symbols:
+            last_atr = self.last_ind_value(symbol, self.atr)
+            last_close = self.last_close(symbol)
+            sz: float = 0.1
+            if self.ind_crossover(symbol, self.fast_ma, self.slow_ma):
+                (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=True)
+                # sl = self.last_close - 5*last_atr
+                # tp = self.last_close + 10*last_atr
+                self.market_buy(symbol, size=sz, tp_limit=tp, sl_limit=sl)
+                print(f"[{symbol}] Going long...\n\n")
 
-#         last_atr = self.last_ind_value(self.atr)
-#         sz: float = 0.1
-#         if self.ind_crossover(self.fast_ma, self.slow_ma):
-#             (tp, sl) = self.calc_tp_sl(last_atr, long=True)
-#             # sl = self.last_close - 5*last_atr
-#             # tp = self.last_close + 10*last_atr
-#             self.market_buy(size=sz, tp_limit=tp, sl_limit=sl)
-#             print("Going long...\n\n")
-
-#         if self.ind_crossover(self.slow_ma, self.fast_ma):
-#             (tp, sl) = self.calc_tp_sl(last_atr, long=False)
-#             # sl = self.last_close + 5*last_atr
-#             # tp = self.last_close - 10*last_atr
-#             self.market_sell(size=sz, tp_limit=tp, sl_limit=sl)
-#             print("Going short...\n\n")
+            if self.ind_crossover(symbol, self.slow_ma, self.fast_ma):
+                (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=False)
+                # sl = self.last_close + 5*last_atr
+                # tp = self.last_close - 10*last_atr
+                self.market_sell(symbol, size=sz, tp_limit=tp, sl_limit=sl)
+                print(f"[{symbol}] Going short...\n\n")
 
 
 ls = MyLiveStrat()
-try:
-    ls.run()
-finally:
-    ls.on_ctrl_c()
+ls.run()

@@ -14,32 +14,43 @@ from alpaca.data.live.stock import StockDataStream
 
 from trbot import tbsecrets
 
-
 API_KEY: str = tbsecrets.ALPACA_SECRETS[0]["api_key"]
 SECRET_KEY: str = tbsecrets.ALPACA_SECRETS[0]["secret_key"]
 
-trade_client = TradingClient(API_KEY, SECRET_KEY)
-pos = trade_client.get_all_positions()
-print(pos)
+# ===================================================================
+# trade_client = TradingClient(API_KEY, SECRET_KEY)
+# pos = trade_client.get_all_positions()
+# print(pos)
 
-# df = pd.read_csv("test1.csv", index_col=["symbol", "timestamp"])
-# print(df)
+# ===================================================================
+import pandas as pd
+df = pd.read_csv("test1.csv", index_col=["symbol", "timestamp"])
+print(df)
 
-# df.reset_index(inplace=True)
-# symbols: set[str] = set(df["symbol"])
+df.reset_index(inplace=True)
+symbols: set[str] = set(df["symbol"])
 
-# for symbol in symbols:
-#     sliced_df = df[df["symbol"] == symbol].copy()
-#     sliced_df.drop("symbol", axis=1, inplace=True)
-#     sliced_df.to_csv(f"{symbol}.csv", index=False)
+for symbol in symbols:
+    sliced_df = df[df["symbol"] == symbol].copy()
+    del sliced_df["trade_count"]
+    del sliced_df["vwap"]
+    sliced_df.drop("symbol", axis=1, inplace=True)
+    sliced_df.to_csv(f"ohlcv-1hr/{symbol}.csv", index=False)
 
-# sliced_df = df.loc["AAPL", :]
-# print(sliced_df)
-# =========================== Ex. 1 ===========================
+# ===================================================================
+# import pandas as pd
+# import time
+
+# symbols = [
+#     "AAPL", "ABNB", "BBY", "DASH", "EBAY", "F", "GE", "GOOG", "HIMS", "HPQ",
+#     "INTC", "LOGI", "NIO", "NVDA", "NVDY", "PANW", "PEP", "PLTR", "QCOM", "ROST",
+#     "SHOP", "SMCI", "SPY", "TGT", "WMT", "XLF"
+# ]
+
 # stock_historical_data_client = StockHistoricalDataClient(API_KEY, SECRET_KEY, raw_data=False)
 # zone = ZoneInfo("America/New_York")
-# dt = datetime(year=2025, month=6, day=24, hour=9, minute=30)
-# start = dt - relativedelta(years=6, months=10)
+# dt = datetime.now()
+# start = dt - relativedelta(months=1)
 # end = dt
 # print(f"[{symbols}] {start} -> {end}")
 # req = StockBarsRequest(
