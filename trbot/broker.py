@@ -40,20 +40,118 @@ class Broker(ABC):
         pass
 
     @abstractmethod
-    def on_market_open(self) -> None:
-        pass
-
-    @abstractmethod
-    def on_market_close(self) -> None:
-        pass
-
-    @abstractmethod
     def execute_open_order(self, order: MarketOrder, last_close: float, curr_dt_str: str) -> None:
         pass
 
     @abstractmethod
     def execute_close_order(self, order: MarketOrder, last_close: float) -> None:
         pass
+
+
+class LiveBroker(Broker):
+    def __init__(self) -> None:
+        api_key: str = ALPACA_SECRETS[1]["api_key"]
+        secret_key: str = ALPACA_SECRETS[1]["secret_key"]
+        self._data_stream: StockDataStream = StockDataStream(api_key, secret_key)
+        self._trade_client: TradingClient = TradingClient(api_key, secret_key)
+        self._stock_historical_data_client = StockHistoricalDataClient(
+            api_key, secret_key, raw_data=False
+        )
+
+        # Initialize portfolio w/ initial cash amount
+        acct = self._trade_client.get_account()
+        if not isinstance(acct, TradeAccount):
+            raise TypeError(f"account was of type {type(acct)} instead of TradeAccount")
+
+        cash: str | None = acct.cash
+        if cash is None:
+            raise ValueError("`account.cash: str | None` was None.")
+
+        self._portfolio: Portfolio = Portfolio(initial_capital=float(cash))
+
+    @property
+    def portfolio(self) -> Portfolio:
+        return self._portfolio
+
+    def is_market_open(self, dt_str: str | None = None) -> bool:
+        clock = self._trade_client.get_clock()
+
+        if isinstance(clock, Clock):
+            return clock.is_open
+        else:
+            raise TypeError(f"`clock` was type `{type(clock)}` instead of `Clock`.")
+
+    def execute_open_order(self, order: MarketOrder, last_close: float, curr_dt_str: str) -> None:
+        tp = None
+        sl = None
+        if order.take_profit is not None:
+            tp = TakeProfitRequest(limit_price=order.take_profit.tp_limit)
+        if order.stop_loss is not None:
+            sl = StopLossRequest(stop_price=order.stop_loss.sl_limit)
+
+        req = MarketOrderRequest(
+            symbol=order.symbol,
+            qty=order.quantity,
+            side=OrderSide.BUY if order.is_long() else OrderSide.SELL,
+            type=OrderType.MARKET,
+            time_in_force=TimeInForce.DAY,
+            take_profit=tp,
+            stop_loss=sl,
+        )
+        _ = self._trade_client.submit_order(req)
+
+    def execute_close_order(self, order: MarketOrder, last_close: float) -> None:
+        self._trade_client.close_position(
+            order.symbol,
+            close_options=ClosePositionRequest(qty=str(order.quantity))
+        )
+
+    # NOTE: this could take a while, depending the time range supplied
+    def get_historical_candles(self,
+        symbols: list[str], start: datetime, end: datetime = datetime.now()
+    ) -> None:
+        zone = ZoneInfo("America/New_York")
+        req = StockBarsRequest(
+            symbol_or_symbols=symbols,
+            timeframe=TimeFrame(amount=1, unit=TimeFrameUnit.Hour),
+            start=start,
+            end=end
+        )
+
+        df: pd.DataFrame = pd.DataFrame()
+        try:
+            t: float = time.time()
+            bars: BarSet | RawData = self._stock_historical_data_client.get_stock_bars(req)
+            if not isinstance(bars, BarSet):
+                raise TypeError(f"Expected `bars` to be of type BarSet, got {type(bars)}")
+
+            diff: float = time.time() - t
+            print(f"Took {diff:.4f}s to gather bars")
+            df = bars.df.copy()
+        except Exception as e:
+            print(e)
+
+        # Reset index to make it a regular column
+        df.reset_index(inplace=True)
+        # Modify the timestamp column
+        df["timestamp"] = df["timestamp"].apply(
+            lambda x: datetime.fromisoformat(str(x)).astimezone(zone)
+        )
+
+        uniq_symbols: set[str] = set(df["symbol"])
+        for symbol in uniq_symbols:
+            sf = Stockframe.from_csv(f"ohlcv-1hr/{symbol}.csv", symbol, mult=1, timespan=Timespan.HOUR)
+            print("> len(sf) =", len(sf.df))
+            sliced_df = df[df["symbol"] == symbol].copy()
+            sliced_df.drop("symbol", axis=1, inplace=True)
+            new_df = pd.concat([sf.df, sliced_df], ignore_index=True)
+            del new_df["trade_count"]
+            del new_df["vwap"]
+            print(new_df)
+            print("\n\n> len(sf) =", len(sf.df))
+            print("> len(new_df) =", len(new_df))
+
+            new_df.to_csv(f"ohlcv-1hr/{symbol}_new.csv", index=False)
 
 
 class HistoricalBroker:
@@ -188,114 +286,6 @@ class HistoricalBroker:
         position: Position = portfolio.positions[order.symbol]
         portfolio.capital += position.quantity * last_close
         del portfolio.positions[order.symbol]
-
-class LiveBroker(Broker):
-    def __init__(self) -> None:
-        self._api_key: str = ALPACA_SECRETS[0]["api_key"]
-        self._secret_key: str = ALPACA_SECRETS[0]["secret_key"]
-        self._data_stream: StockDataStream = StockDataStream(self._api_key, self._secret_key)
-        self._trade_client: TradingClient = TradingClient(self._api_key, self._secret_key)
-
-        # Initialize portfolio w/ initial cash amount
-        acct = self._trade_client.get_account()
-        if not isinstance(acct, TradeAccount):
-            raise TypeError(f"account was of type {type(acct)} instead of TradeAccount")
-
-        cash: str | None = acct.cash
-        if cash is None:
-            raise ValueError("`account.cash: str | None` was None.")
-
-        self._portfolio: Portfolio = Portfolio(initial_capital=float(cash))
-
-    @property
-    def portfolio(self) -> Portfolio:
-        return self._portfolio
-
-    def is_market_open(self, dt_str: str | None = None) -> bool:
-        clock = self._trade_client.get_clock()
-
-        if isinstance(clock, Clock):
-            return clock.is_open
-        else:
-            raise TypeError(f"`clock` was type `{type(clock)}` instead of `Clock`.")
-
-    def on_market_open(self) -> None:
-        raise NotImplementedError("LiveBroker.on_market_open")
-
-    def on_market_close(self) -> None:
-        raise NotImplementedError("LiveBroker.on_market_close")
-
-    def execute_open_order(self, order: MarketOrder, last_close: float, curr_dt_str: str) -> None:
-        tp = None
-        sl = None
-        if order.take_profit is not None:
-            tp = TakeProfitRequest(limit_price=order.take_profit.tp_limit)
-        if order.stop_loss is not None:
-            sl = StopLossRequest(stop_price=order.stop_loss.sl_limit)
-
-        req = MarketOrderRequest(
-            symbol=order.symbol,
-            qty=order.quantity,
-            side=OrderSide.BUY if order.is_long() else OrderSide.SELL,
-            type=OrderType.MARKET,
-            time_in_force=TimeInForce.DAY,
-            take_profit=tp,
-            stop_loss=sl,
-        )
-        _ = self._trade_client.submit_order(req)
-
-    def execute_close_order(self, order: MarketOrder, last_close: float) -> None:
-        self._trade_client.close_position(
-            order.symbol,
-            close_options=ClosePositionRequest(qty=str(order.quantity))
-        )
-
-    # NOTE: this could take a while, depending the time range supplied
-    def get_historical_candles(self,
-        symbols: list[str], start: datetime, end: datetime = datetime.now()
-    ) -> None:
-        stock_historical_data_client = StockHistoricalDataClient(self._api_key, self._secret_key, raw_data=False)
-        zone = ZoneInfo("America/New_York")
-        req = StockBarsRequest(
-            symbol_or_symbols=symbols,
-            timeframe=TimeFrame(amount=1, unit=TimeFrameUnit.Hour),
-            start=start,
-            end=end
-        )
-
-        df: pd.DataFrame = pd.DataFrame()
-        try:
-            t: float = time.time()
-            bars: BarSet | RawData = stock_historical_data_client.get_stock_bars(req)
-            if not isinstance(bars, BarSet):
-                raise TypeError(f"Expected `bars` to be of type BarSet, got {type(bars)}")
-
-            diff: float = time.time() - t
-            print(f"Took {diff:.4f}s to gather bars")
-            df = bars.df.copy()
-        except Exception as e:
-            print(e)
-
-        # Reset index to make it a regular column
-        df.reset_index(inplace=True)
-        # Modify the timestamp column
-        df["timestamp"] = df["timestamp"].apply(
-            lambda x: datetime.fromisoformat(str(x)).astimezone(zone)
-        )
-
-        uniq_symbols: set[str] = set(df["symbol"])
-        for symbol in uniq_symbols:
-            sf = Stockframe.from_csv(f"ohlcv-1hr/{symbol}.csv", symbol, mult=1, timespan=Timespan.HOUR)
-            print("> len(sf) =", len(sf.df))
-            sliced_df = df[df["symbol"] == symbol].copy()
-            sliced_df.drop("symbol", axis=1, inplace=True)
-            new_df = pd.concat([sf.df, sliced_df], ignore_index=True)
-            print(new_df)
-            print("\n\n> len(sf) =", len(sf.df))
-            print("> len(new_df) =", len(new_df))
-
-            new_df.to_csv(f"ohlcv-1hr/{symbol}.csv", index=False)
-
 
 # ============================ POLYGON.IO-specific ============================
 _BASE_URL: str = "https://api.polygon.io"

@@ -15,5 +15,6 @@
     "reportUnnecessaryContains": "warning",
     "reportRedundantExpr": "warning",
     "reportConstantRedefinition": "arning",
-    "reportWildcardImportFromLibrary": "warning"
+    "reportWildcardImportFromLibrary": "warning",
+    "reportMatchNotExhaustive": "warning"
 }

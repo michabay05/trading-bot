@@ -39,14 +39,6 @@ class Timespan(Enum):
     HOUR = "hour"
     DAY = "day"
 
-    @staticmethod
-    def from_str(name: str) -> 'Timespan':
-        ts = Timespan[name]
-        if ts:
-            return ts
-        else:
-            raise KeyError(f"Unknown timespan: {name}")
-
     def to_seconds(self) -> int:
         if self == Timespan.DAY:
             # (1 day) * (24hr/day) * (60min/hr) * (60s/min)
@@ -65,7 +57,6 @@ class Timespan(Enum):
 
     def __str__(self):
         return self.value
-
 
 @dataclass
 class CandleOption:

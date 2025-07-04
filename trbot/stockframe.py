@@ -44,6 +44,10 @@ class Stockframe:
         sf._df = pd.read_csv(filepath, index_col=False)
         if "datetime" in sf._df.columns:
             sf._df.rename(columns={"datetime": "timestamp"}, inplace=True)
+        if "trade_count" in sf._df.columns:
+            del sf._df["trade_count"]
+        if "vwap" in sf._df.columns:
+            del sf._df["vwap"]
 
         sf.parse_timestamp("timestamp")
         return sf
@@ -54,6 +58,7 @@ class Stockframe:
         return output
 
     def parse_timestamp(self, col_name: str, replace: bool = True) -> None:
+        # TODO: replace this with `self._df.apply(lambda x: ...)`
         self._formatted_dts: list[datetime] = []
         for dt_str in self._df[col_name]:
             self._formatted_dts.append(
@@ -68,17 +73,6 @@ class Stockframe:
             candles.candles_outpath(outdir, self.symbol, self.mult, self.timespan),
             index=False
         )
-
-    def append_candle(self, cnd: Candle) -> None:
-        # columns=["timestamp", "open", "high", "low", "close", "volume"],
-        self._df.loc[len(self._df)] = [
-            cnd.timestamp,
-            cnd.open,
-            cnd.high,
-            cnd.low,
-            cnd.close,
-            cnd.volume,
-        ]
 
     @property
     def df(self):
@@ -100,5 +94,5 @@ class Stockframe:
         return self._df["low"].to_numpy()
 
     @property
-    def timestamp(self) -> list[datetime]:
+    def timestamp_series(self) -> list[datetime]:
         return self._formatted_dts

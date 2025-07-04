@@ -12,6 +12,11 @@ A list of all the TODOs needed to be completed before each release
     - Robinhood
     - Interactive brokers
 - Pattern Day Trading??
+    - Definition: "A pattern day trader (PDT) is a regulatory designation for those traders or
+      investors who execute four or more day trades over the span of five business days using a
+      margin account. The number of day trades must constitute more than 6% of the margin account's
+      total trade activity during that five-business-day window."
+- Research "A fluid stop loss candlestick structure"
 
 ## Future versions
 - [ ] (feat) Factor risk tolerance into strategy
@@ -44,8 +49,12 @@ A list of all the TODOs needed to be completed before each release
 ---
 
 ## v0.8
-- [ ] (feat) Handle warmup for live trading
-- [x] (feat) Implement aggregation of dataframe, (specifically 1min to 1hr)
+- [x] (feat) Handle warmup for live trading
+- [x] (fix) Restructure indicator value storage mechanism
+    - The old system was based on the historical backtester, which caused the live strategy to miss
+      trading opportunities.
+- [ ] (feat) Restructure stockframe such that it can adapt to a single or multiple symbols
+- [ ] (feat) Implement aggregation of candle data (specifically 1min to 1hr)
 - [ ] (feat) Sync local portfolio with remote portfolio for live paper trading
     - [ ] Cash
     - [ ] Open positions
@@ -62,6 +71,7 @@ A list of all the TODOs needed to be completed before each release
         - [ ] Sync portfolio
 - [ ] (feat) Take advantage of next open and next close from alpaca's Trading clock
     - Then, I would only have to ping alpaca once a day on market open instead on every new minute bar
+- [ ] (feat) Use `yfinance` as a source for market data
 
 ## v0.7
 - [x] (feat) Add rendering for non-overlayed indicators like RSI, MACD
