@@ -48,6 +48,10 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Consider replacing my custom backtester with either one of these python libraries
     - `backtesting.py`
     - `vectorbt`
+- [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
+- [ ] (fix) Recheck and fix all the broken parts of the strategy tester
+- [ ] (feat) Restructure stockframe such that it can adapt to a single or multiple symbols
+- [ ] (refactor) Update the indicator system in the candle visualizer to use the `Indicator` type
 
 ---
 
@@ -59,25 +63,23 @@ A list of all the TODOs needed to be completed before each release
 - [x] (feat | fix) Live data parsing
     - Instead of appending to a dataframe, append to a list. Adding the candles to a dataframe will
       happen on market close.
-- [ ] (feat) Restructure stockframe such that it can adapt to a single or multiple symbols
 - [x] (feat) Implement aggregation of candle data (specifically 1min to 1hr)
-- [ ] (feat) Sync local portfolio with remote portfolio for live paper trading
+- [x] (feat) Sync local portfolio with remote portfolio for live paper trading
     - [x] Cash
-    - [ ] Open positions
-    - [ ] Closed positions
+    - [x] Open orders
+    - [x] Open positions
+- [x] Sync positions every time a position is a LONG or SHORT order is created
 - [x] (feat) Add ability to update historical candle csv
-- [ ] (feat) Implement the following:
-    - [ ] (feat) Add functions that run on market open and market close
-    - [ ] On market open, run the following:
+- [x] (feat) Implement the following:
+    - [x] (feat) Add functions that run on market open and market close
+    - [x] On market open, run the following:
+        - [x] Setup indicators used in strategy
         - [x] Load into memory the necessary historical candle csv
-        - [ ] Sync portfolio
-    - [ ] On market close, run the following
-        - [ ] (feat) Add daily hourly candles to the existing list of historical candles
-        - [ ] (feat) Find out the next market open time
-        - [ ] Sync portfolio
-- [ ] (feat) Take advantage of next open and next close from alpaca's Trading clock
+    - [x] On market close, run the following
+        - [x] (feat) Brings historical data up to date
+        - [x] (feat) Find out the next market open time and sleep until then
+- [x] (feat) Using alpaca's next open, make the bot sleep until the next market open
     - Then, I would only have to ping alpaca once a day on market open instead on every new minute bar
-- [ ] (feat) Use `yfinance` as a source for market data
 
 ## v0.7
 - [x] (feat) Add rendering for non-overlayed indicators like RSI, MACD

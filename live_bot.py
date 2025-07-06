@@ -1,4 +1,5 @@
 from trbot.strategy import Indicator, LiveStrategy
+from trbot.portfolio import MarketOrder
 
 class MyLiveStrat(LiveStrategy):
     def setup(self) -> None:
@@ -26,7 +27,7 @@ class MyLiveStrat(LiveStrategy):
 
         return (tp, sl)
 
-    def on_candle(self) -> None:
+    def on_candle(self) -> MarketOrder | None:
         for symbol in self.symbols:
             last_atr = self.last_ind_value(symbol, self.atr)
             last_close = self.last_close(symbol)
@@ -35,16 +36,15 @@ class MyLiveStrat(LiveStrategy):
                 (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=True)
                 # sl = self.last_close - 5*last_atr
                 # tp = self.last_close + 10*last_atr
-                self.market_buy(symbol, size=sz, tp_limit=tp, sl_limit=sl)
                 print(f"[{symbol}] Going long...\n\n")
-
-            if self.ind_crossover(symbol, self.slow_ma, self.fast_ma):
+                return self.market_buy(symbol, size=sz, tp_limit=tp, sl_limit=sl)
+            elif self.ind_crossover(symbol, self.slow_ma, self.fast_ma):
                 (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=False)
                 # sl = self.last_close + 5*last_atr
                 # tp = self.last_close - 10*last_atr
-                self.market_sell(symbol, size=sz, tp_limit=tp, sl_limit=sl)
                 print(f"[{symbol}] Going short...\n\n")
+                return self.market_sell(symbol, size=sz, tp_limit=tp, sl_limit=sl)
 
 
 ls = MyLiveStrat()
-ls.run()
+ls.start()
