@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field
 from abc import abstractmethod
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from typing import Callable, Any, Literal
 from zoneinfo import ZoneInfo
+import time
 
 import numpy as np
 from numpy.typing import NDArray
@@ -14,7 +15,7 @@ from alpaca.data.models.bars import Bar
 from trbot.candles import Candle, Timespan
 from .broker import HistoricalBroker, LiveBroker
 from .replayer import CandleReplayer
-from .portfolio import OrderIntent, OrderSide, Portfolio, MarketOrder, StopLossTrigger, TakeProfitTrigger
+from .portfolio import OrderIntent, OrderDir, Portfolio, MarketOrder, StopLossTrigger, TakeProfitTrigger
 from .stockframe import Stockframe
 
 
@@ -110,6 +111,7 @@ class LiveStrategy:
         self._live_data: dict[str, _LiveData] = {}
         for sym in self.symbols:
             self._live_data[sym] = _LiveData()
+        self._conn_alive: bool = False
 
         self._indicators: set[Indicator] = set()
         self._max_period: int = 0
@@ -151,32 +153,49 @@ class LiveStrategy:
     def _on_market_open(self) -> None:
         self.setup()
         self._init_all_live_data()
-        self.broker._data_stream.run()
-        raise NotImplementedError("LiveStrategy.on_market_open")
+
+        if not self._conn_alive:
+            self._conn_alive = True
+            self.broker._data_stream.run()
 
     def _on_market_close(self) -> None:
-        self.broker._data_stream.stop()
-        print("Market officially closed...")
+        if self._conn_alive:
+            self.broker._data_stream.stop()
+            self._conn_alive = False
+
         # Bring historical data up to date
         start = datetime.now() - relativedelta(months=1)
         self.broker.export_historical_candles(ALL_SYMBOLS, start)
 
-    def run(self) -> None:
+        zone: ZoneInfo = ZoneInfo("America/New_York")
+        status: dict = self.broker.get_market_status()
+        next_open: datetime = status["next_open"]
+        diff = (next_open - datetime.now(tz=zone)) + timedelta(seconds=5)
+        print(f"Next market open: {next_open}")
+        print(f"Sleeping for {str(diff)}...")
+        time.sleep(diff.total_seconds())
+
+        self.start()
+
+    def start(self) -> None:
         self.broker._data_stream.subscribe_bars(
             self._stock_data_stream_handler, *self.symbols
         )
-        assert self._broker.is_market_open(), (
-            f"[ERROR] Market is not open yet! Rerun this program once it is."
-        )
 
-        self._on_market_open()
+        status: dict = self.broker.get_market_status()
+        if status["is_open"]:
+            # Market is currently open
+            self._on_market_open()
+        else:
+            # Market is currently closed
+            self._on_market_close()
 
     async def _stock_data_stream_handler(self, bar: Bar | dict) -> None:
         if isinstance(bar, dict):
             # I have no idea what is inside this dict
             raise ValueError(f"data is of type {type(bar)}, expected type `Bar`")
 
-        if not self._broker.is_market_open():
+        if not self.broker.get_market_status()["is_open"]:
             # Market is closed
             self._on_market_close()
 
@@ -205,12 +224,16 @@ class LiveStrategy:
             hour_cnd: Candle = self._aggregate_min_cnds(bar.symbol)
             ld.add_agg(hour_cnd)
             print(f"\n\nHour: {hour_cnd}\n\n")
+
             # ... recalculate the indicator values, ...
             for ind in self._indicators:
                 ld.update_indicator(ind.name(), ind.compute_values(ld.agg_cnds))
 
             # ... and apply strategy on the new target-timespan candle
-            self.on_candle()
+            order: MarketOrder | None = self.on_candle()
+            if order is not None:
+                self.broker.sync_portfolio()
+                self.broker.execute_open_order(order, self.last_close(bar.symbol), self.curr_dt_str)
 
     @abstractmethod
     def setup(self) -> None:
@@ -218,7 +241,7 @@ class LiveStrategy:
         pass
 
     @abstractmethod
-    def on_candle(self) -> None:
+    def on_candle(self) -> MarketOrder | None:
         """ Called on each new candle """
         pass
 
@@ -248,7 +271,7 @@ class LiveStrategy:
 
     def market_buy(self, symbol: str,
         size: float, tp_limit: float | None = None, sl_limit: float | None = None
-    ) -> None:
+    ) -> MarketOrder:
         assert size > 0, "Negative size provided. (size > 0)"
         assert symbol in self.symbols, f"Provided ({symbol}) is not in list of symbols ({self.symbols})"
 
@@ -260,8 +283,8 @@ class LiveStrategy:
 
         mkt_ord: MarketOrder = MarketOrder(
             symbol=symbol,
-            side=OrderSide.LONG,
-            quantity=size,
+            side=OrderDir.LONG,
+            requested_qty=size,
             requested_price=last_close,
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.BUY_TO_OPEN
@@ -277,11 +300,11 @@ class LiveStrategy:
                 intent=mkt_ord.intent.opp_close()
             )
 
-        self.broker.execute_open_order(mkt_ord, last_close, self.curr_dt_str)
+        return mkt_ord
 
     def market_sell(self, symbol: str,
         size: float, tp_limit: float | None = None, sl_limit: float | None = None
-    ) -> None:
+    ) -> MarketOrder:
         assert size > 0, "Negative size provided. (size > 0)"
         assert symbol in self.symbols, f"Provided ({symbol}) is not in list of symbols ({self.symbols})"
 
@@ -293,8 +316,8 @@ class LiveStrategy:
 
         mkt_ord: MarketOrder = MarketOrder(
             symbol=symbol,
-            side=OrderSide.SHORT,
-            quantity=size,
+            side=OrderDir.SHORT,
+            requested_qty=size,
             requested_price=last_close,
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.SELL_TO_OPEN
@@ -310,7 +333,7 @@ class LiveStrategy:
                 intent=mkt_ord.intent.opp_close()
             )
 
-        self.broker.execute_open_order(mkt_ord, last_close, self.curr_dt_str)
+        return mkt_ord
 
     def _aggregate_min_cnds(self, symbol: str) -> Candle:
         """ Aggregate minute candles into a single candle w/ the target timespan """

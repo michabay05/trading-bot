@@ -6,10 +6,10 @@ import json, sys, time
 from alpaca.data import RawData
 from alpaca.data.live.stock import StockDataStream
 from alpaca.trading.client import TradingClient
-from alpaca.trading.enums import OrderSide, OrderType, TimeInForce
+from alpaca.trading.enums import OrderSide, OrderStatus, OrderType, QueryOrderStatus, TimeInForce
 from alpaca.trading.models import Clock, TradeAccount
 from alpaca.data.models import BarSet
-from alpaca.trading.requests import ClosePositionRequest, MarketOrderRequest, StopLossRequest, TakeProfitRequest
+from alpaca.trading.requests import ClosePositionRequest, GetOrdersRequest, MarketOrderRequest, StopLossRequest, TakeProfitRequest
 from alpaca.data.historical.stock import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame, TimeFrameUnit
@@ -19,8 +19,7 @@ import pandas as pd
 from . import candles, tbsecrets
 from .tbsecrets import ALPACA_SECRETS
 from .candles import Candle, CandleOption, Timespan
-from .portfolio import Portfolio, MarketOrder, OrderStatus, Position
-from .stockframe import Stockframe
+from .portfolio import OrderDir, TBOrder, Portfolio, MarketOrder, OrderState, Position
 
 
 class InsufficientFundsError(Exception):
@@ -34,10 +33,6 @@ class Broker(ABC):
     def portfolio(self) -> Portfolio:
         pass
     ## ============= PROPERTIES USED IN THESE ABSTRACT CLASS (ABOVE) ============= ##
-
-    @abstractmethod
-    def is_market_open(self, dt_str: str | None) -> bool:
-        pass
 
     @abstractmethod
     def execute_open_order(self, order: MarketOrder, last_close: float, curr_dt_str: str) -> None:
@@ -61,7 +56,7 @@ class LiveBroker(Broker):
         self.sync_portfolio()
 
     def sync_portfolio(self):
-        # Initialize portfolio w/ initial cash amount
+        # Sync w/ remote's available cash
         acct = self._trade_client.get_account()
         if not isinstance(acct, TradeAccount):
             raise TypeError(f"account was of type {type(acct)} instead of TradeAccount")
@@ -70,17 +65,57 @@ class LiveBroker(Broker):
         if cash is None:
             raise ValueError("`account.cash: str | None` was None.")
 
-        self._portfolio = Portfolio(initial_capital=float(cash))
+        self._portfolio.cash = float(cash)
+
+        # Sync w/ remote's open orders
+        open_orders = self._trade_client.get_orders(filter=GetOrdersRequest(status=QueryOrderStatus.OPEN))
+        if not isinstance(open_orders, list):
+            raise TypeError(f"open_orders was of type {type(open_orders)} instead of list[Order]")
+
+        orders = []
+        for ord in open_orders:
+            # TODO: Add more details here. alpaca differentiates between `Order` and `OrderRequest`
+            #       My order class models the OrderRequest class rather than the `Order`
+            d = {
+                "symbol": ord.symbol,
+                "side": OrderDir.LONG if ord.side == OrderSide.BUY else OrderDir.SHORT,
+                "status": OrderState.FILLED if ord.status == OrderStatus.FILLED else OrderState.WORKING,
+                "requested_qty": ord.qty,
+                "purchase_dt": ord.filled_at,
+                "purchase_qty": ord.filled_qty,
+            }
+            orders.append(TBOrder(**d))
+
+        # Sync w/ remote's open positions
+        open_positions = self._trade_client.get_all_positions()
+        if not isinstance(open_positions, list):
+            raise TypeError(f"open_position was of type {type(acct)} instead of list[Position]")
+
+        positions: dict[str, Position] = {}
+        for pos in open_positions:
+            d = {
+                "symbol": pos.symbol,
+                "qty": float(pos.qty),
+                "price": pos.current_price,
+                "side": pos.side,
+            }
+            positions[d["symbol"]] = Position(**d)
+
+        self._portfolio.positions = positions
 
     @property
     def portfolio(self) -> Portfolio:
         return self._portfolio
 
-    def is_market_open(self, dt_str: str | None = None) -> bool:
+    def get_market_status(self) -> dict:
         clock = self._trade_client.get_clock()
 
         if isinstance(clock, Clock):
-            return clock.is_open
+            return {
+                "is_open": clock.is_open,
+                "next_open": clock.next_open,
+                "next_close": clock.next_close
+            }
         else:
             raise TypeError(f"`clock` was type `{type(clock)}` instead of `Clock`.")
 
@@ -94,7 +129,7 @@ class LiveBroker(Broker):
 
         req = MarketOrderRequest(
             symbol=order.symbol,
-            qty=order.quantity,
+            qty=order.requested_qty,
             side=OrderSide.BUY if order.is_long() else OrderSide.SELL,
             type=OrderType.MARKET,
             time_in_force=TimeInForce.DAY,
@@ -106,7 +141,7 @@ class LiveBroker(Broker):
     def execute_close_order(self, order: MarketOrder, last_close: float) -> None:
         self._trade_client.close_position(
             order.symbol,
-            close_options=ClosePositionRequest(qty=str(order.quantity))
+            close_options=ClosePositionRequest(qty=str(order.requested_qty))
         )
 
     # NOTE: this could take a while, depending the time range supplied
@@ -178,14 +213,14 @@ class HistoricalBroker:
                 if tp_crossed:
                     tp_order: MarketOrder = MarketOrder(
                         symbol=order.symbol,
-                        quantity=order.quantity,
+                        requested_qty=order.requested_qty,
                         side=order.side.opposite(),
                         requested_price=last_close,
                         requested_dt=curr_dt_str,
                         intent=order.take_profit.intent
                     )
                     self.execute_close_order(tp_order, pft, last_close)
-                    assert tp_order.status != OrderStatus.FILLED
+                    assert tp_order.status != OrderState.FILLED
                     # Update info about when and at what price the take profit took place
                     order.take_profit.purchase_dt = curr_dt_str
                     order.take_profit.purchase_price = last_close
@@ -198,14 +233,14 @@ class HistoricalBroker:
                 if sl_crossed:
                     sl_order: MarketOrder = MarketOrder(
                         symbol=order.symbol,
-                        quantity=order.quantity,
+                        requested_qty=order.requested_qty,
                         side=order.side.opposite(),
                         requested_price=last_close,
                         requested_dt=curr_dt_str,
                         intent=order.stop_loss.intent
                     )
                     self.execute_close_order(sl_order, pft, last_close)
-                    assert sl_order.status != OrderStatus.FILLED
+                    assert sl_order.status != OrderState.FILLED
                     # Update info about when and at what price the take profit took place
                     order.stop_loss.purchase_dt = curr_dt_str
                     order.stop_loss.purchase_price = last_close
@@ -220,7 +255,7 @@ class HistoricalBroker:
             # In essence, buy as much shares as possible with this amount:
             #   >> size * portfolio.capital
             pct: float = size
-            order_value: float = pct * portfolio.capital
+            order_value: float = pct * portfolio.cash
             qty = order_value / last_close
         else:
             qty = size
@@ -233,25 +268,25 @@ class HistoricalBroker:
         # NOTE: this method only handles orders with the intent of opening a position
         assert order.is_to_open()
 
-        if order.status != OrderStatus.WORKING:
+        if order.status != OrderState.WORKING:
             # The order has been completed already
             return
 
         if not self.is_market_open(curr_dt_str):
             # if market not open, then status won't be executed. that will happen once the market reopens
-            order.status = OrderStatus.WORKING
+            order.status = OrderState.WORKING
             return
 
-        order.quantity = self._validate_quantity(order.quantity, last_close, portfolio)
-        requested_value = order.quantity * order.requested_price
-        if portfolio.capital < requested_value:
+        order.requested_qty = self._validate_quantity(order.requested_qty, last_close, portfolio)
+        requested_value = order.requested_qty * order.requested_price
+        if portfolio.cash < requested_value:
             # Order cancelled due to insufficient funds (Update order status)
-            raise InsufficientFundsError(f"(Capital: ${portfolio.capital:.4f}, order total: ${requested_value})")
+            raise InsufficientFundsError(f"(Capital: ${portfolio.cash:.4f}, order total: ${requested_value})")
 
         # Subtract order from total and update portfolio's positions
-        portfolio.capital = portfolio.capital - requested_value
+        portfolio.cash = portfolio.cash - requested_value
         # Update order status
-        order.status = OrderStatus.FILLED
+        order.status = OrderState.FILLED
         order.purchase_dt = curr_dt_str
         order.purchase_price = last_close
         portfolio.add_orders(order)
@@ -266,7 +301,7 @@ class HistoricalBroker:
         else:
             # New position was justed created
             portfolio.positions[order.symbol] = Position(
-                order.symbol, order.quantity, order.requested_price
+                order.symbol, order.requested_qty, order.requested_price
             )
 
         if order.take_profit is not None:
@@ -280,7 +315,7 @@ class HistoricalBroker:
             return
 
         position: Position = portfolio.positions[order.symbol]
-        portfolio.capital += position.quantity * last_close
+        portfolio.cash += position.quantity * last_close
         del portfolio.positions[order.symbol]
 
 # ============================ POLYGON.IO-specific ============================

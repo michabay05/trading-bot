@@ -1,13 +1,35 @@
 from enum import Enum
-from dataclasses import dataclass, asdict, field
+from dataclasses import asdict, dataclass, field
 import json, os
 
 
+class OrderType(Enum):
+    MARKET = "market"
+
+class OrderDir(Enum):
+    LONG = "long"
+    SHORT = "short"
+
+    def opposite(self) -> 'OrderDir':
+        if self == OrderDir.LONG:
+            return OrderDir.SHORT
+        elif self == OrderDir.SHORT:
+            return OrderDir.LONG
+        else:
+            raise ValueError(f"Unknown side: {self.value}")
+
+
+class OrderState(Enum):
+    FILLED = "filled"
+    WORKING = "working"
+
+
+@dataclass
 class Position:
-    def __init__(self, symbol: str, quantity: float, price: float) -> None:
-        self.symbol: str = symbol
-        self.quantity: float = quantity
-        self.price: float = price
+    symbol: str
+    quantity: float
+    price: float
+    side: OrderDir
 
     def market_value(self) -> float:
         return self.quantity * self.price
@@ -15,33 +37,11 @@ class Position:
     def close(self) -> None:
         pass
 
-    @staticmethod
-    def to_dict(pst: 'Position') -> dict:
-        return {
-            "quantity": pst.quantity,
-            "price": pst.price,
-        }
+    def to_dict(self) -> dict:
+        d = asdict(self)
+        d["side"] = self.side.value
+        return d
 
-
-class OrderType(Enum):
-    MARKET = "market"
-
-class OrderSide(Enum):
-    LONG = "long"
-    SHORT = "short"
-
-    def opposite(self) -> 'OrderSide':
-        if self == OrderSide.LONG:
-            return OrderSide.SHORT
-        elif self == OrderSide.SHORT:
-            return OrderSide.LONG
-        else:
-            raise ValueError(f"Unknown side: {self.value}")
-
-class OrderStatus(Enum):
-    FILLED = "filled"
-    EXPIRED = "expired"
-    WORKING = "working"
 
 class OrderIntent(Enum):
     BUY_TO_OPEN = "buy_to_open"
@@ -95,16 +95,17 @@ class StopLossTrigger:
 ORDER_ID_COUNTER: int = 0
 
 @dataclass
-class _Order:
+class TBOrder:
     symbol: str
-    quantity: float
-    side: OrderSide
+    side: OrderDir
+    requested_qty: float
     requested_price: float
     requested_dt: str
     intent: OrderIntent
     type: OrderType
     id: int = field(init=False)
-    status: OrderStatus = OrderStatus.WORKING
+    status: OrderState = OrderState.WORKING
+    purchase_qty: float | None = None
     purchase_dt: str | None = None
     purchase_price: float | None = None
     take_profit: TakeProfitTrigger | None = None
@@ -135,7 +136,7 @@ class _Order:
         super().__setattr__(name, value)
 
     def is_long(self) -> bool:
-        return self.side == OrderSide.LONG
+        return self.side == OrderDir.LONG
 
     def is_to_open(self) -> bool:
         return (
@@ -150,10 +151,10 @@ class _Order:
         )
 
     def __repr__(self) -> str:
-        return json.dumps(_Order.to_dict(self), indent=4)
+        return json.dumps(TBOrder.to_dict(self), indent=4)
 
     @staticmethod
-    def to_dict(ord: '_Order') -> dict:
+    def to_dict(ord: 'TBOrder') -> dict:
         d = asdict(ord)
         d["side"] = ord.side.value
         d["type"] = ord.type.value
@@ -164,16 +165,17 @@ class _Order:
         return d
 
 @dataclass
-class MarketOrder(_Order):
+class MarketOrder(TBOrder):
     type: OrderType = OrderType.MARKET
 
 
 class Portfolio:
     def __init__(self, initial_capital: float = 1000.0) -> None:
         self._initial_capital: float = initial_capital
-        self._capital: float = self._initial_capital
+        self._cash: float = self._initial_capital
+        # Stores currently open positions
         self._positions: dict[str, Position] = {}
-        self._orders: list[_Order] = []
+        self._orders: list[TBOrder] = []
         self._pl: float = 0.0
         self._capital_pct: float = 0.0
 
@@ -188,28 +190,32 @@ class Portfolio:
         return self._capital_pct
 
     @property
-    def capital(self) -> float:
-        return self._capital
+    def cash(self) -> float:
+        return self._cash
 
-    @capital.setter
-    def capital(self, value: float) -> None:
-        self._capital = value
+    @cash.setter
+    def cash(self, value: float) -> None:
+        self._cash = value
 
     @property
     def positions(self) -> dict[str, Position]:
         return self._positions
 
+    @positions.setter
+    def positions(self, new_positions: dict[str, Position]) -> None:
+        self._positions = new_positions
+
     @property
-    def orders(self) -> list[_Order]:
+    def orders(self) -> list[TBOrder]:
         return self._orders
 
-    def add_orders(self, order: _Order) -> None:
+    def add_orders(self, order: TBOrder) -> None:
         self._orders.append(order)
 
     def __repr__(self) -> str:
         return json.dumps(Portfolio.to_dict(self), indent=4)
 
-    def find_order_by_id(self, id: int) -> _Order | None:
+    def find_order_by_id(self, id: int) -> TBOrder | None:
         for ord in self._orders:
             if ord.id == id:
                 return ord
@@ -227,18 +233,14 @@ class Portfolio:
 
         with open(filepath, "r") as f:
             root = json.load(f)
-            self._capital = float(root["capital"])
+            self._cash = float(root["capital"])
             psts: dict[str, Position] = {}
             for k, v in root["positions"].items():
-                psts[k] = Position(
-                    symbol=k,
-                    quantity=float(v["quantity"]),
-                    price=float(v["price"]),
-                )
+                psts[k] = Position(**v)
 
-            ords: list[_Order] = []
+            ords: list[TBOrder] = []
             for ord in root["orders"]:
-                ords.append(_Order(**ord))
+                ords.append(TBOrder(**ord))
 
         self._positions = psts
         self._orders = ords
@@ -247,7 +249,7 @@ class Portfolio:
     @staticmethod
     def to_dict(pft: 'Portfolio') -> dict:
         return {
-            "capital": pft.capital,
+            "capital": pft.cash,
             "pl": pft.pl,
             "capital_pct": pft._capital_pct,
             "position_count": len(pft.positions),
@@ -256,7 +258,7 @@ class Portfolio:
                 symbol: Position.to_dict(position)
                 for symbol, position in pft.positions.items()
             },
-            "orders": [ _Order.to_dict(ord) for ord in pft.orders ]
+            "orders": [ TBOrder.to_dict(ord) for ord in pft.orders ]
         }
 
     def update_pl(self):
@@ -264,5 +266,5 @@ class Portfolio:
         for pst in self.positions.values():
             pst_total += abs(pst.market_value())
 
-        self._pl = (self._capital + pst_total) - self._initial_capital
-        self._capital_pct = 100.0 * (self._capital / self._initial_capital)
+        self._pl = (self._cash + pst_total) - self._initial_capital
+        self._capital_pct = 100.0 * (self._cash / self._initial_capital)
