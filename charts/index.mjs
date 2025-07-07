@@ -1,5 +1,5 @@
 import { createChart, CandlestickSeries, LineSeries, BaselineSeries, HistogramSeries, } from "./node_modules/lightweight-charts/dist/lightweight-charts.standalone.development.mjs";
-let candlestickSeries, baselineSeries, datapointsCount;
+let candlestickSeries, secondarySeries, datapointsCount;
 let lineSeriesArr = [];
 async function fetchJSONData() {
     const ohlcvPath = window.location.href + "/ohlcv.json";
@@ -47,7 +47,7 @@ function renderOhlcv(chart, cndJSON) {
     const volumeData = [];
     datapointsCount = cndJSON.length;
     for (let i = 0; i < cndJSON.length; i++) {
-        let timeValue = Date.parse(cndJSON[i]["datetime"]);
+        let timeValue = Date.parse(cndJSON[i]["timestamp"]);
         candlestickData.push({
             time: timeValue,
             open: cndJSON[i]["open"],
@@ -78,24 +78,26 @@ function renderOhlcv(chart, cndJSON) {
 }
 function renderIndicators(mainChart, secondaryChart, indsJSON) {
     for (const ind of indsJSON) {
+        console.log(ind.name);
+        const output = [];
+        // const colors: string[] = ["#2962FF", "#FFA500", "#b39ddb", "#fff59d", "#faa1a4", "#80deea"];
+        let series;
         if (ind.overlay) {
-            const colors = ["#2962FF", "#FFA500", "#b39ddb", "#fff59d", "#faa1a4", "#80deea"];
-            const series = createSeriesFromString(mainChart, ind.seriesType);
-            for (let j = 0; j < ind.data.length; j++) {
-                let dateStr = ind.data[j]["time"];
-                ind.data[j]["time"] = Date.parse(dateStr);
-            }
-            series.setData(ind.data);
+            series = createSeriesFromString(mainChart, ind.seriesType);
         }
         else {
-            const series = createSeriesFromString(secondaryChart, ind.seriesType);
-            // Render non-overlaid inds
-            for (let j = 0; j < ind.data.length; j++) {
-                let dateStr = ind.data[j]["time"];
-                ind.data[j]["time"] = Date.parse(dateStr);
-            }
-            series.setData(ind.data);
+            series = createSeriesFromString(secondaryChart, ind.seriesType);
+            secondarySeries = series;
         }
+        for (let j = 0; j < ind.data.length; j++) {
+            const tmp = { "time": Date.parse(ind.data[j]["time"]) };
+            const value = ind.data[j]["value"];
+            if (value != 0.0) {
+                tmp["value"] = value;
+            }
+            output.push(tmp);
+        }
+        series.setData(output);
     }
 }
 const w = 0.85 * window.innerWidth;
@@ -193,18 +195,14 @@ function syncCrosshair(chart, series, dataPoint) {
     chart.clearCrosshairPosition();
 }
 mainChart.subscribeCrosshairMove((param) => {
-    const dataPointCS = getCrosshairDataPoint(lineSeriesArr[0], param);
-    syncCrosshair(secondaryChart, baselineSeries, dataPointCS);
+    const dataPointonMain = getCrosshairDataPoint(candlestickSeries, param);
+    syncCrosshair(secondaryChart, secondarySeries, dataPointonMain);
 });
 secondaryChart.subscribeCrosshairMove((param) => {
-    const dataPointBS = getCrosshairDataPoint(baselineSeries, param);
-    syncCrosshair(mainChart, lineSeriesArr[0], dataPointBS);
-    // const dataPointVS = getCrosshairDataPoint(volumeSeries, param);
-    // syncCrosshair(mainChart, volumeSeries, dataPointVS);
+    const dataPointonSecondary = getCrosshairDataPoint(secondarySeries, param);
+    syncCrosshair(mainChart, candlestickSeries, dataPointonSecondary);
 });
 const [cndJSON, indsJSON] = await fetchJSONData();
-// renderMainChart(mainChart);
-// renderSecondaryChart(secondaryChart);
 renderOhlcv(mainChart, cndJSON);
 renderIndicators(mainChart, secondaryChart, indsJSON);
 document.addEventListener("keypress", e => {

@@ -1,7 +1,9 @@
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
 from alpaca.data.enums import DataFeed
+from alpaca.trading.models import Position
 from dateutil.relativedelta import relativedelta
+import json
 
 from alpaca.data.models.bars import Bar
 from alpaca.data.historical.stock import StockHistoricalDataClient
@@ -18,35 +20,44 @@ API_KEY: str = tbsecrets.ALPACA_SECRETS[0]["api_key"]
 SECRET_KEY: str = tbsecrets.ALPACA_SECRETS[0]["secret_key"]
 
 # ===================================================================
-# trade_client = TradingClient(API_KEY, SECRET_KEY)
-# pos = trade_client.get_all_positions()
-# print(pos)
+trade_client = TradingClient(API_KEY, SECRET_KEY)
+pos = trade_client.get_all_positions()
+for p in pos:
+    assert isinstance(p, Position)
+    d = {
+        "symbol": p.symbol,
+        "qty": float(p.qty),
+        "price": p.current_price,
+        "side": p.side,
+    }
+    print(json.dumps(d, indent=4))
+    print()
 
 # ===================================================================
-import pandas as pd
-df = pd.read_csv("test1.csv", index_col=["symbol", "timestamp"])
-print(df)
-
-df.reset_index(inplace=True)
-symbols: set[str] = set(df["symbol"])
-
-for symbol in symbols:
-    sliced_df = df[df["symbol"] == symbol].copy()
-    del sliced_df["trade_count"]
-    del sliced_df["vwap"]
-    sliced_df.drop("symbol", axis=1, inplace=True)
-    sliced_df.to_csv(f"ohlcv-1hr/{symbol}.csv", index=False)
+# import pandas as pd
+# df = pd.read_csv("test1.csv", index_col=["symbol", "timestamp"])
+# print(df)
+#
+# df.reset_index(inplace=True)
+# symbols: set[str] = set(df["symbol"])
+#
+# for symbol in symbols:
+#     sliced_df = df[df["symbol"] == symbol].copy()
+#     del sliced_df["trade_count"]
+#     del sliced_df["vwap"]
+#     sliced_df.drop("symbol", axis=1, inplace=True)
+#     sliced_df.to_csv(f"ohlcv-1hr/{symbol}.csv", index=False)
 
 # ===================================================================
 # import pandas as pd
 # import time
-
+#
 # symbols = [
 #     "AAPL", "ABNB", "BBY", "DASH", "EBAY", "F", "GE", "GOOG", "HIMS", "HPQ",
 #     "INTC", "LOGI", "NIO", "NVDA", "NVDY", "PANW", "PEP", "PLTR", "QCOM", "ROST",
 #     "SHOP", "SMCI", "SPY", "TGT", "WMT", "XLF"
 # ]
-
+#
 # stock_historical_data_client = StockHistoricalDataClient(API_KEY, SECRET_KEY, raw_data=False)
 # zone = ZoneInfo("America/New_York")
 # dt = datetime.now()
@@ -59,14 +70,14 @@ for symbol in symbols:
 #     start=start,
 #     end=end
 # )
-
+#
 # df: pd.DataFrame = pd.DataFrame()
 # try:
 #     t: float = time.time()
 #     bars = stock_historical_data_client.get_stock_bars(req)
 #     diff: float = time.time() - t
 #     print(f"Took {diff:.4f}s to gather bars")
-
+#
 #     # Reset index to make it a regular column
 #     df = bars.df.copy()
 #     df.reset_index(inplace=True)

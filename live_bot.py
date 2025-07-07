@@ -4,13 +4,13 @@ from trbot.portfolio import MarketOrder
 class MyLiveStrat(LiveStrategy):
     def setup(self) -> None:
         self.fast_ma = self.add_indicator(
-            Indicator(kind="ema", part=["close"], params={"timeperiod": 5})
+            Indicator(kind="ema", part=["close"], period=5)
         )
         self.slow_ma = self.add_indicator(
-            Indicator(kind="ema", part=["close"], params={"timeperiod": 20})
+            Indicator(kind="ema", part=["close"], period=20)
         )
         self.atr = self.add_indicator(
-            Indicator(kind="atr", part=["high", "low", "close"], params={"timeperiod": 14})
+            Indicator(kind="atr", part=["high", "low", "close"], period=14)
         )
         self.rr_ratio: int = 10
 

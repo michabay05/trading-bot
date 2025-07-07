@@ -1,15 +1,14 @@
 from datetime import datetime
-from typing import Callable
 import time
-import enum, http.server, json, math, os, socketserver, sys, webbrowser
+import http.server, json, math, os, socketserver, sys, webbrowser
 
 import numpy as np
 from numpy.typing import NDArray
 import pandas as pd
-import talib
 
 from trbot import candles
-from trbot.candles import Timespan
+from trbot.strategy import IndValues, Indicator
+from trbot.candles import Candle, Timespan
 from trbot.stockframe import Stockframe
 
 def start_server(port: int) -> None:
@@ -38,64 +37,42 @@ def valid_tickers(search_dir: str) -> tuple[list[str], list[str]]:
 
 def candle_csv_to_json(csv_path: str, ticker: str, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)
-    sf.df.to_json(target_path, orient="records", indent=4)
+    sf.df.to_json(target_path, orient="records", indent=4, date_format="iso")
 
-def calc_save_indicators(csv_path: str, ticker: str, target_path: str) -> None:
+def calc_save_indicators(csv_path: str, ticker: str, indicator_list: list, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)
-    custom_df: pd.DataFrame = pd.DataFrame()
-    data: NDArray[np.float64] = sf.close_series
-    dates: list[datetime] = sf.timestamp
-    custom_df["timestamp"] = dates
+    dates: list[datetime] = sf.timestamp_series
+    candles: list[Candle] = []
+    for i in range(0, len(sf)):
+        candles.append(sf.row_to_candle(i))
 
     # Calculate indicator values
     output: list[dict] = []
-    for name, args in INDICATORS.items():
-        # Call indicator function
-        func: Callable = args[0]
-        func_params: dict = args[1]
-        vals = func(data, **func_params)
-        # Check values are of expected length
-        assert len(vals) == len(dates)
-        # Append it to the dataframe on its own column
-        custom_df[name] = vals
+    for it in indicator_list:
+        indicator: Indicator = it["indicator"]
+        values: IndValues = indicator.compute_from_candles(candles)
+        assert len(dates) == len(values), f"(dates.len = {len(dates)}) != (values.len = {len(values)})"
+        n: int = len(dates)
 
-        render_params: dict = args[2]
-        d = {
-            "name": name,
-            **render_params,
+        tmp = {
+            "name": indicator.name(),
+            **it["render_params"],
             "data": []
         }
-        for row in custom_df.itertuples(index=False):
-            dt: datetime = row[0]
-            v: float = row[1]
+        for i in range(0, n):
+            dt: datetime = dates[i]
+            v = values[i]
             if math.isnan(v):
                 v = 0.0
-            d["data"].append({"time": str(dt), "value": v})
+            tmp["data"].append({"time": str(dt), "value": v})
 
-        output.append(d)
-        # Remove column when done because the loop above only works with a dataframe that only
-        # has a datetime and value column
-        del custom_df[name]
+        output.append(tmp)
+
 
     with open(target_path, "w") as f:
         json.dump(output, f, indent=4)
 
-
-DEFAULT_PORT: int = 8080
-# NOTE: all of these functions use the close data of the candles
-INDICATORS: dict = {
-    "EMA_1": [
-        talib.EMA, {"timeperiod": 50}, {"seriesType": "line", "overlay": True}
-    ],
-    "EMA_2": [
-        talib.EMA, {"timeperiod": 100}, {"seriesType": "line", "overlay": True}
-    ],
-    "RSI": [
-        talib.RSI, {"timeperiod": 14}, {"seriesType": "baseline", "overlay": False}
-    ]
-}
-
-def main():
+def main() -> None:
     print(f"[INFO] Currently in '{os.getcwd()}'")
 
     program_name: str = sys.argv[0]
@@ -118,8 +95,23 @@ def main():
     # Copy necessary candle csv over to 'charts/' as a json
     candle_csv_to_json(fname, ticker, "charts/ohlcv.json")
 
+    indicator_list: list = [
+        {
+            "indicator": Indicator(kind="sma", part=["close"], period=5),
+            "render_params": {"seriesType": "line", "overlay": True},
+        },
+        {
+            "indicator": Indicator(kind="ema", part=["close"], period=20),
+            "render_params": {"seriesType": "line", "overlay": True}
+        },
+        {
+            "indicator": Indicator(kind="rsi", part=["close"], period=15),
+            "render_params": {"seriesType": "baseline", "overlay": False}
+        }
+    ]
+
     # Calculate and save necessary indicators
-    calc_save_indicators(fname, ticker, "charts/inds.json")
+    calc_save_indicators(fname, ticker, indicator_list, "charts/inds.json")
     diff: float = time.time() - start_time
     print(f"Took {diff:.3}s copy over the ohlcv and indicator data.")
 

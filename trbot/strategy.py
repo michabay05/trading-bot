@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from abc import abstractmethod
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from typing import Callable, Any, Literal
+from typing import Any, Literal
 from zoneinfo import ZoneInfo
 import time
 
@@ -33,57 +33,58 @@ ALL_SYMBOLS = [
 
 class Indicator:
     def __init__(self,
-        kind: IndicatorKind,
-        part: list[CandlePart], params: dict[str, Any] = {}
+        kind: IndicatorKind, part: list[CandlePart], period: int
     ) -> None:
         self._kind: str = kind
-        self._func: Callable = Indicator._ta_func_from_kind(self._kind)
         self._parts: list[CandlePart] = part
-        if "timeperiod" not in params.keys():
-            raise KeyError(f"Missing key 'timeperiod' for talib func parameters.\nparams = {params}")
-        self._params: dict[str, Any] = params
+        self._params: dict[str, Any] = { "timeperiod": period }
+
+    def __repr__(self) -> str:
+        return f"Indicator({self._kind}, {self._parts}, params={self._params})"
 
     @property
     def period(self) -> int:
         return self._params["timeperiod"]
 
-    def compute_values(self, cnds: list[Candle]) -> IndValues:
+    def compute_from_candles(self, cnds: list[Candle]) -> IndValues:
         assert len(cnds) >= self.period
-        data: dict[str, IndValues] = {}
-        sliced_cnds: list[Candle] = cnds[-self.period:]
+        candle_chunks: dict[str, IndValues] = {}
         for part in self._parts:
             vals: list[float] = []
             match part:
                 case "close":
-                    vals = [cnd.close for cnd in sliced_cnds]
+                    vals = [cnd.close for cnd in cnds]
                 case "low":
-                    vals = [cnd.low for cnd in sliced_cnds]
+                    vals = [cnd.low for cnd in cnds]
                 case "high":
-                    vals = [cnd.high for cnd in sliced_cnds]
+                    vals = [cnd.high for cnd in cnds]
                 case _:
-                    raise ValueError(f"Unknown part of a candle: {self._parts}")
+                    raise ValueError(f"Unknown part of a candle: {part}")
 
-            data[part] = np.array(vals, dtype=np.float64)
+            candle_chunks[part] = np.array(vals, dtype=np.float64)
 
-        values: IndValues = self._func(**data, **self._params)
-        return values
+        return self.call_ta_func(candle_chunks)
 
     def name(self) -> str:
         return f"{self._kind}_{self.period}"
 
-    @staticmethod
-    def _ta_func_from_kind(kind: str) -> Callable:
-        match kind:
+    def call_ta_func(self, cnd_chunks: dict) -> IndValues:
+        match self._kind:
             case "sma":
-                return talib.SMA
+                return talib.SMA(cnd_chunks[self._parts[0]], timeperiod=self.period)
             case "ema":
-                return talib.EMA
+                return talib.EMA(cnd_chunks[self._parts[0]], timeperiod=self.period)
             case "rsi":
-                return talib.RSI
+                return talib.RSI(cnd_chunks[self._parts[0]], timeperiod=self.period)
             case "atr":
-                return talib.ATR
+                return talib.ATR(
+                    high=cnd_chunks["high"],
+                    low=cnd_chunks["low"],
+                    close=cnd_chunks["close"],
+                    timeperiod=self.period
+                )
             case _:
-                raise ValueError(f"Unknown kind of indicator: {kind}")
+                raise ValueError(f"Unknown kind of indicator: {self._kind}")
 
 
 @dataclass
@@ -170,10 +171,15 @@ class LiveStrategy:
         zone: ZoneInfo = ZoneInfo("America/New_York")
         status: dict = self.broker.get_market_status()
         next_open: datetime = status["next_open"]
-        diff = (next_open - datetime.now(tz=zone)) + timedelta(seconds=5)
-        print(f"Next market open: {next_open}")
-        print(f"Sleeping for {str(diff)}...")
-        time.sleep(diff.total_seconds())
+        t = datetime.now(tz=zone)
+        # Wake up every 30 minutes and then sleep
+        while t < next_open:
+            print(f"Current time: {t}")
+            diff = next_open - t
+            sleep_time = min(diff.total_seconds(), 30 * 60)
+            print(f"Sleeping for {sleep_time} seconds...")
+            time.sleep(sleep_time)
+            t = datetime.now(tz=zone)
 
         self.start()
 
@@ -227,7 +233,7 @@ class LiveStrategy:
 
             # ... recalculate the indicator values, ...
             for ind in self._indicators:
-                ld.update_indicator(ind.name(), ind.compute_values(ld.agg_cnds))
+                ld.update_indicator(ind.name(), ind.compute_from_candles(ld.agg_cnds))
 
             # ... and apply strategy on the new target-timespan candle
             order: MarketOrder | None = self.on_candle()

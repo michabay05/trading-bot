@@ -4,7 +4,7 @@
 > The trading bot is still a **work in progress**. Take heed.
 
 ## Quickstart
-Run trading bot
+Before running these commands, remember to install `talib` on your system (not the python package, but the c library).
 ```bash
 $ python -m venv .venv
 $ source .venv/bin/activate

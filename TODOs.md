@@ -22,11 +22,9 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Factor risk tolerance into strategy
 - [ ] (feat) Send email to notify of a trading signal
     - At some point, the bot itself will be able to execute trades (not sure how at the moment though).
-- [ ] (rsch) Develop list of tickers for bot to trade
 - [ ] (feat) Add a limit order
 - [ ] (feat) Add stop order
 - [ ] (feat) Bring back MACD and BBANDS indicators
-- [ ] (feat) Implement indicator warm up
 - [ ] (refactor) Handle edge case where position has zero quantity
     - Remove it from the list of positions
 - [ ] (refactor) Change candle csv naming scheme to match that of the portfolios
@@ -36,7 +34,6 @@ A list of all the TODOs needed to be completed before each release
     - Trade = A completed buy-sell transaction pair
     - Position = Current market exposure (open trades)
 - [ ] (feat) Resize charts upon window resize
-- [ ] (feat) Add PDT protection
 - [ ] (feat) Implement commissions setting for Broker
 - [ ] (fix) Deal with timezones when importing stockframe data from csv
 - [ ] (refactor) the broker inside the strategy should handle everything related to orders and their execution
@@ -48,12 +45,21 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Consider replacing my custom backtester with either one of these python libraries
     - `backtesting.py`
     - `vectorbt`
-- [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
 - [ ] (fix) Recheck and fix all the broken parts of the strategy tester
 - [ ] (feat) Restructure stockframe such that it can adapt to a single or multiple symbols
 - [ ] (refactor) Update the indicator system in the candle visualizer to use the `Indicator` type
 
 ---
+
+## v0.9
+- [ ] (feat) Factor in PDT limitations
+    - Researched PDT using these sources
+        - [FINRA's official definition of PDT](https://www.finra.org/investors/investing/investment-products/stocks/day-trading)
+        - [Alpaca's FAQ about PDT](https://alpaca.markets/support/pattern-day-trading-protection)
+        - [Alpaca's docs about PDT protection](https://docs.alpaca.markets/docs/user-protection)
+- [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
+- [ ] (rsch) Develop list of tickers for bot to trade
+
 
 ## v0.8
 - [x] (feat) Handle warmup for live trading
