@@ -12,39 +12,43 @@ class MyLiveStrat(LiveStrategy):
         self.atr = self.add_indicator(
             Indicator(kind="atr", part=["high", "low", "close"], period=14)
         )
-        self.rr_ratio: int = 10
 
-    def calc_tp_sl(self, last_close: float, last_atr: float, long: bool) -> tuple[float, float]:
+    def calc_tp_sl(self, last_close: float, last_atr: float, long: bool,
+        rr_ratio: int = 10
+    ) -> tuple[float, float]:
         sl: float = 0.0
         tp: float = 0.0
         diff: float = last_atr
         if long:
             sl = last_close - diff
-            tp = last_close + (self.rr_ratio * diff)
+            tp = last_close + (rr_ratio * diff)
         else:
             sl = last_close + diff
-            tp = last_close - (self.rr_ratio * diff)
+            tp = last_close - (rr_ratio * diff)
 
         return (tp, sl)
 
-    def on_candle(self) -> MarketOrder | None:
-        for symbol in self.symbols:
-            last_atr = self.last_ind_value(symbol, self.atr)
-            last_close = self.last_close(symbol)
-            sz: float = 0.1
-            if self.ind_crossover(symbol, self.fast_ma, self.slow_ma):
-                (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=True)
-                # sl = self.last_close - 5*last_atr
-                # tp = self.last_close + 10*last_atr
-                print(f"[{symbol}] Going long...\n\n")
-                return self.market_buy(symbol, size=sz, tp_limit=tp, sl_limit=sl)
-            elif self.ind_crossover(symbol, self.slow_ma, self.fast_ma):
-                (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=False)
-                # sl = self.last_close + 5*last_atr
-                # tp = self.last_close - 10*last_atr
-                print(f"[{symbol}] Going short...\n\n")
-                return self.market_sell(symbol, size=sz, tp_limit=tp, sl_limit=sl)
+    def on_candle(self, symbol: str) -> MarketOrder | None:
+        last_atr = self.last_ind_value(symbol, self.atr)
+        last_close = self.last_close(symbol)
+        sz: float = 1
+        if self.ind_crossover(symbol, self.fast_ma, self.slow_ma):
+            (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=True)
+            # sl = self.last_close - 5*last_atr
+            # tp = self.last_close + 10*last_atr
+            print(f"[INFO] {symbol}: Going long...\n\n")
+            return self.market_buy(symbol, size=sz, tp_limit=tp, sl_limit=sl)
+        elif self.ind_crossover(symbol, self.slow_ma, self.fast_ma):
+            (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=False)
+            # sl = self.last_close + 5*last_atr
+            # tp = self.last_close - 10*last_atr
+            print(f"[INFO] {symbol}: Going short...\n\n")
+            return self.market_sell(symbol, size=sz, tp_limit=tp, sl_limit=sl)
 
 
 ls = MyLiveStrat()
-ls.start()
+try:
+    ls.start()
+except KeyboardInterrupt:
+    print("[ERROR] Received keyboard interrupt, ctrl-c...")
+    ls.export_gathered_live_data()

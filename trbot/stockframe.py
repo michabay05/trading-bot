@@ -19,7 +19,9 @@ class Stockframe:
         self.timespan: Timespan = timespan
 
     @classmethod
-    def from_parts(cls, cnds: list[Candle], ticker: str, mult: int, timespan: Timespan) -> None:
+    def from_parts(cls,
+        cnds: list[Candle], ticker: str, mult: int, timespan: Timespan
+    ) -> 'Stockframe':
         data: list[list[str]] = []
         for c in cnds:
             data.append([
@@ -37,6 +39,7 @@ class Stockframe:
             columns=["timestamp", "open", "high", "low", "close", "volume"], # type: ignore
         )
         sf.parse_timestamp("timestamp")
+        return sf
 
     @classmethod
     def from_csv(cls, filepath: str, ticker: str, mult: int, timespan: Timespan) -> 'Stockframe':

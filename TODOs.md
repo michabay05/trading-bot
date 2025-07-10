@@ -53,13 +53,15 @@ A list of all the TODOs needed to be completed before each release
 
 ## v0.9
 - [ ] (feat) Factor in PDT limitations
-    - Researched PDT using these sources
+    - Research PDT using these sources
         - [FINRA's official definition of PDT](https://www.finra.org/investors/investing/investment-products/stocks/day-trading)
         - [Alpaca's FAQ about PDT](https://alpaca.markets/support/pattern-day-trading-protection)
         - [Alpaca's docs about PDT protection](https://docs.alpaca.markets/docs/user-protection)
 - [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
-- [ ] (rsch) Develop list of tickers for bot to trade
-
+- [x] (rsch) Develop list of tickers for bot to trade
+- [ ] (feat) Add symbols to each candle
+- [ ] (feat) Export data gathered throughout the market data
+- [ ] (rsch) Experiment with yahoo finance data
 
 ## v0.8
 - [x] (feat) Handle warmup for live trading
