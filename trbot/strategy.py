@@ -28,12 +28,6 @@ IndValues = NDArray[np.float64]
 IndicatorKind = Literal["sma", "ema", "rsi", "atr"]
 CandlePart = Literal["close", "low", "high"]
 
-ALL_SYMBOLS: list[str] = [
-    "AAPL", "ABNB", "BBY", "DASH", "DELL", "EBAY", "F", "GE", "GOOG", "HIMS",
-    "HPQ", "INTC", "LOGI", "NIO", "NVDA", "NVDY", "PANW", "PEP", "PLTR", "QCOM",
-    "ROST", "SHOP", "SMCI", "SPY", "TGT", "WMT", "XLF"
-]
-
 
 class Indicator:
     def __init__(self,
@@ -135,7 +129,7 @@ class LiveStrategy:
 
         self._time = datetime.now(tz=ZoneInfo("America/New_York"))
         self._current_hour: int = self._time.hour
-        self._next_close: datetime = datetime.now()
+        self._next_close: datetime = self._time
 
     @property
     def broker(self) -> LiveBroker:
@@ -146,7 +140,7 @@ class LiveStrategy:
         return self.broker.portfolio
 
     def last_close(self, symbol: str) -> float:
-        return self._live_data[symbol].live_cnds[-1].close
+        return self._live_data[symbol].agg_cnds[-1].close
 
     @property
     def curr_dt_str(self) -> str:
@@ -199,7 +193,10 @@ class LiveStrategy:
             print("[INFO] Starting data stream...")
             self.broker._data_stream.run()
 
+        self.start()
+
     def export_gathered_live_data(self) -> None:
+        zone = ZoneInfo("America/New_York")
         date_str: str = datetime.now(tz=zone).strftime("%Y_%m_%d")
         dir: Path = Path(f"trout/logs/{date_str}/")
         os.mkdir(dir)
@@ -219,7 +216,7 @@ class LiveStrategy:
             self.broker._data_stream.stop()
             self._conn_alive = False
 
-            # Export live and aggregated candles gathered throughout trading hours
+        # Export live and aggregated candles gathered throughout trading hours
         status: dict = self.broker.get_market_status()
         next_open: datetime = status["next_open"]
         t = datetime.now(tz=zone)
@@ -406,7 +403,7 @@ class LiveStrategy:
         """ Aggregate minute candles into a single candle w/ the target timespan """
         ld: _LiveData = self._live_data[symbol]
         now = datetime.now(tz=ZoneInfo("America/New_York"))
-        start_ts = now - timedelta(hours=1)
+        start_ts = (now - timedelta(hours=1)).replace(minute=00, second=00, microsecond=00)
         end = now
 
         # Find starting index
@@ -436,7 +433,7 @@ class LiveStrategy:
             hour_cnd.high = max(hour_cnd.high, cnd.high)
             hour_cnd.low = min(hour_cnd.low, cnd.low)
             hour_cnd.volume += cnd.volume
-            hour_cnd.close = cnd.volume
+            hour_cnd.close = cnd.close
             i += 1
 
         return hour_cnd
