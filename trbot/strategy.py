@@ -13,10 +13,11 @@ import talib
 import matplotlib.pyplot as plt
 from alpaca.data.models.bars import Bar
 
-from trbot.candles import Candle, Timespan
-from .broker import HistoricalBroker, LiveBroker
-from .replayer import CandleReplayer
-from .portfolio import (
+import util
+from candles import Candle, Timespan
+from broker import HistoricalBroker, LiveBroker
+from replayer import CandleReplayer
+from portfolio import (
     OrderIntent, OrderDir, Portfolio, MarketOrder,
     StopLossTrigger, TakeProfitTrigger
 )
@@ -173,7 +174,7 @@ class LiveStrategy:
     def _on_market_open(self) -> None:
         # Bring historical data up to date
         start = datetime.now() - relativedelta(months=1)
-        self.broker.export_historical_candles(ALL_SYMBOLS, start)
+        self.broker.export_historical_candles(util.ALL_SYMBOLS, start)
         print(f"[INFO] Historicals up to date (from {str(start)} to now)")
 
         self.setup()
@@ -196,8 +197,7 @@ class LiveStrategy:
         self.start()
 
     def export_gathered_live_data(self) -> None:
-        zone = ZoneInfo("America/New_York")
-        date_str: str = datetime.now(tz=zone).strftime("%Y_%m_%d")
+        date_str: str = datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
         dir: Path = Path(f"trout/logs/{date_str}/")
         os.mkdir(dir)
         for symbol, ld in self._live_data.items():
@@ -211,7 +211,6 @@ class LiveStrategy:
             sf.df.to_csv(f"{dir}/agg-{symbol}-{ld.agg_timespan.value}.csv", index=False)
 
     def _on_market_close(self) -> None:
-        zone: ZoneInfo = ZoneInfo("America/New_York")
         if self._conn_alive:
             self.broker._data_stream.stop()
             self._conn_alive = False
@@ -219,7 +218,7 @@ class LiveStrategy:
         # Export live and aggregated candles gathered throughout trading hours
         status: dict = self.broker.get_market_status()
         next_open: datetime = status["next_open"]
-        t = datetime.now(tz=zone)
+        t = datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
         while t < next_open:
             print(f"Current time: {t}")
@@ -227,7 +226,7 @@ class LiveStrategy:
             sleep_time = min(diff.total_seconds(), 30 * 60)
             print(f"Sleeping for {sleep_time} seconds...")
             time.sleep(sleep_time)
-            t = datetime.now(tz=zone)
+            t = datetime.now(tz=util.MY_TIMEZONE)
 
         self.start()
 
@@ -274,7 +273,7 @@ class LiveStrategy:
                 symbol_ld = self._live_data[symbol]
                 # On new target-timespan, do the following ...
                 # ... aggregate the minute candles into a single target-timespan candle, ...
-                hour_cnd: Candle = self._aggregate_min_cnds(symbol)
+                hour_cnd: Candle = util.aggregate_cnds(symbol_ld.live_cnds, self._time)
                 symbol_ld.add_agg(hour_cnd)
                 print(f"\n\n[INFO] {symbol:4}: {hour_cnd}\n\n")
 
@@ -292,7 +291,7 @@ class LiveStrategy:
                 order: MarketOrder | None = self.on_candle(symbol)
                 if order is not None:
                     self.broker.sync_portfolio()
-                    self.broker.execute_open_order(order, self.last_close(bar.symbol), self.curr_dt_str)
+                    self.broker.execute_open_order(order)
                     print(f"[INFO] Submitted order: {order}")
                 else:
                     print(f"[INFO] No order")
@@ -325,7 +324,7 @@ class LiveStrategy:
         )
         s2: list[float] | IndValues = (
             [ val2, val2 ] if isinstance(val2, float)
-            else ld.agg_inds[str(val1)]
+            else ld.agg_inds[str(val2)]
         )
 
         try:
@@ -339,17 +338,15 @@ class LiveStrategy:
         assert size > 0, "Negative size provided. (size > 0)"
         assert symbol in self.symbols, f"Provided ({symbol}) is not in list of symbols ({self.symbols})"
 
-        last_close: float = self.last_close(symbol)
         if tp_limit is not None and sl_limit is not None:
-            assert 0.0 < sl_limit < last_close < tp_limit, (
-                f"$0.00 < SL(${tp_limit:.3f}) < Price(${last_close:.3f}) < TP(${sl_limit:.3f})"
+            assert 0.0 < sl_limit < tp_limit, (
+                f"$0.00 < SL(${tp_limit:.3f}) < TP(${sl_limit:.3f})"
             )
 
         mkt_ord: MarketOrder = MarketOrder(
             symbol=symbol,
             side=OrderDir.LONG,
             requested_qty=size,
-            requested_price=last_close,
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.BUY_TO_OPEN
         )
@@ -372,17 +369,15 @@ class LiveStrategy:
         assert size > 0, "Negative size provided. (size > 0)"
         assert symbol in self.symbols, f"Provided ({symbol}) is not in list of symbols ({self.symbols})"
 
-        last_close: float = self.last_close(symbol)
         if tp_limit is not None and sl_limit is not None:
-            assert 0.0 < tp_limit < last_close < sl_limit, (
-                f"TP(${tp_limit:.3f}) < Price(${last_close:.3f}) < SL(${sl_limit:.3f})"
+            assert 0.0 < tp_limit < sl_limit, (
+                f"TP(${tp_limit:.3f}) < SL(${sl_limit:.3f})"
             )
 
         mkt_ord: MarketOrder = MarketOrder(
             symbol=symbol,
             side=OrderDir.SHORT,
             requested_qty=size,
-            requested_price=last_close,
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.SELL_TO_OPEN
         )
@@ -398,45 +393,6 @@ class LiveStrategy:
             )
 
         return mkt_ord
-
-    def _aggregate_min_cnds(self, symbol: str) -> Candle:
-        """ Aggregate minute candles into a single candle w/ the target timespan """
-        ld: _LiveData = self._live_data[symbol]
-        now = datetime.now(tz=ZoneInfo("America/New_York"))
-        start_ts = (now - timedelta(hours=1)).replace(minute=00, second=00, microsecond=00)
-        end = now
-
-        # Find starting index
-        start_ind: int = 0
-        while start_ind < len(ld.live_cnds):
-            cnd: Candle = ld.live_cnds[start_ind]
-            if cnd.timestamp.hour >= start_ts.hour:
-                break
-
-            start_ind += 1
-
-        start_cnd: Candle = ld.live_cnds[start_ind]
-        hour_cnd: Candle = Candle(
-            timestamp=start_ts,
-            open=start_cnd.open,
-            high=start_cnd.high,
-            low=start_cnd.low,
-            close=start_cnd.close,
-            volume=start_cnd.volume
-        )
-        i: int = start_ind + 1
-        while i < len(ld.live_cnds):
-            cnd: Candle = ld.live_cnds[i]
-            if cnd.timestamp.hour >= end.hour:
-                break
-
-            hour_cnd.high = max(hour_cnd.high, cnd.high)
-            hour_cnd.low = min(hour_cnd.low, cnd.low)
-            hour_cnd.volume += cnd.volume
-            hour_cnd.close = cnd.close
-            i += 1
-
-        return hour_cnd
 
     def _crossover(self, val1: list[float] | IndValues, val2: list[float] | IndValues) -> bool:
         if len(val1) >= 2 and len(val2) >= 2:

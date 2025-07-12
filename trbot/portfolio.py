@@ -99,7 +99,6 @@ class TBOrder:
     symbol: str
     side: OrderDir
     requested_qty: float
-    requested_price: float
     requested_dt: str
     intent: OrderIntent
     type: OrderType

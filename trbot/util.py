@@ -10,8 +10,8 @@ from alpaca.data.historical.stock import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame, TimeFrameUnit
 
-from .tbsecrets import ALPACA_SECRETS
-from .candles import Candle, Timespan
+from tbsecrets import ALPACA_SECRETS
+from candles import Candle, Timespan
 
 
 ALL_SYMBOLS: list[str] = [
@@ -84,22 +84,22 @@ def alpaca_df_to_individual(alpaca_df: pd.DataFrame) -> Iterator[tuple[str, pd.D
         sliced_df.drop("symbol", axis=1, inplace=True)
         yield symbol, sliced_df
 
-def aggregate_cnds(cnds: list[Candle], now: datetime, small_timespan: Timespan = Timespan.MINUTE,
-    large_timespan: Timespan = Timespan.HOUR
+def aggregate_cnds(smaller_cnds: list[Candle], now: datetime,
+    small_timespan: Timespan = Timespan.MINUTE, large_timespan: Timespan = Timespan.HOUR
 ) -> Candle:
     """ Aggregate smaller timespan candles into a single candle w/ a lager timespan """
     start_hour = now.hour - 1
     end_hour = now.hour
     # Find starting index
     start_ind: int = 0
-    while start_ind < len(cnds):
-        cnd: Candle = cnds[start_ind]
+    while start_ind < len(smaller_cnds):
+        cnd: Candle = smaller_cnds[start_ind]
         if cnd.timestamp.hour >= start_hour:
             break
 
         start_ind += 1
 
-    start_cnd: Candle = cnds[start_ind]
+    start_cnd: Candle = smaller_cnds[start_ind]
     agg_cnd: Candle = Candle(
         timestamp=datetime(
             now.year, now.month, now.day, start_hour,
@@ -112,8 +112,8 @@ def aggregate_cnds(cnds: list[Candle], now: datetime, small_timespan: Timespan =
         volume=start_cnd.volume
     )
     i: int = start_ind + 1
-    while i < len(cnds):
-        cnd: Candle = cnds[i]
+    while i < len(smaller_cnds):
+        cnd: Candle = smaller_cnds[i]
         if cnd.timestamp.hour >= end_hour:
             break
 

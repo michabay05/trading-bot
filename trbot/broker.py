@@ -43,7 +43,7 @@ class Broker(ABC):
         pass
 
 
-class LiveBroker(Broker):
+class LiveBroker:
     def __init__(self) -> None:
         api_key: str = ALPACA_SECRETS[1]["api_key"]
         secret_key: str = ALPACA_SECRETS[1]["secret_key"]
@@ -119,7 +119,7 @@ class LiveBroker(Broker):
         else:
             raise TypeError(f"`clock` was type `{type(clock)}` instead of `Clock`.")
 
-    def execute_open_order(self, order: MarketOrder, last_close: float, curr_dt_str: str) -> None:
+    def execute_open_order(self, order: MarketOrder) -> None:
         tp = None
         sl = None
         if order.take_profit is not None:
