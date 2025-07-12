@@ -28,7 +28,6 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (refactor) Handle edge case where position has zero quantity
     - Remove it from the list of positions
 - [ ] (refactor) Change candle csv naming scheme to match that of the portfolios
-- [ ] (feat) Add market holidays to market open or closed functionality
 - [ ] (feat) Add time in force for orders (DAY or Good-til-Cancelled)
 - [ ] (feat) Add the notion of a trade and also FYI:
     - Trade = A completed buy-sell transaction pair
@@ -45,9 +44,11 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Consider replacing my custom backtester with either one of these python libraries
     - `backtesting.py`
     - `vectorbt`
-- [ ] (fix) Recheck and fix all the broken parts of the strategy tester
+- [ ] (fix) Check and fix all the broken parts of the strategy tester
 - [ ] (feat) Restructure stockframe such that it can adapt to a single or multiple symbols
 - [ ] (refactor) Update the indicator system in the candle visualizer to use the `Indicator` type
+- [ ] (refactor) Rewrite candle visualizer better with correct typescript stuff
+    - The lack of types is driving me insane.
 
 ---
 
@@ -58,10 +59,14 @@ A list of all the TODOs needed to be completed before each release
         - [Alpaca's FAQ about PDT](https://alpaca.markets/support/pattern-day-trading-protection)
         - [Alpaca's docs about PDT protection](https://docs.alpaca.markets/docs/user-protection)
 - [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
+- [x] (feat) Add market holidays to market open or closed functionality
+    - This is accomplished through alpaca's `next open` and `next close` functionality
 - [x] (rsch) Develop list of tickers for bot to trade
 - [ ] (feat) Add symbols to each candle
-- [ ] (feat) Export data gathered throughout the market data
+- [x] (feat) Export data gathered throughout the market data
 - [ ] (rsch) Experiment with yahoo finance data
+- [ ] (feat) Extract data stream into its own data source system
+    - This setup makes it easier to use add Yahoo finance data at some point
 
 ## v0.8
 - [x] (feat) Handle warmup for live trading

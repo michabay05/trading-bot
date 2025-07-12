@@ -2,10 +2,6 @@ from datetime import datetime
 import time
 import http.server, json, math, os, socketserver, sys, webbrowser
 
-import numpy as np
-from numpy.typing import NDArray
-import pandas as pd
-
 from trbot import candles
 from trbot.strategy import IndValues, Indicator
 from trbot.candles import Candle, Timespan
@@ -24,20 +20,29 @@ def start_server(port: int) -> None:
 def usage(program_name: str) -> None:
     print(f"Usage: {program_name} <SYMBOL>")
 
-def valid_tickers(search_dir: str) -> tuple[list[str], list[str]]:
-    tickers = []
-    filenames = []
-    for filename in os.listdir(search_dir):
-        fpath: str = os.path.join(search_dir, filename)
-        info: dict = candles.candle_info_from_path(fpath)
-        tickers.append(info["ticker"])
-        filenames.append(fpath)
-
-    return (tickers, filenames)
-
 def candle_csv_to_json(csv_path: str, ticker: str, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)
-    sf.df.to_json(target_path, orient="records", indent=4, date_format="iso")
+    candles: list[Candle] = []
+    for i in range(0, len(sf)):
+        candles.append(sf.row_to_candle(i))
+
+    output: dict = {
+        "symbol": ticker,
+        "data": []
+    }
+    for cnd in candles:
+        tmp = {
+            "timestamp": str(cnd.timestamp),
+            "open": cnd.open,
+            "high": cnd.high,
+            "low": cnd.low,
+            "close": cnd.close,
+            "volume": cnd.volume
+        }
+        output["data"].append(tmp)
+
+    with open(target_path, "w") as f:
+        json.dump(output, f, indent=4)
 
 def calc_save_indicators(csv_path: str, ticker: str, indicator_list: list, target_path: str) -> None:
     sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)
@@ -61,13 +66,18 @@ def calc_save_indicators(csv_path: str, ticker: str, indicator_list: list, targe
         }
         for i in range(0, n):
             dt: datetime = dates[i]
-            v = values[i]
-            if math.isnan(v):
-                v = 0.0
-            tmp["data"].append({"time": str(dt), "value": v})
+            d: dict = {
+                "timeStr": str(dt),
+                # This needs to be in milliseconds
+                "time": int(dt.timestamp() * 1000),
+            }
+            v: float = values[i]
+            if not math.isnan(v):
+                d["value"] = v
+
+            tmp["data"].append(d)
 
         output.append(tmp)
-
 
     with open(target_path, "w") as f:
         json.dump(output, f, indent=4)
@@ -93,25 +103,39 @@ def main() -> None:
 
     start_time: float = time.time()
     # Copy necessary candle csv over to 'charts/' as a json
-    candle_csv_to_json(fname, ticker, "charts/ohlcv.json")
+    ohlcv_path: str = "charts/ohlcv.json"
+    candle_csv_to_json(fname, ticker, ohlcv_path)
+    print(f"[INFO] Exported ohlcv data: '{ohlcv_path}'")
 
     indicator_list: list = [
         {
-            "indicator": Indicator(kind="sma", part=["close"], period=5),
-            "render_params": {"seriesType": "line", "overlay": True},
+            "indicator": Indicator(kind="ema", part=["close"], period=5),
+            "render_params": {
+                "overlay": True,
+                "color": "#80deea",
+            },
         },
         {
             "indicator": Indicator(kind="ema", part=["close"], period=20),
-            "render_params": {"seriesType": "line", "overlay": True}
+            "render_params": {
+                "overlay": True,
+                "color": "#b39ddb"
+            }
         },
         {
             "indicator": Indicator(kind="rsi", part=["close"], period=15),
-            "render_params": {"seriesType": "baseline", "overlay": False}
+            "render_params": {
+                "overlay": False,
+                "color": "#2962ff",
+            }
         }
     ]
 
     # Calculate and save necessary indicators
-    calc_save_indicators(fname, ticker, indicator_list, "charts/inds.json")
+    ind_path: str = "charts/inds.json"
+    calc_save_indicators(fname, ticker, indicator_list, ind_path)
+    print(f"[INFO] Exported indicator data: '{ind_path}'")
+
     diff: float = time.time() - start_time
     print(f"Took {diff:.3}s copy over the ohlcv and indicator data.")
 

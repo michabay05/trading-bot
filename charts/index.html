@@ -18,12 +18,32 @@
             }
             #main-chart {
                 margin-bottom: 2em;
+                position: relative;
+            }
+            #main-info {
+                position: absolute;
+                z-index: 2;
+                height: fit-content;
+                padding-top: 0.3em;
+                padding-left: 0.6em;
+                display: flex;
+            }
+            .main-symbol-info {
+                color: #fcfcfc;
+                font-size: 1.3em;
+                margin-right: 1em;
+            }
+            .main-ohlcv-info-parts {
+                color: #f0f0f0;
+                font-size: 1em;
             }
         </style>
     </head>
     <body>
         <div id="tv-charts">
-            <div id="main-chart"></div>
+            <div id="main-chart">
+                <div id="main-info"></div>
+            </div>
             <div id="secondary-chart"></div>
         </div>
 
