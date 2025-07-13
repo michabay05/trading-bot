@@ -2,7 +2,7 @@ import {
     createChart, ColorType, LineStyle, CrosshairMode, CandlestickSeries,
     HistogramSeries,
     type ChartOptions, type DeepPartial, type OhlcData, type HistogramData,
-    type IChartApi, type UTCTimestamp
+    type IChartApi, type UTCTimestamp, type ISeriesApi
 } from "lightweight-charts";
 
 
@@ -29,18 +29,14 @@ interface _IIndsRenderData {
     data: _LWIndsData[];
 }
 
-async function fetchJSONData(): Promise<[string, _IOhlcvData[], _IIndsRenderData[]]> {
-    const ohlcvPath: string = "ohlcv.json";
-    const ohlcvResp = await fetch(ohlcvPath);
-    const ohlcvJSON = await ohlcvResp.json();
-    const symbol: string = ohlcvJSON["symbol"];
-    const ohlcvData: _IOhlcvData[] = ohlcvJSON["data"];
+async function fetchJSONData(symbol: string): Promise<[_IOhlcvData[], _IIndsRenderData[]]> {
+    const symbolInfoPath: string = `${symbol}.json`
+    const symbolInfoResp = await fetch(symbolInfoPath);
+    const symbolInfoJSON = await symbolInfoResp.json();
+    const candleData: _IOhlcvData[] = symbolInfoJSON["candles"];
+    const indicatorData: _IIndsRenderData[] = symbolInfoJSON["indicators"];
 
-    const indsPath: string = "inds.json";
-    const indsResp = await fetch(indsPath);
-    const indsJSON: _IIndsRenderData[] = await indsResp.json();
-
-    return [symbol, ohlcvData, indsJSON];
+    return [candleData, indicatorData];
 }
 
 function setupChart(container: HTMLDivElement): IChartApi {
@@ -81,15 +77,17 @@ function reformatOhlcvData(ohlcvData: _IOhlcvData[]): [OhlcData[], HistogramData
     return [ohlcData, volData];
 }
 
-async function render(chart: IChartApi): Promise<void> {
-    const [symbol, ohlcvData, indsJSON] = await fetchJSONData();
+async function renderData(
+    symbol: string, candleSeries: ISeriesApi<"Candlestick">,
+    volumeSeries: ISeriesApi<"Histogram">,
+): Promise<void> {
+    const [ohlcvData, indicatorData] = await fetchJSONData(symbol);
     const [ohlcData, volumeData] = reformatOhlcvData(ohlcvData);
 
-    const candlestickSeries = chart.addSeries(CandlestickSeries, {}, 0);
-    const volumeSeries = chart.addSeries(HistogramSeries, {}, 1);
-    const pft = volumeSeries.priceFormatter();
-    candlestickSeries.setData(ohlcData);
+    candleSeries.setData(ohlcData);
     volumeSeries.setData(volumeData);
+
+    console.warn("Indicators are yet to be implemented.");
 }
 
 
@@ -97,16 +95,38 @@ let MAIN_CHART: IChartApi;
 let CHART_CONTAINER: HTMLDivElement;
 
 window.addEventListener("load", () => {
-    const chartContainerID = "chart-container";
-    const container = document.getElementById(chartContainerID);
+    const containerID = "chart-container";
+    const container = document.getElementById(containerID);
     if (!container) {
-        console.error(`Could not find ${chartContainerID}`);
+        console.error(`Could not find ${containerID}`);
         throw new Error();
     }
 
+    const alternatorID = "alternator-btn";
+    const alternatorBtn = document.getElementById(alternatorID);
+    if (!alternatorBtn) {
+        console.error(`Could not find ${containerID}`);
+        throw new Error();
+    }
+    const alternator = alternatorBtn as HTMLButtonElement;
+
     CHART_CONTAINER = container as HTMLDivElement;
     MAIN_CHART = setupChart(CHART_CONTAINER);
-    render(MAIN_CHART);
+    const candleSeries: ISeriesApi<"Candlestick"> = MAIN_CHART.addSeries(CandlestickSeries, {}, 0);
+    const volSeries: ISeriesApi<"Histogram"> = MAIN_CHART.addSeries(HistogramSeries, {}, 1);
+
+    let symbol = "AAPL";
+    alternator.addEventListener("click", () => {
+        if (symbol === "AAPL") {
+            symbol = "SPY";
+        } else {
+            symbol = "AAPL";
+        }
+        console.log(`Symbol: ${symbol}`);
+        renderData(symbol, candleSeries, volSeries);
+    });
+
+    renderData(symbol, candleSeries, volSeries);
 });
 
 window.addEventListener("resize", () => {

@@ -8,17 +8,20 @@
         <style>
             body {
                 height: 100vh;
-                display: flex;
-                align-items: center;
+            }
+            #alternator-btn {
+                margin: 1em auto;
+                display: block;
             }
             #chart-container {
-                width: 90vw;
-                height: 90vh;
+                width: 90%;
+                height: 90%;
                 margin: 0 auto;
             }
         </style>
     </head>
     <body>
+        <button id="alternator-btn">Change symbol</button>
         <div id="chart-container"></div>
         <script type="module" src="/src/main.ts"></script>
     </body>
