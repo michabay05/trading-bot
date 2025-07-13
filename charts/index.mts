@@ -122,9 +122,7 @@ function renderIndicators(mainChart: any, secondaryChart: any, indsJSON: _IIndsR
             secondarySeries = series;
         }
         for (let j = 0; j < ind.data.length; j++) {
-            if (typeof ind.data[j].time == "string") {
-                ind.data[j].time = Date.parse(ind.data[j].timeStr);
-            }
+            ind.data[j].time = Date.parse(ind.data[j].timeStr);
         }
         series.setData(ind.data);
     }

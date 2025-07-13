@@ -9,12 +9,15 @@ Before running these commands, remember to install `talib` on your system (not t
 $ python -m venv .venv
 $ source .venv/bin/activate
 $ pip install -r requirements.txt
-$ python run_bot.py
+$ python live_bot.py
 ```
 ---
 Visualize candles and indicators (run this command after setting up virtual environment)
 ```bash
-$ python visualize_candles.py GM
+$ python trbot/visualize_candles.py
+$ cd charts/
+$ npm install
+$ npm run dev
 ```
 
 ## Features
@@ -28,5 +31,4 @@ $ python visualize_candles.py GM
 ## Resource used
 - [areed1192/python-trading-robot](https://github.com/areed1192/python-trading-robot.git)
 - [tradingview/lightweight-charts](https://github.com/tradingview/lightweight-charts.git)
-- [lightweight-charts-python](https://github.com/louisnw01/lightweight-charts-python.git)
 - [alpacahq/alpaca-py](https://github.com/alpacahq/alpaca-py/)

@@ -1,8 +1,11 @@
 import {
     createChart, ColorType, LineStyle, CrosshairMode, CandlestickSeries,
-    HistogramSeries,
+    HistogramSeries, LineSeries,
     type ChartOptions, type DeepPartial, type OhlcData, type HistogramData,
-    type IChartApi, type UTCTimestamp, type ISeriesApi
+    type IChartApi, type UTCTimestamp, type ISeriesApi,
+    type LineData, type WhitespaceData,
+    LineType,
+    LastPriceAnimationMode
 } from "lightweight-charts";
 
 
@@ -30,12 +33,27 @@ interface _IIndsRenderData {
 }
 
 interface _ISymbolsInfo {
-    symbols: string[]
+    symbols: string[];
 }
+
+interface _ILastUpdate {
+    symbol: string;
+    new_candles: _IOhlcvData[];
+    new_ind_values: number[];
+}
+
+type _LWMultIndicatorData = { [name: string]:  ISeriesApi<"Line"> };
+type _LWIndicatorData = LineData | WhitespaceData;
 
 async function fetchInfo(): Promise<_ISymbolsInfo> {
     const symbolsResp = await fetch("info.json");
     return symbolsResp.json();
+}
+
+async function fetchLastUpdate(symbol: string): Promise<_ILastUpdate> {
+    const updateResp = await fetch("updates.json");
+    const updateJSON = await updateResp.json();
+    return updateJSON[symbol];
 }
 
 async function fetchJSONData(symbol: string): Promise<[_IOhlcvData[], _IIndsRenderData[]]> {
@@ -61,10 +79,10 @@ function setupChart(container: HTMLDivElement): IChartApi {
     });
 }
 
-function reformatOhlcvData(ohlcvData: _IOhlcvData[]): [OhlcData[], HistogramData[]] {
+function reformatOhlcvData(ohlcvData: _IOhlcvData[], start: number = 0): [OhlcData[], HistogramData[]] {
     let ohlcData: OhlcData[] = [];
     let volData: HistogramData[] = [];
-    for (let i = 0; i < ohlcvData.length; i++) {
+    for (let i = start; i < ohlcvData.length; i++) {
         let timeValue = Date.parse(ohlcvData[i]["timestamp"]) as UTCTimestamp;
 
         ohlcData.push({
@@ -85,16 +103,43 @@ function reformatOhlcvData(ohlcvData: _IOhlcvData[]): [OhlcData[], HistogramData
     return [ohlcData, volData];
 }
 
-async function renderData(
-    symbol: string, candleSeries: ISeriesApi<"Candlestick">,
-    volumeSeries: ISeriesApi<"Histogram">,
-): Promise<void> {
-    const [ohlcvData, indicatorData] = await fetchJSONData(symbol);
-    const [ohlcData, volumeData] = reformatOhlcvData(ohlcvData);
+function reformatIndicatorData(indicatorData: _IIndsRenderData[]): _LWIndicatorData[][] {
+    const output: _LWIndicatorData[][] = [];
+    for (const ind of indicatorData) {
+        const indData: _LWIndicatorData[] = [];
+        for (let j = 0; j < ind.data.length; j++) {
+            indData.push({
+                time: ind.data[j].time as UTCTimestamp,
+                value: ind.data[j].value,
+            });
+        }
+        output.push(indData);
+    }
+    console.error("Unimplemented: reformatIndicatorData");
+    return output;
+}
 
+async function visualizeData(
+    ohlcvData: _IOhlcvData[], indicatorData: _IIndsRenderData[],
+    candleSeries: ISeriesApi<"Candlestick">, volumeSeries: ISeriesApi<"Histogram">,
+    multIndSeries: _LWMultIndicatorData
+): Promise<void> {
+    const [ohlcData, volumeData] = reformatOhlcvData(ohlcvData);
     candleSeries.setData(ohlcData);
     volumeSeries.setData(volumeData);
 
+    if (indicatorData.length != Object.keys(multIndSeries.length).length) {
+        console.error(
+            `indicatorData.length (${indicatorData.length}) != lineSeriesArr.length(${multIndSeries.length})`);
+        throw Error();
+    }
+
+    const multipleIndData = reformatIndicatorData(indicatorData);
+    for (let i = 0; i < indicatorData.length; i++) {
+        // TODO: make sure that overlaid data is placed in pane 0 and the others in pane 3.
+        //       probably through some kind of assert
+        multIndSeries[indicatorData[i].name].setData(multipleIndData[i]);
+    }
     console.warn("Indicators are yet to be implemented.");
 }
 
@@ -124,12 +169,16 @@ window.addEventListener("load", async () => {
         throw new Error();
     }
 
+    const updateDataBtnID: string = "update-data-btn";
+    const updateDataBtn = document.getElementById(updateDataBtnID) as HTMLButtonElement;
+    if (!symbolSubmitBtn) {
+        console.error(`Could not find ${updateDataBtnID}`);
+        throw new Error();
+    }
+
     // Set global variables
     CHART_CONTAINER = containerDiv as HTMLDivElement;
     MAIN_CHART = setupChart(CHART_CONTAINER);
-
-    const cndSeries: ISeriesApi<"Candlestick"> = MAIN_CHART.addSeries(CandlestickSeries, {}, 0);
-    const volSeries: ISeriesApi<"Histogram"> = MAIN_CHART.addSeries(HistogramSeries, {}, 1);
 
     const info = await fetchInfo();
     for (const symbol of info.symbols) {
@@ -139,14 +188,51 @@ window.addEventListener("load", async () => {
         symbolDropdown.appendChild(option);
     }
 
+    // Pane indicies:
+    //    - 0 for Candles and overlaid indicators like EMA
+    //    - 1 for Candle volume
+    //    - 2 for Non-overlaid indicators like RSI
+
     const defaultSymbol = symbolDropdown.options[0].value;
+    let [ohlcvData, indicatorData] = await fetchJSONData(defaultSymbol);
+    const cndSeries: ISeriesApi<"Candlestick"> = MAIN_CHART.addSeries(CandlestickSeries, {}, 0);
+    const volSeries: ISeriesApi<"Histogram"> = MAIN_CHART.addSeries(HistogramSeries, {}, 1);
+    const multIndSeries: _LWMultIndicatorData = {};
+    for (const ind of indicatorData) {
+        const paneIndex = ind.overlay ? 0 : 2;
+        const lineSeries = MAIN_CHART.addSeries(LineSeries, {
+            color: ind.color,
+            lineType: LineType.Simple,
+            lastPriceAnimation: LastPriceAnimationMode.OnDataUpdate
+        }, paneIndex);
+        multIndSeries[ind.name] = lineSeries;
+    }
+
     console.log(`Default symbol: ${defaultSymbol}`);
-    await renderData(defaultSymbol, cndSeries, volSeries);
+    await visualizeData(ohlcvData, indicatorData, cndSeries, volSeries, multIndSeries);
 
     symbolSubmitBtn.addEventListener("click", async () => {
         const symbol: string = symbolDropdown.value;
+        [ohlcvData, indicatorData] = await fetchJSONData(symbol);
         console.log(`Rendering ${symbol}...`)
-        await renderData(symbol, cndSeries, volSeries);
+        await visualizeData(ohlcvData, indicatorData, cndSeries, volSeries, multIndSeries);
+    });
+
+    updateDataBtn.addEventListener("click", async () => {
+        const symbol: string = symbolDropdown.value;
+        const lastUpdate: _ILastUpdate = await fetchLastUpdate(symbol);
+        const [lastOhclv, lastVolume] = reformatOhlcvData(
+            lastUpdate.new_candles, lastUpdate.new_candles.length - 1
+        );
+        cndSeries.update(lastOhclv[0]);
+        volSeries.update(lastVolume[0]);
+
+        for (const [ind_name, ind_val] of Object.entries(lastUpdate.new_ind_values)) {
+            multIndSeries[ind_name].update({
+                time: lastOhclv[0].time,
+                value: ind_val
+            });
+        }
     });
 });
 
