@@ -47,8 +47,6 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (fix) Check and fix all the broken parts of the strategy tester
 - [ ] (feat) Restructure stockframe such that it can adapt to a single or multiple symbols
 - [ ] (refactor) Update the indicator system in the candle visualizer to use the `Indicator` type
-- [ ] (refactor) Rewrite candle visualizer better with correct typescript stuff
-    - The lack of types is driving me insane.
 
 ---
 
@@ -67,6 +65,12 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (rsch) Experiment with yahoo finance data
 - [ ] (feat) Extract data stream into its own data source system
     - This setup makes it easier to use add Yahoo finance data at some point
+- [x] (refactor) Rewrite candle visualizer better with correct typescript stuff
+    - The lack of types is driving me insane.
+    - In the next version, `charts-v2` will officially replaced by the old `charts`.
+- [x] (feat) Introduce ability to change symbol without having to re-export new values
+- [ ] (feat) Integrate `visualize candles` into `trbot`
+    - Probably into `strategy.py`
 
 ## v0.8
 - [x] (feat) Handle warmup for live trading

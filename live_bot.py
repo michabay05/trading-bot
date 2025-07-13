@@ -51,4 +51,5 @@ try:
     ls.start()
 except KeyboardInterrupt:
     print("[ERROR] Received keyboard interrupt, ctrl-c...")
+finally:
     ls.export_gathered_live_data()

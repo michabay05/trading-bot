@@ -29,9 +29,17 @@ interface _IIndsRenderData {
     data: _LWIndsData[];
 }
 
+interface _ISymbolsInfo {
+    symbols: string[]
+}
+
+async function fetchInfo(): Promise<_ISymbolsInfo> {
+    const symbolsResp = await fetch("info.json");
+    return symbolsResp.json();
+}
+
 async function fetchJSONData(symbol: string): Promise<[_IOhlcvData[], _IIndsRenderData[]]> {
-    const symbolInfoPath: string = `${symbol}.json`
-    const symbolInfoResp = await fetch(symbolInfoPath);
+    const symbolInfoResp = await fetch(`${symbol}.json`);
     const symbolInfoJSON = await symbolInfoResp.json();
     const candleData: _IOhlcvData[] = symbolInfoJSON["candles"];
     const indicatorData: _IIndsRenderData[] = symbolInfoJSON["indicators"];
@@ -94,39 +102,52 @@ async function renderData(
 let MAIN_CHART: IChartApi;
 let CHART_CONTAINER: HTMLDivElement;
 
-window.addEventListener("load", () => {
-    const containerID = "chart-container";
-    const container = document.getElementById(containerID);
-    if (!container) {
-        console.error(`Could not find ${containerID}`);
+window.addEventListener("load", async () => {
+    const containerDivID: string = "chart-container";
+    const containerDiv = document.getElementById(containerDivID);
+    if (!containerDiv) {
+        console.error(`Could not find ${containerDivID}`);
         throw new Error();
     }
 
-    const alternatorID = "alternator-btn";
-    const alternatorBtn = document.getElementById(alternatorID);
-    if (!alternatorBtn) {
-        console.error(`Could not find ${containerID}`);
+    const symbolDropdownID: string = "symbol-dropdown";
+    const symbolDropdown = document.getElementById(symbolDropdownID) as HTMLSelectElement;
+    if (!symbolDropdown) {
+        console.error(`Could not find ${symbolDropdownID}`);
         throw new Error();
     }
-    const alternator = alternatorBtn as HTMLButtonElement;
 
-    CHART_CONTAINER = container as HTMLDivElement;
+    const symbolSubmitID: string = "symbol-submit-btn";
+    const symbolSubmitBtn = document.getElementById(symbolSubmitID) as HTMLButtonElement;
+    if (!symbolSubmitBtn) {
+        console.error(`Could not find ${symbolSubmitID}`);
+        throw new Error();
+    }
+
+    // Set global variables
+    CHART_CONTAINER = containerDiv as HTMLDivElement;
     MAIN_CHART = setupChart(CHART_CONTAINER);
-    const candleSeries: ISeriesApi<"Candlestick"> = MAIN_CHART.addSeries(CandlestickSeries, {}, 0);
+
+    const cndSeries: ISeriesApi<"Candlestick"> = MAIN_CHART.addSeries(CandlestickSeries, {}, 0);
     const volSeries: ISeriesApi<"Histogram"> = MAIN_CHART.addSeries(HistogramSeries, {}, 1);
 
-    let symbol = "AAPL";
-    alternator.addEventListener("click", () => {
-        if (symbol === "AAPL") {
-            symbol = "SPY";
-        } else {
-            symbol = "AAPL";
-        }
-        console.log(`Symbol: ${symbol}`);
-        renderData(symbol, candleSeries, volSeries);
-    });
+    const info = await fetchInfo();
+    for (const symbol of info.symbols) {
+        const option = document.createElement("option");
+        option.value = symbol;
+        option.innerText = symbol;
+        symbolDropdown.appendChild(option);
+    }
 
-    renderData(symbol, candleSeries, volSeries);
+    const defaultSymbol = symbolDropdown.options[0].value;
+    console.log(`Default symbol: ${defaultSymbol}`);
+    await renderData(defaultSymbol, cndSeries, volSeries);
+
+    symbolSubmitBtn.addEventListener("click", async () => {
+        const symbol: string = symbolDropdown.value;
+        console.log(`Rendering ${symbol}...`)
+        await renderData(symbol, cndSeries, volSeries);
+    });
 });
 
 window.addEventListener("resize", () => {

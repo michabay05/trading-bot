@@ -9,9 +9,10 @@
             body {
                 height: 100vh;
             }
-            #alternator-btn {
+            #info-div {
                 margin: 1em auto;
                 display: block;
+                width: fit-content;
             }
             #chart-container {
                 width: 90%;
@@ -21,7 +22,10 @@
         </style>
     </head>
     <body>
-        <button id="alternator-btn">Change symbol</button>
+        <div id="info-div">
+            <select id="symbol-dropdown"></select>
+            <button id="symbol-submit-btn">Submit</button>
+        </div>
         <div id="chart-container"></div>
         <script type="module" src="/src/main.ts"></script>
     </body>
