@@ -218,6 +218,7 @@ window.onload = async () => {
             ticksVisible: true,
         }
     };
+
     mainChart = createChart(mainContainer, {
         width: w, height: 0.75 * window.innerHeight,
         timeScale: {
