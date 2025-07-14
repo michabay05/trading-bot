@@ -95,7 +95,7 @@ class LiveBroker:
         for pos in open_positions:
             d = {
                 "symbol": pos.symbol,
-                "qty": float(pos.qty),
+                "quantity": float(pos.qty),
                 "price": pos.current_price,
                 "side": pos.side,
             }

@@ -2,23 +2,10 @@ from datetime import datetime
 import time
 import json, math, os
 
-from trbot.strategy import _LiveData, IndValues, Indicator
+from trbot.strategy import IndValues, Indicator
 from trbot.candles import Candle, Timespan
 from trbot.stockframe import Stockframe
 
-
-EXPORT_DIR = f"./charts-v2/public"
-
-def update_live_aggregates(live_datas: dict[str, _LiveData]) -> None:
-    output: dict = {}
-    for symbol, live_data in live_datas.items():
-        output[symbol] = {
-            "new_candles": live_data.agg_cnds,
-            "new_indicators": live_data.agg_inds
-        }
-
-    with open(f"{EXPORT_DIR}/updates.json") as f:
-        json.dump(output, f, indent=4)
 
 def _candle_csv_to_json(csv_path: str, ticker: str) -> list[dict]:
     sf: Stockframe = Stockframe.from_csv(csv_path, ticker=ticker, mult=1, timespan=Timespan.HOUR)

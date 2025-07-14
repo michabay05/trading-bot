@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field, asdict
 from abc import abstractmethod
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from typing import Any, Literal
 from zoneinfo import ZoneInfo
 from pathlib import Path
-import time, os
+import json, time, os
 
 import numpy as np
 from numpy.typing import NDArray
@@ -13,11 +13,11 @@ import talib
 import matplotlib.pyplot as plt
 from alpaca.data.models.bars import Bar
 
-import util
-from candles import Candle, Timespan
-from broker import HistoricalBroker, LiveBroker
-from replayer import CandleReplayer
-from portfolio import (
+from . import util
+from .candles import Candle, Timespan
+from .broker import HistoricalBroker, LiveBroker
+from .replayer import CandleReplayer
+from .portfolio import (
     OrderIntent, OrderDir, Portfolio, MarketOrder,
     StopLossTrigger, TakeProfitTrigger
 )
@@ -132,14 +132,6 @@ class LiveStrategy:
         self._current_hour: int = self._time.hour
         self._next_close: datetime = self._time
 
-    @property
-    def broker(self) -> LiveBroker:
-        return self._broker
-
-    @property
-    def portfolio(self) -> Portfolio:
-        return self.broker.portfolio
-
     def last_close(self, symbol: str) -> float:
         return self._live_data[symbol].agg_cnds[-1].close
 
@@ -174,7 +166,7 @@ class LiveStrategy:
     def _on_market_open(self) -> None:
         # Bring historical data up to date
         start = datetime.now() - relativedelta(months=1)
-        self.broker.export_historical_candles(util.ALL_SYMBOLS, start)
+        self._broker.export_historical_candles(util.ALL_SYMBOLS, start)
         print(f"[INFO] Historicals up to date (from {str(start)} to now)")
 
         self.setup()
@@ -187,12 +179,12 @@ class LiveStrategy:
         print("]")
 
         print(f"[INFO] Symbols: {self.symbols}")
-        print(f"[INFO] Cash: ${self.broker._portfolio.cash:.2f}")
+        print(f"[INFO] Cash: ${self._broker._portfolio.cash:.2f}")
 
         if not self._conn_alive:
             self._conn_alive = True
             print("[INFO] Starting data stream...")
-            self.broker._data_stream.run()
+            self._broker._data_stream.run()
 
         self.start()
 
@@ -212,11 +204,11 @@ class LiveStrategy:
 
     def _on_market_close(self) -> None:
         if self._conn_alive:
-            self.broker._data_stream.stop()
+            self._broker._data_stream.stop()
             self._conn_alive = False
 
         # Export live and aggregated candles gathered throughout trading hours
-        status: dict = self.broker.get_market_status()
+        status: dict = self._broker.get_market_status()
         next_open: datetime = status["next_open"]
         t = datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
@@ -231,11 +223,11 @@ class LiveStrategy:
         self.start()
 
     def start(self) -> None:
-        self.broker._data_stream.subscribe_bars(
+        self._broker._data_stream.subscribe_bars(
             self._stock_data_stream_handler, *self.symbols
         )
 
-        status: dict = self.broker.get_market_status()
+        status: dict = self._broker.get_market_status()
         self._next_close = status["next_close"]
         if status["is_open"]:
             # Market is currently open
@@ -260,11 +252,7 @@ class LiveStrategy:
         self._live_data[bar.symbol].add_live(cnd)
         print(f"[{bar.symbol:4}] Minute:", cnd)
 
-        if self._time >= self._next_close:
-            # Market is closed
-            self._on_market_close()
-
-        self._time = datetime.now(tz=ZoneInfo("America/New_York"))
+        self._time = datetime.now(tz=util.MY_TIMEZONE)
         if cnd.timestamp.hour > self._current_hour:
             self._current_hour = cnd.timestamp.hour
 
@@ -290,13 +278,19 @@ class LiveStrategy:
                 # ... and apply strategy on the new target-timespan candle
                 order: MarketOrder | None = self.on_candle(symbol)
                 if order is not None:
-                    self.broker.sync_portfolio()
-                    self.broker.execute_open_order(order)
+                    self._broker.sync_portfolio()
+                    self._broker.execute_open_order(order)
                     print(f"[INFO] Submitted order: {order}")
                 else:
                     print(f"[INFO] No order")
 
                 print("------------------")
+
+        update_live_aggregates(self._live_data)
+
+        if self._time >= self._next_close:
+            # Market is closed
+            self._on_market_close()
 
     @abstractmethod
     def setup(self) -> None:
@@ -478,3 +472,17 @@ class StrategyTester:
 
     def export_portfolio(self, outdir: str) -> None:
         self._portfolio.save_to_json(f"{outdir}/{self._sf.symbol}-portfolio.json")
+
+
+def update_live_aggregates(live_datas: dict[str, _LiveData]) -> None:
+    export_dir: str = f"./charts-v2/public"
+    output: dict = {}
+    for symbol, live_data in live_datas.items():
+        output[symbol] = {
+            "new_candles": live_data.agg_cnds,
+            "new_indicators": live_data.agg_inds
+        }
+
+    with open(f"{export_dir}/updates.json") as f:
+        json.dump(output, f, indent=4)
+

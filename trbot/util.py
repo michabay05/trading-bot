@@ -10,8 +10,8 @@ from alpaca.data.historical.stock import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame, TimeFrameUnit
 
-from tbsecrets import ALPACA_SECRETS
-from candles import Candle, Timespan
+from .tbsecrets import ALPACA_SECRETS
+from .candles import Candle, Timespan
 
 
 ALL_SYMBOLS: list[str] = [
