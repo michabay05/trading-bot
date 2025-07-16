@@ -102,8 +102,9 @@ def main() -> None:
         }
     ]
 
-    all_symbols: list[str] = ["SPY", "AAPL", "GE", "HPQ"]
+    all_symbols: list[str] = ["SPY", "AAPL", "GE", "HPQ", "EBAY", "XLF"]
 
+    EXPORT_DIR: str = "./charts-v2/public/"
     successful_symbols: list[str] = []
     failed_symbols: list[str] = []
     for symbol in all_symbols:

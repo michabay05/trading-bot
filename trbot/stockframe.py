@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 from numpy.typing import NDArray
 
+from trbot import util
+
 from . import candles
 from .candles import Candle, Timespan
 
@@ -65,7 +67,7 @@ class Stockframe:
         self._formatted_dts: list[datetime] = []
         for dt_str in self._df[col_name]:
             self._formatted_dts.append(
-                datetime.fromisoformat(dt_str).astimezone(ZoneInfo("America/New_York"))
+                datetime.fromisoformat(dt_str).astimezone(util.MY_TIMEZONE)
             )
 
         if replace:

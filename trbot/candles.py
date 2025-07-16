@@ -3,6 +3,8 @@ from zoneinfo import ZoneInfo
 from datetime import datetime
 from enum import Enum
 
+from trbot import util
+
 
 @dataclass
 class Candle:
@@ -12,18 +14,18 @@ class Candle:
     low: float
     close: float
     volume: float
-    vwap: float | None = None
 
     def __post_init__(self):
-        self.timestamp = self.timestamp.astimezone(tz=ZoneInfo("America/New_York"))
+        self.timestamp = self.timestamp.astimezone(tz=util.MY_TIMEZONE)
 
     def __repr__(self) -> str:
+        return str(self.to_dict())
+
+    def to_dict(self) -> dict:
         output = asdict(self)
         # Format the datetime object a bit better
         output["timestamp"] = str(self.timestamp)
-        if output["vwap"] is None:
-            del output["vwap"]
-        return str(output)
+        return output
 
     def __eq__(self, other) -> bool:
         return (self.open == other.open and

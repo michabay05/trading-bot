@@ -16,6 +16,8 @@ from alpaca.data.timeframe import TimeFrame, TimeFrameUnit
 import requests
 import pandas as pd
 
+from trbot import util
+
 from . import candles, tbsecrets
 from .tbsecrets import ALPACA_SECRETS
 from .candles import Candle, CandleOption, Timespan
@@ -148,7 +150,6 @@ class LiveBroker:
     def export_historical_candles(self,
         symbols: list[str], start: datetime, end: datetime = datetime.now()
     ) -> None:
-        zone = ZoneInfo("America/New_York")
         req = StockBarsRequest(
             symbol_or_symbols=symbols,
             timeframe=TimeFrame(amount=1, unit=TimeFrameUnit.Hour),
@@ -170,7 +171,7 @@ class LiveBroker:
         df.reset_index(inplace=True)
         # Modify the timestamp column
         df["timestamp"] = df["timestamp"].apply(
-            lambda x: datetime.fromisoformat(str(x)).astimezone(zone)
+            lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
         )
 
         uniq_symbols: set[str] = set(df["symbol"])

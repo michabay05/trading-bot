@@ -3,9 +3,7 @@ from abc import abstractmethod
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from typing import Any, Literal
-from zoneinfo import ZoneInfo
-from pathlib import Path
-import json, time, os
+import json, time, os, shutil
 
 import numpy as np
 from numpy.typing import NDArray
@@ -13,7 +11,7 @@ import talib
 import matplotlib.pyplot as plt
 from alpaca.data.models.bars import Bar
 
-from . import util
+from . import util, log
 from .candles import Candle, Timespan
 from .broker import HistoricalBroker, LiveBroker
 from .replayer import CandleReplayer
@@ -119,7 +117,7 @@ class _LiveData:
 class LiveStrategy:
     def __init__(self) -> None:
         self._broker: LiveBroker = LiveBroker()
-        self.symbols: list[str] = ["SPY", "AAPL", "GE", "HPQ"]
+        self.symbols: list[str] = ["SPY", "AAPL", "GE", "HPQ", "EBAY", "XLF"]
         self._live_data: dict[str, _LiveData] = {}
         for sym in self.symbols:
             self._live_data[sym] = _LiveData()
@@ -128,7 +126,7 @@ class LiveStrategy:
         self._indicators: set[Indicator] = set()
         self._max_period: int = 0
 
-        self._time = datetime.now(tz=ZoneInfo("America/New_York"))
+        self._time = datetime.now(tz=util.MY_TIMEZONE)
         self._current_hour: int = self._time.hour
         self._next_close: datetime = self._time
 
@@ -145,10 +143,10 @@ class LiveStrategy:
     def _init_all_live_data(self) -> None:
         assert self._max_period > 0
 
-        print(f"[INFO] Max period: {self._max_period}")
-        print(f"[INFO] Loading data of {self._max_period + 5} candles...")
+        log.debug(f"Max period: {self._max_period}")
+        log.debug(f"Loading data of {self._max_period + 5} candles...")
         for symbol in self.symbols:
-            print(f"    [INFO] Symbol: {symbol}")
+            log.info(f"    Symbol: {symbol}")
             ld = self._live_data[symbol]
             path = f"ohlcv-1hr/{symbol}.csv"
             sf = Stockframe.from_csv(path, symbol, mult=1, timespan=Timespan.HOUR)
@@ -167,30 +165,34 @@ class LiveStrategy:
         # Bring historical data up to date
         start = datetime.now() - relativedelta(months=1)
         self._broker.export_historical_candles(util.ALL_SYMBOLS, start)
-        print(f"[INFO] Historicals up to date (from {str(start)} to now)")
+        log.debug(f"Historicals up to date (from {str(start)} to now)")
 
         self.setup()
-        print("[INFO] Indicators setup")
+        log.info("Indicators setup")
         self._init_all_live_data()
-        print("[INFO] Live data initialized")
-        print("[INFO] Live data: [")
+        log.info("Live data initialized")
+        log.debug("Live data: [")
         for symbol, ld in self._live_data.items():
-            print(f"    {symbol}: {ld.to_dict()}")
-        print("]")
+            log.debug(f"    {symbol}: {ld.to_dict()}")
+        log.debug("]")
 
-        print(f"[INFO] Symbols: {self.symbols}")
-        print(f"[INFO] Cash: ${self._broker._portfolio.cash:.2f}")
+        log.info(f"Symbols: {self.symbols}")
+        log.info(f"Cash: ${self._broker._portfolio.cash:.2f}")
 
         if not self._conn_alive:
             self._conn_alive = True
-            print("[INFO] Starting data stream...")
+            log.debug("Starting data stream...")
             self._broker._data_stream.run()
 
         self.start()
 
     def export_gathered_live_data(self) -> None:
         date_str: str = datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
-        dir: Path = Path(f"trout/logs/{date_str}/")
+        dir: str = f"trout/logs/{date_str}/"
+        if os.path.exists(dir):
+            assert os.path.isdir(dir)
+            shutil.rmtree(dir)
+
         os.mkdir(dir)
         for symbol, ld in self._live_data.items():
             sf: Stockframe = Stockframe.from_parts(
@@ -213,10 +215,10 @@ class LiveStrategy:
         t = datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
         while t < next_open:
-            print(f"Current time: {t}")
+            log.info(f"Current time: {t}")
             diff = next_open - t
             sleep_time = min(diff.total_seconds(), 30 * 60)
-            print(f"Sleeping for {sleep_time} seconds...")
+            log.info(f"Sleeping for {sleep_time} seconds...")
             time.sleep(sleep_time)
             t = datetime.now(tz=util.MY_TIMEZONE)
 
@@ -250,43 +252,43 @@ class LiveStrategy:
             volume=bar.volume,
         )
         self._live_data[bar.symbol].add_live(cnd)
-        print(f"[{bar.symbol:4}] Minute:", cnd)
+        log.debug(f"[{bar.symbol:4}] Minute: {cnd}")
 
         self._time = datetime.now(tz=util.MY_TIMEZONE)
         if cnd.timestamp.hour > self._current_hour:
             self._current_hour = cnd.timestamp.hour
 
             for symbol in self.symbols:
-                print(f"[INFO] Hourly update for {symbol}...")
+                log.info(f"Hourly update for {symbol}...")
                 symbol_ld = self._live_data[symbol]
                 # On new target-timespan, do the following ...
                 # ... aggregate the minute candles into a single target-timespan candle, ...
                 hour_cnd: Candle = util.aggregate_cnds(symbol_ld.live_cnds, self._time)
                 symbol_ld.add_agg(hour_cnd)
-                print(f"\n\n[INFO] {symbol:4}: {hour_cnd}\n\n")
+                log.debug(f"\n\n{symbol:4}: {hour_cnd}\n\n")
 
                 # ... recalculate the indicator values, ...
-                print("[INFO] Indicator values: [")
+                log.debug("Indicator values: [")
                 for ind in self._indicators:
                     values = ind.compute_from_candles(symbol_ld.agg_cnds)
                     name = ind.name()
                     symbol_ld.set_indicator(name, values)
-                    print(f"    {name}: {values[-1]}")
+                    log.debug(f"    {name}: {values[-1]}")
 
-                print("]")
+                log.debug("]")
 
                 # ... and apply strategy on the new target-timespan candle
                 order: MarketOrder | None = self.on_candle(symbol)
                 if order is not None:
                     self._broker.sync_portfolio()
                     self._broker.execute_open_order(order)
-                    print(f"[INFO] Submitted order: {order}")
+                    log.debug(f"Submitted order: {order}")
                 else:
-                    print(f"[INFO] No order")
+                    log.debug(f"No order")
 
-                print("------------------")
+                log.debug("------------------")
 
-        update_live_aggregates(self._live_data)
+            update_live_aggregates(self._live_data)
 
         if self._time >= self._next_close:
             # Market is closed
@@ -478,11 +480,19 @@ def update_live_aggregates(live_datas: dict[str, _LiveData]) -> None:
     export_dir: str = f"./charts-v2/public"
     output: dict = {}
     for symbol, live_data in live_datas.items():
+        agg_cnds: list[dict] = []
+        for agc in live_data.agg_cnds:
+            agg_cnds.append(agc.to_dict())
+
+        agg_inds: dict[str, list[float]] = {}
+        for ind_name, ind_values in live_data.agg_inds.items():
+            agg_inds[ind_name] = ind_values.tolist()
+
         output[symbol] = {
-            "new_candles": live_data.agg_cnds,
-            "new_indicators": live_data.agg_inds
+            "new_candles": agg_cnds,
+            "new_indicators": agg_inds
         }
 
-    with open(f"{export_dir}/updates.json") as f:
+    with open(f"{export_dir}/updates.json", "w") as f:
         json.dump(output, f, indent=4)
 
