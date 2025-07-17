@@ -40,37 +40,44 @@ A list of all the TODOs needed to be completed before each release
     - [ ] Symbol
     - [ ] Indicators (also pass in function arguments as seen here: `talib.EMA(close, timeperiod=50)`)
     - [Legend example from Lightweight Charts](https://tradingview.github.io/lightweight-charts/tutorials/how_to/legends#examples)
-- [ ] (fix) Instead of replacing `NaN` with `0.0` for indicators during their warmup time, use `WhiteSpaceData` in lightweight charts
 - [ ] (feat) Consider replacing my custom backtester with either one of these python libraries
     - `backtesting.py`
     - `vectorbt`
 - [ ] (fix) Check and fix all the broken parts of the strategy tester
 - [ ] (feat) Restructure stockframe such that it can adapt to a single or multiple symbols
 - [ ] (refactor) Update the indicator system in the candle visualizer to use the `Indicator` type
+- [ ] (rsch) Experiment with yahoo finance data
+- [ ] (feat) Extract data stream into its own data source system
+    - This setup makes it easier to use add Yahoo finance data at some point
+- [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
 
 ---
 
 ## v0.9
-- [ ] (feat) Factor in PDT limitations
+- [x] (fix) Instead of replacing `NaN` with `0.0` for indicators during their warmup time, use `WhiteSpaceData` in lightweight charts
+- [x] (rsch) Understand what 'PDT' means...exactly
     - Research PDT using these sources
         - [FINRA's official definition of PDT](https://www.finra.org/investors/investing/investment-products/stocks/day-trading)
         - [Alpaca's FAQ about PDT](https://alpaca.markets/support/pattern-day-trading-protection)
         - [Alpaca's docs about PDT protection](https://docs.alpaca.markets/docs/user-protection)
-- [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
 - [x] (feat) Add market holidays to market open or closed functionality
     - This is accomplished through alpaca's `next open` and `next close` functionality
 - [x] (rsch) Develop list of tickers for bot to trade
-- [ ] (feat) Add symbols to each candle
 - [x] (feat) Export data gathered throughout the market data
-- [ ] (rsch) Experiment with yahoo finance data
-- [ ] (feat) Extract data stream into its own data source system
-    - This setup makes it easier to use add Yahoo finance data at some point
 - [x] (refactor) Rewrite candle visualizer better with correct typescript stuff
     - The lack of types is driving me insane.
     - In the next version, `charts-v2` will officially replaced by the old `charts`.
 - [x] (feat) Introduce ability to change symbol without having to re-export new values
-- [ ] (feat) Integrate `visualize candles` into `trbot`
-    - Probably into `strategy.py`
+- [x] (feat) Integrate `visualize candles` into `trbot` as `visualizer`.
+- [x] (fix) Handle errors related to export daily (on_market_close) data
+    - `ERROR: Folder 'trout/logs/...' already exists`
+- [x] (fix) Handle errors related to export live data ... live
+    - [x] `ERROR: Object '...' is not JSON serializable`
+- [x] (refactor) Implement my own custom logging system that accomplishes the following:
+    - [x] Both printing and saving to a file w/ config to enable or disable it
+        - 'file' can mean sys.stdout or a regular file
+    - [x] Colored output w/ config to enable or disable it
+    - [x] Various modes: error, warning, info, debug w/ config to set minimum level
 
 ## v0.8
 - [x] (feat) Handle warmup for live trading

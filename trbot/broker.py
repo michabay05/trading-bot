@@ -18,7 +18,7 @@ import pandas as pd
 
 from trbot import util
 
-from . import candles, tbsecrets
+from . import candles, tbsecrets, log
 from .tbsecrets import ALPACA_SECRETS
 from .candles import Candle, CandleOption, Timespan
 from .portfolio import OrderDir, TBOrder, Portfolio, MarketOrder, OrderState, Position
@@ -169,6 +169,7 @@ class LiveBroker:
 
         # Reset index to make it a regular column
         df.reset_index(inplace=True)
+        log.debug(f"{df.columns}")
         # Modify the timestamp column
         df["timestamp"] = df["timestamp"].apply(
             lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
@@ -183,7 +184,7 @@ class LiveBroker:
             del sliced_df["trade_count"]
             del sliced_df["vwap"]
 
-            sliced_df.to_csv(f"ohlcv-1hr/{symbol}.csv", index=False)
+            sliced_df.to_csv(f"trout/ohlcv-1hr/{symbol}.csv", index=False)
 
 
 class HistoricalBroker:

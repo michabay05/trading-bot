@@ -1,10 +1,10 @@
 from datetime import datetime
-import time
-import json, math, os
+import json, math, os, time
 
-from trbot.strategy import IndValues, Indicator
-from trbot.candles import Candle, Timespan
-from trbot.stockframe import Stockframe
+from . import log
+from .strategy import IndValues, Indicator
+from .candles import Candle, Timespan
+from .stockframe import Stockframe
 
 
 def _candle_csv_to_json(csv_path: str, ticker: str) -> list[dict]:
@@ -77,6 +77,7 @@ def _export_data(symbol: str, csv_path: str, indicator_list: list[dict]) -> dict
     }
 
 def main() -> None:
+    log.info(f"Current working directory: '{os.getcwd()}'")
     start_time: float = time.time()
     indicator_list: list = [
         {
@@ -108,7 +109,7 @@ def main() -> None:
     successful_symbols: list[str] = []
     failed_symbols: list[str] = []
     for symbol in all_symbols:
-        csv_path: str = f"./ohlcv-1hr/{symbol}.csv"
+        csv_path: str = f"./trout/ohlcv-1hr/{symbol}.csv"
         if not os.path.exists(csv_path):
             print(f"[ERROR] File does not exist: {csv_path}")
             failed_symbols.append(symbol)

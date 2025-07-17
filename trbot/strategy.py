@@ -117,7 +117,10 @@ class _LiveData:
 class LiveStrategy:
     def __init__(self) -> None:
         self._broker: LiveBroker = LiveBroker()
-        self.symbols: list[str] = ["SPY", "AAPL", "GE", "HPQ", "EBAY", "XLF"]
+        self.symbols: list[str] = [
+            "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
+            "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS"
+        ]
         self._live_data: dict[str, _LiveData] = {}
         for sym in self.symbols:
             self._live_data[sym] = _LiveData()
@@ -146,9 +149,9 @@ class LiveStrategy:
         log.debug(f"Max period: {self._max_period}")
         log.debug(f"Loading data of {self._max_period + 5} candles...")
         for symbol in self.symbols:
-            log.info(f"    Symbol: {symbol}")
+            log.debug(f"    Symbol: {symbol}")
             ld = self._live_data[symbol]
-            path = f"ohlcv-1hr/{symbol}.csv"
+            path = f"trout/ohlcv-1hr/{symbol}.csv"
             sf = Stockframe.from_csv(path, symbol, mult=1, timespan=Timespan.HOUR)
             n: int = len(sf) - (self._max_period + 5)
             # Populate enough historical candles so that the indicators can produce values
@@ -244,7 +247,7 @@ class LiveStrategy:
             raise ValueError(f"data is of type {type(bar)}, expected type `Bar`")
 
         cnd: Candle = Candle(
-            timestamp=bar.timestamp,
+            timestamp=bar.timestamp.astimezone(tz=util.MY_TIMEZONE),
             open=bar.open,
             high=bar.high,
             low=bar.low,
@@ -288,7 +291,8 @@ class LiveStrategy:
 
                 log.debug("------------------")
 
-            update_live_aggregates(self._live_data)
+ 
+        update_live_aggregates(self._live_data)
 
         if self._time >= self._next_close:
             # Market is closed
@@ -479,14 +483,24 @@ class StrategyTester:
 def update_live_aggregates(live_datas: dict[str, _LiveData]) -> None:
     export_dir: str = f"./charts-v2/public"
     output: dict = {}
+
+    now: datetime = datetime.now(tz=util.MY_TIMEZONE)
+    todays_open: datetime = datetime(
+        year=now.year, month=now.month, day=now.month, hour=9, minute=30
+    )
+
     for symbol, live_data in live_datas.items():
         agg_cnds: list[dict] = []
+        count: int = 0
         for agc in live_data.agg_cnds:
-            agg_cnds.append(agc.to_dict())
+            if agc.timestamp >= todays_open:
+                agg_cnds.append(agc.to_dict())
+            else:
+                count += 1
 
         agg_inds: dict[str, list[float]] = {}
         for ind_name, ind_values in live_data.agg_inds.items():
-            agg_inds[ind_name] = ind_values.tolist()
+            agg_inds[ind_name] = ind_values.tolist()[count:]
 
         output[symbol] = {
             "new_candles": agg_cnds,

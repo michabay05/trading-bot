@@ -60,7 +60,7 @@ def log(level: LogLevel, msg: str) -> None:
 
     print(output)
     if _LOG_OUTPUT_PATH is not None:
-        with open(_LOG_OUTPUT_PATH, "w") as f:
+        with open(_LOG_OUTPUT_PATH, "w+") as f:
             print(output, file=f)
 
 def debug(msg: str) -> None:

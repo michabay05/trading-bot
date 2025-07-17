@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from trbot.strategy import Indicator, LiveStrategy
 from trbot.portfolio import MarketOrder
+from trbot import log, util
 
 class MyLiveStrat(LiveStrategy):
     def setup(self) -> None:
@@ -7,7 +10,7 @@ class MyLiveStrat(LiveStrategy):
             Indicator(kind="ema", part=["close"], period=5)
         )
         self.slow_ma = self.add_indicator(
-            Indicator(kind="ema", part=["close"], period=20)
+            Indicator(kind="ema", part=["close"], period=35)
         )
         self.atr = self.add_indicator(
             Indicator(kind="atr", part=["high", "low", "close"], period=14)
@@ -36,20 +39,26 @@ class MyLiveStrat(LiveStrategy):
             (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=True)
             # sl = self.last_close - 5*last_atr
             # tp = self.last_close + 10*last_atr
-            print(f"[INFO] {symbol}: Going long...\n\n")
+            log.debug(f"{symbol}: Going long...\n\n")
             return self.market_buy(symbol, size=sz, tp_limit=tp, sl_limit=sl)
         elif self.ind_crossover(symbol, self.slow_ma, self.fast_ma):
             (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=False)
             # sl = self.last_close + 5*last_atr
             # tp = self.last_close - 10*last_atr
-            print(f"[INFO] {symbol}: Going short...\n\n")
+            log.debug(f"{symbol}: Going short...\n\n")
             return self.market_sell(symbol, size=sz, tp_limit=tp, sl_limit=sl)
 
+
+dt_str = datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
+log.init(
+    log_output_path=f"trout/logs/{dt_str}/logs.txt"
+)
 
 ls = MyLiveStrat()
 try:
     ls.start()
 except KeyboardInterrupt:
-    print("[ERROR] Received keyboard interrupt, ctrl-c...")
+    log.error("Received keyboard interrupt, ctrl-c...")
 finally:
     ls.export_gathered_live_data()
+

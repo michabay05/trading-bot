@@ -1,5 +1,3 @@
 /trbot/tbsecrets.py
-/trbot/__pycache__/
-/__pycache__/
-/tests/__pycache__/
+__pycache__
 /trout/
