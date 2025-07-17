@@ -486,7 +486,8 @@ def update_live_aggregates(live_datas: dict[str, _LiveData]) -> None:
 
     now: datetime = datetime.now(tz=util.MY_TIMEZONE)
     todays_open: datetime = datetime(
-        year=now.year, month=now.month, day=now.month, hour=9, minute=30
+        year=now.year, month=now.month, day=now.month, hour=9, minute=30,
+        tzinfo=util.MY_TIMEZONE
     )
 
     for symbol, live_data in live_datas.items():
