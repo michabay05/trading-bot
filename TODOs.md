@@ -43,15 +43,36 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Consider replacing my custom backtester with either one of these python libraries
     - `backtesting.py`
     - `vectorbt`
-- [ ] (fix) Check and fix all the broken parts of the strategy tester
-- [ ] (feat) Restructure stockframe such that it can adapt to a single or multiple symbols
 - [ ] (refactor) Update the indicator system in the candle visualizer to use the `Indicator` type
 - [ ] (rsch) Experiment with yahoo finance data
 - [ ] (feat) Extract data stream into its own data source system
     - This setup makes it easier to use add Yahoo finance data at some point
 - [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
+- [ ] (fix) Handle missing candle values
+    - As it stands, if the bot was stopped for some reason at 10:25 and is restarted at 13:25, there will be a 3-hour gap in the data.
 
 ---
+
+## v0.10
+- [x] (feat) Add Yahoo as an official data source
+    - [x] Convert price points to a single minute candle
+    - [ ] Disable the logging from yfinance
+    - [x] Provide callback when a single minute candle is aggregated
+- [x] (refactor) Extract alpaca data stream from broker to its own thing
+- [x] (refactor) Reimplement the existing strategy system to use the new datafeed system
+- [x] (refactor) Restructure stockframe such that it can adapt to a single or multiple symbols
+    - This ended up being two different objects one for a single symbol and the other for multiple
+- [x] (refactor) Standardized dataframe structure between multiple data sources
+- [x] (refactor) Remove all the old code related to my historical backtester
+    - [x] Polygon-io stuff
+    - [x] Candle replayer
+    - [x] Strategy tester
+    - [x] Historical broker
+- [ ] (feat) Export portfolio on market close
+    - This will eventually be used to compute daily performance metrics.
+- [ ] (feat) Add a second bot that uses Yahoo Finance as a data source
+- [ ] (feat) Add random candle generator
+- [ ] (feat) Add more tests based on the random candle generator
 
 ## v0.9
 - [x] (fix) Instead of replacing `NaN` with `0.0` for indicators during their warmup time, use `WhiteSpaceData` in lightweight charts

@@ -8,13 +8,11 @@ import json, time, os, shutil
 import numpy as np
 from numpy.typing import NDArray
 import talib
-import matplotlib.pyplot as plt
 from alpaca.data.models.bars import Bar
 
 from . import util, log
 from .candles import Candle, Timespan
 from .broker import HistoricalBroker, LiveBroker
-from .replayer import CandleReplayer
 from .portfolio import (
     OrderIntent, OrderDir, Portfolio, MarketOrder,
     StopLossTrigger, TakeProfitTrigger
@@ -399,85 +397,6 @@ class LiveStrategy:
             return val1[-2] < val2[-2] and val1[-1] > val2[-1]
         else:
             raise ValueError("Both lists should have at least 2 elements")
-
-
-class StrategyTester:
-    def __init__(self,
-        sf: Stockframe, start_ind: int = 0, end_ind: int = -1, sleep: bool = False,
-    ) -> None:
-        self._portfolio: Portfolio = Portfolio()
-        self._broker: HistoricalBroker = HistoricalBroker()
-        self._indicators: dict[str, IndValues] = {}
-        self._sf: Stockframe = sf
-
-        assert start_ind != end_ind
-        assert end_ind <= len(sf)
-        self._start: int = start_ind
-        self._end: int = end_ind if start_ind < end_ind else len(sf)
-        self._index: int = self._start
-
-        self._sleep: bool = sleep
-        self._repl: CandleReplayer = CandleReplayer(self._sf, start_ind=self._start, sleep=self._sleep)
-
-        # P/L metrics
-        self._pl_values: list[float] = []
-
-    def series_slice(self, series: NDArray[np.float64]) -> NDArray[np.float64]:
-        return series[self._start:self._index]
-
-    @property
-    def last_close(self) -> float:
-        return self._sf.close_series[-1]
-
-    @property
-    def curr_dt_str(self) -> str:
-        return self._repl.current_time.strftime("%Y-%m-%d %H:%M:%S")
-
-    def get_next_candle(self) -> None:
-        self._index += 1
-
-    @abstractmethod
-    def setup(self) -> None:
-        """ Called once """
-        pass
-
-    @abstractmethod
-    def on_candle(self) -> None:
-        """ Called on each candle """
-        pass
-
-    def run(self) -> None:
-        self.setup()
-
-        while self._index < self._end:
-            if self._sleep:
-                # Notify user of progress
-                print(f"[{self._index}] {self._repl.current_time}")
-
-            # TODO: Check up on any orders that have a take profit or stop loss
-            self._broker.order_checkup(self._portfolio, self.last_close, self.curr_dt_str)
-            self._portfolio.update_pl()
-
-            if self._repl.is_candle_available():
-                self.get_next_candle()
-                self.on_candle()
-                self._pl_values.append(self._portfolio.pl)
-
-            self._repl.step_time()
-
-    def plot_pl(self, filepath: str | None = None):
-        dates = self._sf.timestamp_series
-
-        plt.rcParams['date.converter'] = 'concise'
-        _, ax = plt.subplots(figsize=(8, 6), layout='constrained')
-        ax.plot(dates, self._pl_values) # type: ignore
-        if filepath is None:
-            plt.show()
-        else:
-            plt.savefig(filepath)
-
-    def export_portfolio(self, outdir: str) -> None:
-        self._portfolio.save_to_json(f"{outdir}/{self._sf.symbol}-portfolio.json")
 
 
 def update_live_aggregates(live_datas: dict[str, _LiveData]) -> None:
