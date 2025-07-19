@@ -60,10 +60,5 @@ class Timespan(Enum):
     def __str__(self):
         return self.value
 
-    return {
-        "ticker"  : ticker,
-        "mult"    : mult,
-        "timespan": timespan
-    }
 
 
