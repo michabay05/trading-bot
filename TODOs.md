@@ -56,7 +56,6 @@ A list of all the TODOs needed to be completed before each release
 ## v0.10
 - [x] (feat) Add Yahoo as an official data source
     - [x] Convert price points to a single minute candle
-    - [ ] Disable the logging from yfinance
     - [x] Provide callback when a single minute candle is aggregated
 - [x] (refactor) Extract alpaca data stream from broker to its own thing
 - [x] (refactor) Reimplement the existing strategy system to use the new datafeed system
@@ -68,7 +67,9 @@ A list of all the TODOs needed to be completed before each release
     - [x] Candle replayer
     - [x] Strategy tester
     - [x] Historical broker
-- [ ] (feat) Export portfolio on market close
+- [ ] (refactor) Add notion of amount of cash into strategy system
+    - No money, stop running the bot
+- [x] (feat) Export portfolio on market close
     - This will eventually be used to compute daily performance metrics.
 - [ ] (feat) Add a second bot that uses Yahoo Finance as a data source
 - [ ] (feat) Add random candle generator
@@ -220,4 +221,4 @@ A list of all the TODOs needed to be completed before each release
     - [x] WMT
 - [x] (fix) Remove duplicate candles when paginating downloaded historical data
 - [x] (refactor) Store candles as a pandas dataframe
-- [x] (Replayer) Develop a candle replayer (with modifiable replay time factor)
+- [x] (feat) Develop a candle replayer (with modifiable replay time factor)

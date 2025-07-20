@@ -3,23 +3,24 @@ from dataclasses import asdict, dataclass, field
 import json, os
 
 
-class OrderType(Enum):
+class TBOrderType(Enum):
     MARKET = "market"
+    LIMIT = "limit"
 
-class OrderDir(Enum):
+class TBOrderDir(Enum):
     LONG = "long"
     SHORT = "short"
 
-    def opposite(self) -> 'OrderDir':
-        if self == OrderDir.LONG:
-            return OrderDir.SHORT
-        elif self == OrderDir.SHORT:
-            return OrderDir.LONG
+    def opposite(self) -> 'TBOrderDir':
+        if self == TBOrderDir.LONG:
+            return TBOrderDir.SHORT
+        elif self == TBOrderDir.SHORT:
+            return TBOrderDir.LONG
         else:
             raise ValueError(f"Unknown side: {self.value}")
 
 
-class OrderState(Enum):
+class TBOrderState(Enum):
     FILLED = "filled"
     WORKING = "working"
 
@@ -29,7 +30,7 @@ class Position:
     symbol: str
     quantity: float
     price: float
-    side: OrderDir
+    side: TBOrderDir
 
     def market_value(self) -> float:
         return self.quantity * self.price
@@ -97,13 +98,13 @@ ORDER_ID_COUNTER: int = 0
 @dataclass
 class TBOrder:
     symbol: str
-    side: OrderDir
+    side: TBOrderDir
     requested_qty: float
     requested_dt: str
     intent: OrderIntent
-    type: OrderType
+    type: TBOrderType
     id: int = field(init=False)
-    status: OrderState = OrderState.WORKING
+    status: TBOrderState = TBOrderState.WORKING
     purchase_qty: float | None = None
     purchase_dt: str | None = None
     purchase_price: float | None = None
@@ -135,7 +136,7 @@ class TBOrder:
         super().__setattr__(name, value)
 
     def is_long(self) -> bool:
-        return self.side == OrderDir.LONG
+        return self.side == TBOrderDir.LONG
 
     def is_to_open(self) -> bool:
         return (
@@ -164,8 +165,8 @@ class TBOrder:
         return d
 
 @dataclass
-class MarketOrder(TBOrder):
-    type: OrderType = OrderType.MARKET
+class TBMarketOrder(TBOrder):
+    type: TBOrderType = TBOrderType.MARKET
 
 
 class Portfolio:

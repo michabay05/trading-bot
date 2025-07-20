@@ -4,6 +4,7 @@ from colorama import Fore, Style
 
 class LogLevel(enum.Enum):
     DEBUG = enum.auto()
+    WARN = enum.auto()
     INFO = enum.auto()
     ERROR = enum.auto()
     FATAL = enum.auto()
@@ -12,6 +13,8 @@ class LogLevel(enum.Enum):
         match self:
             case LogLevel.DEBUG:
                 return "DEBUG"
+            case LogLevel.WARN:
+                return "WARN"
             case LogLevel.INFO:
                 return "INFO"
             case LogLevel.ERROR:
@@ -23,6 +26,8 @@ class LogLevel(enum.Enum):
         match self:
             case LogLevel.DEBUG:
                 return Style.DIM
+            case LogLevel.WARN:
+                return Fore.YELLOW
             case LogLevel.INFO:
                 # INFO logs should just be the default color
                 return ""
@@ -30,6 +35,7 @@ class LogLevel(enum.Enum):
                 return Fore.RED
             case LogLevel.FATAL:
                 return Fore.RED + Style.BRIGHT
+
 
 _ENABLE_COLOR_LOGS: bool = True
 _LOG_OUTPUT_PATH: str | None = None
@@ -56,9 +62,11 @@ def log(level: LogLevel, msg: str) -> None:
 
     output: str = f"{str(level)}: {msg}"
     if _ENABLE_COLOR_LOGS:
-        output = level.color_codes() + output + Style.RESET_ALL
+        colored_output = level.color_codes() + output + Style.RESET_ALL
+        print(colored_output)
+    else:
+        print(output)
 
-    print(output)
     if _LOG_OUTPUT_PATH is not None:
         with open(_LOG_OUTPUT_PATH, "w+") as f:
             print(output, file=f)
@@ -68,6 +76,9 @@ def debug(msg: str) -> None:
 
 def info(msg: str) -> None:
     log(LogLevel.INFO, msg)
+
+def warn(msg: str) -> None:
+    log(LogLevel.WARN, msg)
 
 def error(msg: str) -> None:
     log(LogLevel.ERROR, msg)

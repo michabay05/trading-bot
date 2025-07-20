@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from trbot.strategy import Indicator, LiveStrategy
-from trbot.portfolio import MarketOrder
+from trbot.portfolio import TBMarketOrder
 from trbot import log, util
 
 class MyLiveStrat(LiveStrategy):
@@ -31,7 +31,7 @@ class MyLiveStrat(LiveStrategy):
 
         return (tp, sl)
 
-    def on_candle(self, symbol: str) -> MarketOrder | None:
+    def on_candle(self, symbol: str) -> TBMarketOrder | None:
         last_atr = self.last_ind_value(symbol, self.atr)
         last_close = self.last_close(symbol)
         sz: float = 1
@@ -54,11 +54,9 @@ log.init(
     log_output_path=f"trout/logs/{dt_str}/logs.txt"
 )
 
-ls = MyLiveStrat()
+ls = MyLiveStrat(data_source="alpaca")
 try:
     ls.start()
 except KeyboardInterrupt:
     log.error("Received keyboard interrupt, ctrl-c...")
-finally:
-    ls.export_gathered_live_data()
 

@@ -8,23 +8,22 @@ import json, time, os, shutil
 import numpy as np
 from numpy.typing import NDArray
 import talib
-from alpaca.data.models.bars import Bar
+
 
 from . import util, log
+from .broker import LiveBroker
 from .candles import Candle, Timespan
-from .broker import HistoricalBroker, LiveBroker
+from .datafeed import AlpacaDataFeed, DataFeed, YahooDataFeed
 from .portfolio import (
-    OrderIntent, OrderDir, Portfolio, MarketOrder,
+    OrderIntent, TBOrderDir, TBMarketOrder,
     StopLossTrigger, TakeProfitTrigger
 )
-from .stockframe import Stockframe
+from .stockframe_v2 import SingleStockFrame
 
 
 IndValues = NDArray[np.float64]
-
 IndicatorKind = Literal["sma", "ema", "rsi", "atr"]
 CandlePart = Literal["close", "low", "high"]
-
 
 class Indicator:
     def __init__(self,
@@ -113,14 +112,22 @@ class _LiveData:
 
 
 class LiveStrategy:
-    def __init__(self) -> None:
+    def __init__(self, data_source: Literal["alpaca", "yahoo"]) -> None:
         self._broker: LiveBroker = LiveBroker()
-        self.symbols: list[str] = [
+        self._symbols: list[str] = [
             "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
             "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS"
         ]
+        self._data_feed: DataFeed
+        if data_source == "alpaca":
+            self._data_feed = AlpacaDataFeed(self._symbols, acct_name="Alpaca Bot")
+        else:
+            self._data_feed = YahooDataFeed(self._symbols)
+
+        self._data_feed.set_candle_callback(self._on_new_candle)
+
         self._live_data: dict[str, _LiveData] = {}
-        for sym in self.symbols:
+        for sym in self._symbols:
             self._live_data[sym] = _LiveData()
         self._conn_alive: bool = False
 
@@ -146,16 +153,16 @@ class LiveStrategy:
 
         log.debug(f"Max period: {self._max_period}")
         log.debug(f"Loading data of {self._max_period + 5} candles...")
-        for symbol in self.symbols:
+        for symbol in self._symbols:
             log.debug(f"    Symbol: {symbol}")
             ld = self._live_data[symbol]
             path = f"trout/ohlcv-1hr/{symbol}.csv"
-            sf = Stockframe.from_csv(path, symbol, mult=1, timespan=Timespan.HOUR)
-            n: int = len(sf) - (self._max_period + 5)
+            ssf = SingleStockFrame.from_csv(symbol, Timespan.HOUR, path)
+            n: int = len(ssf) - (self._max_period + 5)
             # Populate enough historical candles so that the indicators can produce values
             # on market open (not be in their warmup phase)
-            for i in range(n, len(sf)):
-                cnd: Candle = sf.row_to_candle(i)
+            for i in range(n, len(ssf)):
+                cnd: Candle = ssf.row_to_candle(i)
                 ld.add_agg(cnd)
 
             # Actually, calculate the indicator values based on the candles loaded into memory
@@ -165,7 +172,13 @@ class LiveStrategy:
     def _on_market_open(self) -> None:
         # Bring historical data up to date
         start = datetime.now() - relativedelta(months=1)
-        self._broker.export_historical_candles(util.ALL_SYMBOLS, start)
+
+        # Export the most recent data fetched from the data feed
+        msf = self._data_feed.get_historical(util.ALL_SYMBOLS, Timespan.HOUR, start)
+        for symbol in msf._symbols:
+            ssf = msf.get_symbol(symbol)
+            ssf.save_to_csv(f"trout/ohlcv-1hr/{symbol}.csv")
+
         log.debug(f"Historicals up to date (from {str(start)} to now)")
 
         self.setup()
@@ -177,17 +190,17 @@ class LiveStrategy:
             log.debug(f"    {symbol}: {ld.to_dict()}")
         log.debug("]")
 
-        log.info(f"Symbols: {self.symbols}")
+        log.info(f"Symbols: {self._symbols}")
         log.info(f"Cash: ${self._broker._portfolio.cash:.2f}")
 
         if not self._conn_alive:
             self._conn_alive = True
             log.debug("Starting data stream...")
-            self._broker._data_stream.run()
+            self._data_feed.start_live()
 
         self.start()
 
-    def export_gathered_live_data(self) -> None:
+    def export_info(self) -> None:
         date_str: str = datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
         dir: str = f"trout/logs/{date_str}/"
         if os.path.exists(dir):
@@ -196,21 +209,32 @@ class LiveStrategy:
 
         os.mkdir(dir)
         for symbol, ld in self._live_data.items():
-            sf: Stockframe = Stockframe.from_parts(
-                ld.live_cnds, symbol, mult=1, timespan=ld.live_timespan
+            ssf: SingleStockFrame = SingleStockFrame.from_parts(
+                symbol, ld.live_timespan, ld.live_cnds
             )
-            sf.df.to_csv(f"{dir}/live-{symbol}-{ld.live_timespan.value}.csv", index=False)
-            sf = Stockframe.from_parts(
-                ld.agg_cnds, symbol, mult=1, timespan=ld.agg_timespan
+            ssf.save_to_csv(
+                f"{dir}/live-{symbol}-{ld.live_timespan.value}.csv",
+                index=False
             )
-            sf.df.to_csv(f"{dir}/agg-{symbol}-{ld.agg_timespan.value}.csv", index=False)
+            ssf: SingleStockFrame = SingleStockFrame.from_parts(
+                symbol, ld.agg_timespan, ld.agg_cnds
+            )
+            ssf.save_to_csv(
+                f"{dir}/agg-{symbol}-{ld.agg_timespan.value}.csv",
+                index=False
+            )
+
+        # Export the state of the portfolio
+        self._broker.portfolio.save_to_json(f"{dir}/portfolio.json")
 
     def _on_market_close(self) -> None:
         if self._conn_alive:
-            self._broker._data_stream.stop()
+            self._data_feed.end_live()
             self._conn_alive = False
 
-        # Export live and aggregated candles gathered throughout trading hours
+        # Export all info pertaining to how the day went today
+        self.export_info()
+
         status: dict = self._broker.get_market_status()
         next_open: datetime = status["next_open"]
         t = datetime.now(tz=util.MY_TIMEZONE)
@@ -226,10 +250,6 @@ class LiveStrategy:
         self.start()
 
     def start(self) -> None:
-        self._broker._data_stream.subscribe_bars(
-            self._stock_data_stream_handler, *self.symbols
-        )
-
         status: dict = self._broker.get_market_status()
         self._next_close = status["next_close"]
         if status["is_open"]:
@@ -239,27 +259,15 @@ class LiveStrategy:
             # Market is currently closed
             self._on_market_close()
 
-    async def _stock_data_stream_handler(self, bar: Bar | dict) -> None:
-        if isinstance(bar, dict):
-            # I have no idea what is inside this dict
-            raise ValueError(f"data is of type {type(bar)}, expected type `Bar`")
-
-        cnd: Candle = Candle(
-            timestamp=bar.timestamp.astimezone(tz=util.MY_TIMEZONE),
-            open=bar.open,
-            high=bar.high,
-            low=bar.low,
-            close=bar.close,
-            volume=bar.volume,
-        )
-        self._live_data[bar.symbol].add_live(cnd)
-        log.debug(f"[{bar.symbol:4}] Minute: {cnd}")
+    async def _on_new_candle(self, symbol: str, cnd: Candle) -> None:
+        self._live_data[symbol].add_live(cnd)
+        log.debug(f"[{symbol:4}] Minute: {cnd}")
 
         self._time = datetime.now(tz=util.MY_TIMEZONE)
         if cnd.timestamp.hour > self._current_hour:
             self._current_hour = cnd.timestamp.hour
 
-            for symbol in self.symbols:
+            for symbol in self._symbols:
                 log.info(f"Hourly update for {symbol}...")
                 symbol_ld = self._live_data[symbol]
                 # On new target-timespan, do the following ...
@@ -279,7 +287,7 @@ class LiveStrategy:
                 log.debug("]")
 
                 # ... and apply strategy on the new target-timespan candle
-                order: MarketOrder | None = self.on_candle(symbol)
+                order: TBMarketOrder | None = self.on_candle(symbol)
                 if order is not None:
                     self._broker.sync_portfolio()
                     self._broker.execute_open_order(order)
@@ -302,7 +310,7 @@ class LiveStrategy:
         pass
 
     @abstractmethod
-    def on_candle(self, symbol: str) -> MarketOrder | None:
+    def on_candle(self, symbol: str) -> TBMarketOrder | None:
         """ Called on each new candle """
         pass
 
@@ -332,18 +340,18 @@ class LiveStrategy:
 
     def market_buy(self, symbol: str,
         size: float, tp_limit: float | None = None, sl_limit: float | None = None
-    ) -> MarketOrder:
+    ) -> TBMarketOrder:
         assert size > 0, "Negative size provided. (size > 0)"
-        assert symbol in self.symbols, f"Provided ({symbol}) is not in list of symbols ({self.symbols})"
+        assert symbol in self._symbols, f"Provided ({symbol}) is not in list of symbols ({self._symbols})"
 
         if tp_limit is not None and sl_limit is not None:
             assert 0.0 < sl_limit < tp_limit, (
                 f"$0.00 < SL(${tp_limit:.3f}) < TP(${sl_limit:.3f})"
             )
 
-        mkt_ord: MarketOrder = MarketOrder(
+        mkt_ord: TBMarketOrder = TBMarketOrder(
             symbol=symbol,
-            side=OrderDir.LONG,
+            side=TBOrderDir.LONG,
             requested_qty=size,
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.BUY_TO_OPEN
@@ -363,18 +371,18 @@ class LiveStrategy:
 
     def market_sell(self, symbol: str,
         size: float, tp_limit: float | None = None, sl_limit: float | None = None
-    ) -> MarketOrder:
+    ) -> TBMarketOrder:
         assert size > 0, "Negative size provided. (size > 0)"
-        assert symbol in self.symbols, f"Provided ({symbol}) is not in list of symbols ({self.symbols})"
+        assert symbol in self._symbols, f"Provided ({symbol}) is not in list of symbols ({self._symbols})"
 
         if tp_limit is not None and sl_limit is not None:
             assert 0.0 < tp_limit < sl_limit, (
                 f"TP(${tp_limit:.3f}) < SL(${sl_limit:.3f})"
             )
 
-        mkt_ord: MarketOrder = MarketOrder(
+        mkt_ord: TBMarketOrder = TBMarketOrder(
             symbol=symbol,
-            side=OrderDir.SHORT,
+            side=TBOrderDir.SHORT,
             requested_qty=size,
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.SELL_TO_OPEN

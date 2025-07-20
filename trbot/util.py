@@ -21,9 +21,9 @@ ALL_SYMBOLS: list[str] = [
 
 MY_TIMEZONE = ZoneInfo("America/New_York")
 
-def alpaca_keys(index: int = 0) -> tuple[str, str]:
+def alpaca_keys(acct_name: str) -> tuple[str, str]:
     """ Access my keys from alpaca """
-    return (ALPACA_SECRETS[index]["api_key"], ALPACA_SECRETS[index]["secret_key"])
+    return (ALPACA_SECRETS[acct_name]["api_key"], ALPACA_SECRETS[acct_name]["secret_key"])
 
 def alpaca_get_historical(symbols: list[str], api_key: str, secret_key: str, start: datetime,
     end: datetime, mult: int = 1, timespan: Timespan = Timespan.HOUR

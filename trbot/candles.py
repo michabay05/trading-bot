@@ -1,7 +1,8 @@
 from dataclasses import asdict, dataclass
-from zoneinfo import ZoneInfo
 from datetime import datetime
 from enum import Enum
+
+from alpaca.data.timeframe import TimeFrameUnit
 
 from trbot import util
 
@@ -42,23 +43,41 @@ class Timespan(Enum):
     DAY = "day"
 
     def to_seconds(self) -> int:
-        if self == Timespan.DAY:
-            # (1 day) * (24hr/day) * (60min/hr) * (60s/min)
-            return 24 * 60 * 60
-        elif self == Timespan.HOUR:
-            # (1 hour) * (60min/hr) * (60s/min)
-            return 60 * 60
-        elif self == Timespan.MINUTE:
-            # (1 minute) * (60s/min)
-            return 60
-        else:
-            raise Exception(f"Unknown timespan: {self.name}")
+        match self:
+            case Timespan.DAY:
+                # (1 day) * (24hr/day) * (60min/hr) * (60s/min)
+                return 24 * 60 * 60
+            case Timespan.HOUR:
+                # (1 hour) * (60min/hr) * (60s/min)
+                return 60 * 60
+            case Timespan.MINUTE:
+                # (1 minute) * (60s/min)
+                return 60
 
     def to_ms(self) -> int:
         return self.to_seconds() * 1000
 
+    def as_alpaca(self) -> str:
+        match self:
+            case Timespan.DAY:
+                return TimeFrameUnit.Day
+            case Timespan.HOUR:
+                return TimeFrameUnit.Hour
+            case Timespan.MINUTE:
+                return TimeFrameUnit.Minute
+
+    def as_yf(self, mult: int = 1) -> str:
+        timespan_ltr: str = ""
+        match self:
+            case Timespan.DAY:
+                timespan_ltr = "d"
+            case Timespan.HOUR:
+                timespan_ltr = "h"
+            case Timespan.MINUTE:
+                timespan_ltr = "m"
+
+        return f"{mult}{timespan_ltr}"
+
     def __str__(self):
         return self.value
-
-
 
