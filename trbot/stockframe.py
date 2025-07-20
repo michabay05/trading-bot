@@ -1,107 +1,119 @@
 from datetime import datetime
-from zoneinfo import ZoneInfo
+
 import pandas as pd
-import numpy as np
-from numpy.typing import NDArray
 
-from trbot import util
-
-from . import candles
+from . import util
 from .candles import Candle, Timespan
 
-
-class Stockframe:
-    def __init__(self, ticker: str, mult: int, timespan: Timespan):
-        self._df: pd.DataFrame = pd.DataFrame(
-            columns=["timestamp", "open", "high", "low", "close", "volume"], # type: ignore
-        )
-        self._formatted_dts: list[datetime] = []
-        self.symbol: str = ticker
-        self.mult: int = mult
-        self.timespan: Timespan = timespan
+class SingleStockFrame:
+    def __init__(self,
+        symbol: str, timespan: Timespan, df: pd.DataFrame = pd.DataFrame()
+    ) -> None:
+        self._df: pd.DataFrame = df
+        self._symbol: str = symbol
+        self._timespan: Timespan = timespan
 
     @classmethod
     def from_parts(cls,
-        cnds: list[Candle], ticker: str, mult: int, timespan: Timespan
-    ) -> 'Stockframe':
-        data: list[list[str]] = []
+        symbol: str, timespan: Timespan, cnds: list[Candle]
+    ) -> 'SingleStockFrame':
+        df_cols: dict[str, list] = {
+            "timestamp": [],
+            "open": [],
+            "high": [],
+            "low": [],
+            "close": [],
+            "volume": [],
+        }
         for c in cnds:
-            data.append([
-                f"{c.timestamp}",
-                f"{c.open:.4f}",
-                f"{c.high:.4f}",
-                f"{c.low:.4f}",
-                f"{c.close:.4f}",
-                f"{c.volume:.4f}"
-            ])
+            df_cols["timestamp"].append(c.timestamp)
+            df_cols["open"].append(c.open)
+            df_cols["high"].append(c.high)
+            df_cols["low"].append(c.low)
+            df_cols["close"].append(c.close)
+            df_cols["volume"].append(c.volume)
 
-        sf = cls(ticker, mult, timespan)
-        sf._df = pd.DataFrame(
-            data,
-            columns=["timestamp", "open", "high", "low", "close", "volume"], # type: ignore
-        )
-        sf.parse_timestamp("timestamp")
-        return sf
+        return cls(symbol, timespan, pd.DataFrame.from_dict(df_cols))
 
     @classmethod
-    def from_csv(cls, filepath: str, ticker: str, mult: int, timespan: Timespan) -> 'Stockframe':
-        sf = cls(ticker=ticker, mult=mult, timespan=timespan)
-        sf._df = pd.read_csv(filepath, index_col=False)
-        if "datetime" in sf._df.columns:
-            sf._df.rename(columns={"datetime": "timestamp"}, inplace=True)
-        if "trade_count" in sf._df.columns:
-            del sf._df["trade_count"]
-        if "vwap" in sf._df.columns:
-            del sf._df["vwap"]
-
-        sf.parse_timestamp("timestamp")
-        return sf
-
-    def __repr__(self) -> str:
-        output = f"{self.symbol} on {self.mult} {self.timespan.value} interval\n"
-        output += f"{self._df}"
-        return output
-
-    def parse_timestamp(self, col_name: str, replace: bool = True) -> None:
-        # TODO: replace this with `self._df.apply(lambda x: ...)`
-        self._formatted_dts: list[datetime] = []
-        for dt_str in self._df[col_name]:
-            self._formatted_dts.append(
-                datetime.fromisoformat(dt_str).astimezone(util.MY_TIMEZONE)
-            )
-
-        if replace:
-            self._df["timestamp"] = self._formatted_dts
-
-    def save_to_csv(self, outdir: str) -> None:
-        self._df.to_csv(
-            candles.candles_outpath(outdir, self.symbol, self.mult, self.timespan),
-            index=False
+    def from_csv(cls, symbol: str, timespan: Timespan, csv_path: str) -> 'SingleStockFrame':
+        df = pd.read_csv(csv_path, index_col=False)
+        df["timestamp"] = df["timestamp"].apply(
+            lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
         )
+        return cls(symbol, timespan, df)
 
     def row_to_candle(self, i: int) -> Candle:
         row: pd.Series = self._df.iloc[i]
         return Candle(**row.to_dict())
 
-    @property
-    def df(self):
-        return self._df
+    def save_to_csv(self, out_path: str, index: bool = False) -> None:
+        self._df.to_csv(out_path, index=index)
+
+    def __repr__(self) -> str:
+        output: str = f"Symbol: {self._symbol}\n"
+        output += f"Timespan: {self._timespan}\n"
+        output += str(self._df)
+        return output
 
     def __len__(self) -> int:
         return len(self._df)
 
-    @property
-    def close_series(self) -> NDArray[np.float64]:
-        return self._df["close"].to_numpy()
 
-    @property
-    def high_series(self) -> NDArray[np.float64]:
-        return self._df["high"].to_numpy()
+class MultStockFrame:
+    def __init__(self, timespan: Timespan, df: pd.DataFrame = pd.DataFrame()) -> None:
+        self._df: pd.DataFrame = df
+        self._symbols: set[str] = set(self._df["symbols"])
+        self._timespan: Timespan = timespan
 
-    @property
-    def low_series(self) -> NDArray[np.float64]:
-        return self._df["low"].to_numpy()
+    @classmethod
+    def from_yf(cls, timespan: Timespan, yf_df: pd.DataFrame) -> 'MultStockFrame':
+        # Transform to long format: Date and Ticker as columns, single-level headers
+        df = yf_df.stack(future_stack=True, level=0).rename_axis(["timestamp", "symbols"])
+        # Remove the 'Price' name from the columns index
+        df.columns.name = None
 
-    @property
-    def timestamp_series(self) -> list[datetime]:
-        return self._formatted_dts
+        if isinstance(df, pd.Series):
+            raise TypeError(f"df is of type {type(df)} instead of pd.DataFrame")
+
+        df.sort_values(["symbols", "timestamp"], inplace=True)
+        df.reset_index(inplace=True)
+        df["timestamp"] = df["timestamp"].apply(
+            lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
+        )
+        return cls(timespan, df)
+
+    @classmethod
+    def from_alpaca(cls, timespan: Timespan, alpaca_df: pd.DataFrame) -> 'MultStockFrame':
+        # Reset index to make it a regular column
+        df = alpaca_df.reset_index()
+        df.rename(columns={"symbol": "symbols"}, inplace=True)
+        # Modify the timestamp column
+        df["timestamp"] = df["timestamp"].apply(
+            lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
+        )
+        if "trade_count" in df.columns:
+            del df["trade_count"]
+        if "vwap" in df.columns:
+            del df["vwap"]
+
+        return cls(timespan, df)
+
+    def get_symbol(self, symbol: str) -> SingleStockFrame:
+        if not symbol in self._symbols:
+            raise KeyError(f"Could not find '{symbol}' in dataframe")
+
+        symbol_df = self._df[self._df["symbols"] == symbol].copy()
+        assert isinstance(symbol_df, pd.DataFrame)
+        symbol_df.drop("symbol", axis=1, inplace=True)
+
+        return SingleStockFrame(symbol, self._timespan, symbol_df)
+
+    def __repr__(self) -> str:
+        output: str = f"Symbol: {self._symbols}\n"
+        output += f"Timespan: {self._timespan}\n"
+        output += str(self._df)
+        return output
+
+    def __len__(self) -> int:
+        return len(self._df)
