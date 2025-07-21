@@ -106,9 +106,9 @@ class LiveBroker:
         tp = None
         sl = None
         if order.take_profit is not None:
-            tp = TakeProfitRequest(limit_price=order.take_profit.tp_limit)
+            tp = TakeProfitRequest(limit_price=round(order.take_profit.tp_limit, 2))
         if order.stop_loss is not None:
-            sl = StopLossRequest(stop_price=order.stop_loss.sl_limit)
+            sl = StopLossRequest(stop_price=round(order.stop_loss.sl_limit, 2))
 
         if tp is not None or sl is not None:
             ord_class: OrderClass = OrderClass.BRACKET
