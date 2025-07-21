@@ -1,3 +1,4 @@
+import os
 import enum, sys
 
 from colorama import Fore, Style
@@ -42,14 +43,17 @@ _LOG_OUTPUT_PATH: str | None = None
 _MIN_LOG_LEVEL: LogLevel = LogLevel.DEBUG
 
 def init(
+    log_output_dir: str,
     enable_color_logs: bool = True,
-    log_output_path: str | None = None,
     min_log_level: LogLevel = LogLevel.DEBUG
 ) -> None:
     global _ENABLE_COLOR_LOGS, _LOG_OUTPUT_PATH
 
     _ENABLE_COLOR_LOGS = enable_color_logs
-    _LOG_OUTPUT_PATH = log_output_path
+    if not os.path.exists(log_output_dir):
+        os.mkdir(log_output_dir)
+
+    _LOG_OUTPUT_PATH = f"{log_output_dir}/logs.txt"
     set_level(min_log_level)
 
 def set_level(level: LogLevel) -> None:

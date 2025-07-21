@@ -51,7 +51,7 @@ class MyLiveStrat(LiveStrategy):
 
 dt_str = datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
 log.init(
-    log_output_path=f"trout/logs/{dt_str}/logs.txt"
+    log_output_dir=f"trout/logs/{dt_str}"
 )
 
 ls = MyLiveStrat(data_source="alpaca")

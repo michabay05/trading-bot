@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Awaitable, Callable
 
+import asyncio
 import yfinance as yf
-import pandas as pd
 from alpaca.data import RawData
 from alpaca.data.historical.stock import StockHistoricalDataClient
 from alpaca.data.live.stock import StockDataStream
@@ -54,7 +54,7 @@ class YahooDataFeed(TBDataFeed):
         self._cnd_dict: dict = {}
         self._candles: list[Candle] = []
 
-        self._ws: yf.WebSocket = yf.WebSocket()
+        self._a_ws: yf.AsyncWebSocket = yf.AsyncWebSocket()
 
         self._t: datetime = datetime.now(tz=util.MY_TIMEZONE)
         self._first: bool = True
@@ -67,7 +67,7 @@ class YahooDataFeed(TBDataFeed):
     def get_latest_price(self, symbol: str) -> float:
         return self._prices[symbol][-1]
 
-    def ws_callback(self, msg: dict):
+    async def ws_callback(self, msg: dict):
         output: dict = {
             "symbol": msg["id"],
             "timestamp": datetime.fromtimestamp(int(msg["time"]) / 1000)
@@ -79,7 +79,7 @@ class YahooDataFeed(TBDataFeed):
                 if self._candle_callback is not None:
                     cnd: Candle = Candle(**self._cnd_dict, volume=-1.0)
                     self._candles.append(cnd)
-                    self._candle_callback(output["symbol"], cnd)
+                    await self._candle_callback(output["symbol"], cnd)
             else:
                 self._first = False
 
@@ -99,12 +99,18 @@ class YahooDataFeed(TBDataFeed):
         self._prices[output["symbol"]].append(output["price"])
         log.debug(f"Received message: {output}")
 
+    async def __async__start_live(self):
+        await self._a_ws.subscribe(["AAPL", "BTC-USD"])
+        await self._a_ws.listen()
+
+    async def __async__end_live(self) -> None:
+        await self._a_ws.close()
+
     def start_live(self) -> None:
-        self._ws.subscribe(self._symbols)
-        self._ws.listen(self.ws_callback)
+        asyncio.run(self.__async__start_live())
 
     def end_live(self) -> None:
-        self._ws.close()
+        asyncio.run(self.__async__end_live())
 
     def get_historical(self,
         symbols: list[str], timespan: Timespan, start: datetime, end: datetime = datetime.now()
@@ -118,7 +124,7 @@ class YahooDataFeed(TBDataFeed):
         if df is None:
             raise TypeError(f"df is of type {type(df)} instead of pd.DataFrame")
 
-        return MultStockFrame.from_yf(symbols, timespan, df)
+        return MultStockFrame.from_yf(timespan, df)
 
 
 class AlpacaDataFeed(TBDataFeed):
@@ -155,7 +161,7 @@ class AlpacaDataFeed(TBDataFeed):
             volume=bar.volume,
         )
         if self._candle_callback is not None:
-            self._candle_callback(bar.symbol, cnd)
+            await self._candle_callback(bar.symbol, cnd)
 
     def start_live(self) -> None:
         self._live_data_stream.subscribe_bars(
@@ -184,7 +190,7 @@ class AlpacaDataFeed(TBDataFeed):
         if not isinstance(bars, BarSet):
             raise TypeError(f"Expected `bars` to be of type BarSet, got {type(bars)}")
 
-        return MultStockFrame.from_alpaca(symbols, timespan, bars.df)
+        return MultStockFrame.from_alpaca(timespan, bars.df)
 
 
 adf = AlpacaDataFeed(["AAPL", "SPY"], "YF Bot")

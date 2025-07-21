@@ -290,7 +290,7 @@ class LiveStrategy:
                 order: TBMarketOrder | None = self.on_candle(symbol)
                 if order is not None:
                     self._broker.sync_portfolio()
-                    self._broker.execute_open_order(order)
+                    self._broker.execute_open_order(order, self._data_feed)
                     log.debug(f"Submitted order: {order}")
                 else:
                     log.debug(f"No order")

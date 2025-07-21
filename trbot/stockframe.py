@@ -105,7 +105,7 @@ class MultStockFrame:
 
         symbol_df = self._df[self._df["symbols"] == symbol].copy()
         assert isinstance(symbol_df, pd.DataFrame)
-        symbol_df.drop("symbol", axis=1, inplace=True)
+        symbol_df.drop("symbols", axis=1, inplace=True)
 
         return SingleStockFrame(symbol, self._timespan, symbol_df)
 
