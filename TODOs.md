@@ -50,6 +50,7 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
 - [ ] (fix) Handle missing candle values
     - As it stands, if the bot was stopped for some reason at 10:25 and is restarted at 13:25, there will be a 3-hour gap in the data.
+- [ ] (rsch) Look into alpaca's `TradingStream` and what updates it could provide
 
 ---
 
@@ -67,12 +68,21 @@ A list of all the TODOs needed to be completed before each release
     - [x] Candle replayer
     - [x] Strategy tester
     - [x] Historical broker
-- [ ] (refactor) Add notion of amount of cash into strategy system
-    - No money, stop running the bot
+- [x] (refactor) Add notion of amount of cash into strategy system
+    - No money = Don't send order
 - [x] (feat) Export portfolio on market close
     - This will eventually be used to compute daily performance metrics.
-- [ ] (feat) Add a second bot that uses Yahoo Finance as a data source
-- [ ] (feat) Add random candle generator
+- [x] (feat) Add a second bot that uses Yahoo Finance as a data source
+- [x] (feat) Consider replacing my custom backtester with either one of these python libraries
+    - `backtesting.py` (Chosen as replacement)
+    - `vectorbt`
+- [ ] (feat) Implement the following strategies using the chosen backtesting library
+    - [ ] Opening Range Breakout (ORB)
+    - [ ] Trend following system
+- [ ] (feat) Add configurable candle generator with these parameters
+    - [ ] Random movement
+    - [ ] Candles w/ tendency to go up (>50% chance of going up)
+    - [ ] Candles w/ tendency to go down (>50% chance of going down)
 - [ ] (feat) Add more tests based on the random candle generator
 
 ## v0.9

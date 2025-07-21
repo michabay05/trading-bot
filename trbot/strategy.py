@@ -13,12 +13,12 @@ import talib
 from . import util, log
 from .broker import LiveBroker
 from .candles import Candle, Timespan
-from .datafeed import AlpacaDataFeed, DataFeed, YahooDataFeed
+from .datafeed import AlpacaDataFeed, TBDataFeed, YahooDataFeed
 from .portfolio import (
     OrderIntent, TBOrderDir, TBMarketOrder,
     StopLossTrigger, TakeProfitTrigger
 )
-from .stockframe_v2 import SingleStockFrame
+from .stockframe import SingleStockFrame
 
 
 IndValues = NDArray[np.float64]
@@ -118,7 +118,7 @@ class LiveStrategy:
             "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
             "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS"
         ]
-        self._data_feed: DataFeed
+        self._data_feed: TBDataFeed
         if data_source == "alpaca":
             self._data_feed = AlpacaDataFeed(self._symbols, acct_name="Alpaca Bot")
         else:

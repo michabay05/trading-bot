@@ -3,14 +3,16 @@ from abc import ABC, abstractmethod
 from alpaca.data.live.stock import StockDataStream
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import (
-    OrderSide, OrderType, QueryOrderStatus, TimeInForce, OrderStatus
+    OrderClass, OrderSide, OrderType, PDTCheck, QueryOrderStatus, TimeInForce, OrderStatus
 )
-from alpaca.trading.models import Clock, TradeAccount
+from alpaca.trading.models import AccountConfiguration, Clock, Order, TradeAccount
 from alpaca.trading.requests import (
     ClosePositionRequest, GetOrdersRequest, MarketOrderRequest,
     StopLossRequest, TakeProfitRequest
 )
 from alpaca.data.historical.stock import StockHistoricalDataClient
+
+from trbot.datafeed import TBDataFeed
 
 from . import util
 from .portfolio import (
@@ -19,35 +21,17 @@ from .portfolio import (
 )
 
 
-class InsufficientFundsError(Exception):
-    pass
-
-
-class Broker(ABC):
-    ## ============= PROPERTIES USED IN THESE ABSTRACT CLASS (BELOW) ============= ##
-    @property
-    @abstractmethod
-    def portfolio(self) -> Portfolio:
-        pass
-    ## ============= PROPERTIES USED IN THESE ABSTRACT CLASS (ABOVE) ============= ##
-
-    @abstractmethod
-    def execute_open_order(self, order: TBMarketOrder, last_close: float, curr_dt_str: str) -> None:
-        pass
-
-    @abstractmethod
-    def execute_close_order(self, order: TBMarketOrder, last_close: float) -> None:
-        pass
-
-
 class LiveBroker:
-    def __init__(self) -> None:
+    def __init__(self, paper: bool = True) -> None:
         api_key, secret_key = util.alpaca_keys(acct_name="Alpaca Bot")
-        self.__data_stream: StockDataStream = StockDataStream(api_key, secret_key)
-        self._trade_client: TradingClient = TradingClient(api_key, secret_key)
-        self._stock_historical_data_client = StockHistoricalDataClient(
-            api_key, secret_key, raw_data=False
-        )
+        self._trade_client: TradingClient = TradingClient(api_key, secret_key, paper=paper)
+
+        acct_config = self._trade_client.get_account_configurations()
+        assert isinstance(acct_config, AccountConfiguration)
+        acct_config.fractional_trading = True
+        acct_config.pdt_check = PDTCheck.BOTH
+        self._trade_client.set_account_configurations(acct_config)
+
         self._portfolio: Portfolio = Portfolio()
         self.sync_portfolio()
 
@@ -118,7 +102,7 @@ class LiveBroker:
         else:
             raise TypeError(f"`clock` was type `{type(clock)}` instead of `Clock`.")
 
-    def execute_open_order(self, order: TBMarketOrder) -> None:
+    def execute_open_order(self, order: TBMarketOrder, data_feed: TBDataFeed) -> None:
         tp = None
         sl = None
         if order.take_profit is not None:
@@ -126,16 +110,30 @@ class LiveBroker:
         if order.stop_loss is not None:
             sl = StopLossRequest(stop_price=order.stop_loss.sl_limit)
 
+        if tp is not None or sl is not None:
+            ord_class: OrderClass = OrderClass.BRACKET
+        else:
+            ord_class: OrderClass = OrderClass.SIMPLE
+
         req = MarketOrderRequest(
             symbol=order.symbol,
             qty=order.requested_qty,
             side=OrderSide.BUY if order.is_long() else OrderSide.SELL,
             type=OrderType.MARKET,
             time_in_force=TimeInForce.DAY,
+            order_class=ord_class,
             take_profit=tp,
             stop_loss=sl,
         )
-        _ = self._trade_client.submit_order(req)
+
+        order_value: float = order.requested_qty * data_feed.get_latest_price(order.symbol)
+        if order_value <= self._portfolio.cash:
+            sub_order = self._trade_client.submit_order(req)
+            assert isinstance(sub_order, Order)
+            if sub_order.status == OrderStatus.FILLED:
+                order.status = TBOrderState.FILLED
+        else:
+            order.status = TBOrderState.INSUFF_FUNDS
 
         self._portfolio.add_orders(order)
 

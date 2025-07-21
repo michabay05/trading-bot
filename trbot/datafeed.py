@@ -9,17 +9,21 @@ from alpaca.data.historical.stock import StockHistoricalDataClient
 from alpaca.data.live.stock import StockDataStream
 from alpaca.data.models.bars import Bar
 from alpaca.data.models import BarSet
-from alpaca.data.requests import StockBarsRequest
+from alpaca.data.requests import StockBarsRequest, StockLatestTradeRequest
 from alpaca.data.timeframe import TimeFrame
 
 from . import log, util
-from .stockframe_v2 import MultStockFrame
+from .stockframe import MultStockFrame
 from .candles import Candle, Timespan
 
 
-class DataFeed(ABC):
+class TBDataFeed(ABC):
     @abstractmethod
     def set_candle_callback(self, callback: Callable[[str, Candle], Awaitable[None]]) -> None:
+        pass
+
+    @abstractmethod
+    def get_latest_price(self, symbol: str) -> float:
         pass
 
     @abstractmethod
@@ -40,11 +44,15 @@ class DataFeed(ABC):
 # Disable logging
 # - https://stackoverflow.com/questions/8391411/how-to-block-calls-to-print
 
-class YahooDataFeed(DataFeed):
+class YahooDataFeed(TBDataFeed):
     def __init__(self, symbols: list[str]) -> None:
         self._symbols: list[str] = symbols
-        self._candles: list[Candle] = []
+        self._prices: dict[str, list[float]] = {}
+        for symbol in self._symbols:
+            self._prices[symbol] = []
+
         self._cnd_dict: dict = {}
+        self._candles: list[Candle] = []
 
         self._ws: yf.WebSocket = yf.WebSocket()
 
@@ -55,6 +63,9 @@ class YahooDataFeed(DataFeed):
 
     def set_candle_callback(self, callback: Callable[[str, Candle], Awaitable[None]]) -> None:
         self._candle_callback = callback
+
+    def get_latest_price(self, symbol: str) -> float:
+        return self._prices[symbol][-1]
 
     def ws_callback(self, msg: dict):
         output: dict = {
@@ -85,6 +96,7 @@ class YahooDataFeed(DataFeed):
             self._cnd_dict["low"] = min(output["price"], self._cnd_dict["low"])
             self._cnd_dict["close"] = output["price"]
 
+        self._prices[output["symbol"]].append(output["price"])
         log.debug(f"Received message: {output}")
 
     def start_live(self) -> None:
@@ -109,7 +121,7 @@ class YahooDataFeed(DataFeed):
         return MultStockFrame.from_yf(symbols, timespan, df)
 
 
-class AlpacaDataFeed(DataFeed):
+class AlpacaDataFeed(TBDataFeed):
     def __init__(self, symbols: list[str], acct_name: str) -> None:
         self._symbols: list[str] = symbols
         api_key, secret_key = util.alpaca_keys(acct_name)
@@ -123,6 +135,11 @@ class AlpacaDataFeed(DataFeed):
 
     def set_candle_callback(self, callback: Callable[[str, Candle], Awaitable[None]]) -> None:
         self._candle_callback = callback
+
+    def get_latest_price(self, symbol: str) -> float:
+        sltr = StockLatestTradeRequest(symbol_or_symbols=symbol)
+        output = self._hist_data_stream.get_stock_latest_trade(sltr)
+        return output[symbol].price
 
     async def ws_callback(self, bar: Bar | dict) -> None:
         if isinstance(bar, dict):
@@ -171,67 +188,8 @@ class AlpacaDataFeed(DataFeed):
 
 
 adf = AlpacaDataFeed(["AAPL", "SPY"], "YF Bot")
-x1 = adf.get_historical(["AAPL", "SPY"], Timespan.HOUR, datetime(2025, 7, 13, 9, 30))
-print(x1.get_symbol("AAPL"))
-print("\n\n------------------------------------------------------------------------\n\n")
-ydf = YahooDataFeed(["AAPL", "SPY"])
-x2 = ydf.get_historical(["AAPL", "SPY"], Timespan.HOUR, datetime(2025, 7, 13, 9, 30))
-print(x2.get_symbol("AAPL"))
-
-# ydf = YahooDataFeed(["AAPL"])
-# # ydf.get_historical_candles(["AAPL", "SPY"])
-# try:
-#     ydf.start_live()
-# finally:
-#     log.error("Ending...")
-#     ydf.end_live()
-#     log.info("Good bye")
-
-## ================= SLICING BIG DATAFRAME ================= ##
-# df = pd.read_csv("output.csv")
-# zone = ZoneInfo("America/New_York")
-#
-# for ticker in tickers:
-#     sliced_df = df[df["Ticker"] == ticker].copy()
-#     sliced_df.drop("Ticker", axis=1, inplace=True)
-#     # Date,Open,High,Low,Close,Volume
-#     sliced_df.rename(columns={
-#         "Date":   "timestamp",
-#         "Open":   "open",
-#         "High":   "high",
-#         "Low":    "low",
-#         "Close":  "close",
-#         "Volume": "volume"
-#     }, inplace=True) # type: ignore
-#     sliced_df["timestamp"] = sliced_df["timestamp"].apply(
-#         lambda x: datetime.fromisoformat(str(x)).astimezone(zone)
-#     )
-#     path: str = f"separated/{ticker}.csv"
-#     sliced_df.to_csv(path, index=False)
-#     print(path)
-
-## ================= LIVE EXAMPLE ================= ##
-# # define your message callback
-# def message_handler(msg):
-#     output = {
-#         "id": msg["id"],
-#         "price": msg["price"],
-#         "time": str(
-#             datetime.fromtimestamp(int(msg["time"]) / 1000)
-#                 .astimezone(tz=ZoneInfo("America/New_York"))
-#         )
-#     }
-#     print("Received message:", output)
-
-# symbols = ["DELL"]
-# async_ = True
-# if async_:
-#     async def main():
-#         async with yf.AsyncWebSocket() as ws:
-#             await ws.subscribe(symbols)
-#             await ws.listen(message_handler)
-#     asyncio.run(main())
-# else:
-#     with yf.WebSocket() as ws:
-#         ws.subscribe(symbols)
-#         ws.listen(message_handler)
+# x1 = adf.get_historical(["AAPL", "SPY"], Timespan.HOUR, datetime(2025, 7, 13, 9, 30))
+# print("\n\n------------------------------------------------------------------------\n\n")
+# ydf = YahooDataFeed(["AAPL", "SPY"])
+# x2 = ydf.get_historical(["AAPL", "SPY"], Timespan.HOUR, datetime(2025, 7, 13, 9, 30))
+# print(x2.get_symbol("AAPL"))

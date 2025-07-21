@@ -23,6 +23,7 @@ class TBOrderDir(Enum):
 class TBOrderState(Enum):
     FILLED = "filled"
     WORKING = "working"
+    INSUFF_FUNDS = "insufficient funds"
 
 
 @dataclass
