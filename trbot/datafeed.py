@@ -100,7 +100,7 @@ class YahooDataFeed(TBDataFeed):
         log.debug(f"Received message: {output}")
 
     async def __async__start_live(self):
-        await self._a_ws.subscribe(["AAPL", "BTC-USD"])
+        await self._a_ws.subscribe(self._symbols)
         await self._a_ws.listen()
 
     async def __async__end_live(self) -> None:

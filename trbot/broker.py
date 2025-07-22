@@ -1,6 +1,3 @@
-from abc import ABC, abstractmethod
-
-from alpaca.data.live.stock import StockDataStream
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import (
     OrderClass, OrderSide, OrderType, PDTCheck, QueryOrderStatus, TimeInForce, OrderStatus
@@ -10,11 +7,10 @@ from alpaca.trading.requests import (
     ClosePositionRequest, GetOrdersRequest, MarketOrderRequest,
     StopLossRequest, TakeProfitRequest
 )
-from alpaca.data.historical.stock import StockHistoricalDataClient
 
-from trbot.datafeed import TBDataFeed
 
 from . import util
+from .datafeed import TBDataFeed
 from .portfolio import (
     OrderIntent, TBOrderDir, TBOrder, Portfolio, TBMarketOrder, TBOrderState, Position,
     TBOrderType
@@ -22,8 +18,8 @@ from .portfolio import (
 
 
 class LiveBroker:
-    def __init__(self, paper: bool = True) -> None:
-        api_key, secret_key = util.alpaca_keys(acct_name="Alpaca Bot")
+    def __init__(self, acct_name: str, paper: bool = True) -> None:
+        api_key, secret_key = util.alpaca_keys(acct_name)
         self._trade_client: TradingClient = TradingClient(api_key, secret_key, paper=paper)
 
         acct_config = self._trade_client.get_account_configurations()

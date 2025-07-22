@@ -112,15 +112,19 @@ class _LiveData:
 
 
 class LiveStrategy:
-    def __init__(self, data_source: Literal["alpaca", "yahoo"]) -> None:
-        self._broker: LiveBroker = LiveBroker()
-        self._symbols: list[str] = [
+    def __init__(self, acct_name: str, data_source: Literal["alpaca", "yahoo"]) -> None:
+        self._broker: LiveBroker = LiveBroker(acct_name)
+
+        self._all_symbols: list[str] = [
             "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
             "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS"
         ]
+        self._symbols: list[str] = self._all_symbols.copy()
+        self._blacklist: list[str] = []
+
         self._data_feed: TBDataFeed
         if data_source == "alpaca":
-            self._data_feed = AlpacaDataFeed(self._symbols, acct_name="Alpaca Bot")
+            self._data_feed = AlpacaDataFeed(self._symbols, acct_name)
         else:
             self._data_feed = YahooDataFeed(self._symbols)
 
@@ -235,6 +239,10 @@ class LiveStrategy:
         # Export all info pertaining to how the day went today
         self.export_info()
 
+        # Reset blacklist
+        self._symbols = self._all_symbols.copy()
+        self._blacklist.clear()
+
         status: dict = self._broker.get_market_status()
         next_open: datetime = status["next_open"]
         t = datetime.now(tz=util.MY_TIMEZONE)
@@ -288,10 +296,15 @@ class LiveStrategy:
 
                 # ... and apply strategy on the new target-timespan candle
                 order: TBMarketOrder | None = self.on_candle(symbol)
-                if order is not None:
+                if (order is not None) and (order.symbol not in self._blacklist):
                     self._broker.sync_portfolio()
                     self._broker.execute_open_order(order, self._data_feed)
                     log.debug(f"Submitted order: {order}")
+
+                    # Blacklist stock for the rest of the day
+                    self._blacklist.append(order.symbol)
+                    if order.symbol in self._symbols:
+                        self._symbols.remove(order.symbol)
                 else:
                     log.debug(f"No order")
 

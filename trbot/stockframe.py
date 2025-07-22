@@ -81,6 +81,15 @@ class MultStockFrame:
         df["timestamp"] = df["timestamp"].apply(
             lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
         )
+
+        df.rename(columns={
+            "Open": "open",
+            "High": "high",
+            "Low": "low",
+            "Close": "close",
+            "Volume": "volume",
+        }, inplace=True)
+
         return cls(timespan, df)
 
     @classmethod

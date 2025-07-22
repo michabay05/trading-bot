@@ -76,9 +76,11 @@ A list of all the TODOs needed to be completed before each release
 - [x] (feat) Consider replacing my custom backtester with either one of these python libraries
     - `backtesting.py` (Chosen as replacement)
     - `vectorbt`
+- [x] (fix) Logging error (it overwrote `logs.txt` instead of appending to it)
+- [x] (refactor) Add blacklisting of stocks for a single day trade
 - [ ] (feat) Implement the following strategies using the chosen backtesting library
-    - [ ] Opening Range Breakout (ORB)
     - [ ] Trend following system
+    - [ ] Mean reversion
 - [ ] (feat) Add configurable candle generator with these parameters
     - [ ] Random movement
     - [ ] Candles w/ tendency to go up (>50% chance of going up)
