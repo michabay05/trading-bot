@@ -82,6 +82,9 @@ class MultStockFrame:
             lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
         )
 
+        if "Adj Close" in df.columns:
+            del df["Adj Close"]
+
         df.rename(columns={
             "Open": "open",
             "High": "high",

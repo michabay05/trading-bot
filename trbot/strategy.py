@@ -121,6 +121,10 @@ class LiveStrategy:
         ]
         self._symbols: list[str] = self._all_symbols.copy()
         self._blacklist: list[str] = []
+        self._live_data: dict[str, _LiveData] = {}
+        for sym in self._all_symbols:
+            self._live_data[sym] = _LiveData()
+
 
         self._data_feed: TBDataFeed
         if data_source == "alpaca":
@@ -129,10 +133,6 @@ class LiveStrategy:
             self._data_feed = YahooDataFeed(self._symbols)
 
         self._data_feed.set_candle_callback(self._on_new_candle)
-
-        self._live_data: dict[str, _LiveData] = {}
-        for sym in self._symbols:
-            self._live_data[sym] = _LiveData()
         self._conn_alive: bool = False
 
         self._indicators: set[Indicator] = set()
@@ -178,7 +178,7 @@ class LiveStrategy:
         start = datetime.now() - relativedelta(months=1)
 
         # Export the most recent data fetched from the data feed
-        msf = self._data_feed.get_historical(util.ALL_SYMBOLS, Timespan.HOUR, start)
+        msf = self._data_feed.get_historical(self._symbols, Timespan.HOUR, start)
         for symbol in msf._symbols:
             ssf = msf.get_symbol(symbol)
             ssf.save_to_csv(f"trout/ohlcv-1hr/{symbol}.csv")
@@ -189,10 +189,6 @@ class LiveStrategy:
         log.info("Indicators setup")
         self._init_all_live_data()
         log.info("Live data initialized")
-        log.debug("Live data: [")
-        for symbol, ld in self._live_data.items():
-            log.debug(f"    {symbol}: {ld.to_dict()}")
-        log.debug("]")
 
         log.info(f"Symbols: {self._symbols}")
         log.info(f"Cash: ${self._broker._portfolio.cash:.2f}")
@@ -201,8 +197,6 @@ class LiveStrategy:
             self._conn_alive = True
             log.debug("Starting data stream...")
             self._data_feed.start_live()
-
-        self.start()
 
     def export_info(self) -> None:
         date_str: str = datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
@@ -245,15 +239,15 @@ class LiveStrategy:
 
         status: dict = self._broker.get_market_status()
         next_open: datetime = status["next_open"]
-        t = datetime.now(tz=util.MY_TIMEZONE)
+        self._time = datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
-        while t < next_open:
-            log.info(f"Current time: {t}")
-            diff = next_open - t
+        while self._time < next_open:
+            log.info(f"Current time: {self._time}")
+            diff = next_open - self._time
             sleep_time = min(diff.total_seconds(), 30 * 60)
             log.info(f"Sleeping for {sleep_time} seconds...")
             time.sleep(sleep_time)
-            t = datetime.now(tz=util.MY_TIMEZONE)
+            self._time = datetime.now(tz=util.MY_TIMEZONE)
 
         self.start()
 
@@ -267,15 +261,16 @@ class LiveStrategy:
             # Market is currently closed
             self._on_market_close()
 
-    async def _on_new_candle(self, symbol: str, cnd: Candle) -> None:
-        self._live_data[symbol].add_live(cnd)
-        log.debug(f"[{symbol:4}] Minute: {cnd}")
+    def _on_new_candle(self, symbol: str, cnd: Candle) -> None:
+        ld = self._live_data[symbol]
+        ld.add_live(cnd)
+        log.warn(f"[{symbol:4}] Minute: {cnd}")
 
-        self._time = datetime.now(tz=util.MY_TIMEZONE)
-        if cnd.timestamp.hour > self._current_hour:
+        if util.detect_new_timespan(ld.agg_timespan, t=self._time, now=cnd.timestamp):
+        # if cnd.timestamp.hour > self._current_hour:
             self._current_hour = cnd.timestamp.hour
 
-            for symbol in self._symbols:
+            for symbol in self._all_symbols:
                 log.info(f"Hourly update for {symbol}...")
                 symbol_ld = self._live_data[symbol]
                 # On new target-timespan, do the following ...
@@ -311,9 +306,10 @@ class LiveStrategy:
                 log.debug("------------------")
 
  
+        self._time = datetime.now(tz=util.MY_TIMEZONE)
         update_live_aggregates(self._live_data)
 
-        if self._time >= self._next_close:
+        if self._time > self._next_close:
             # Market is closed
             self._on_market_close()
 

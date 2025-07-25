@@ -54,7 +54,7 @@ log.init(
     log_output_dir=f"trout/logs/{dt_str}"
 )
 
-ls = MyLiveStrat(data_source="alpaca")
+ls = MyLiveStrat(acct_name="Alpaca Bot", data_source="alpaca")
 try:
     ls.start()
 except KeyboardInterrupt:

@@ -51,6 +51,11 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (fix) Handle missing candle values
     - As it stands, if the bot was stopped for some reason at 10:25 and is restarted at 13:25, there will be a 3-hour gap in the data.
 - [ ] (rsch) Look into alpaca's `TradingStream` and what updates it could provide
+- [ ] (feat) Add configurable candle generator with these parameters
+    - [ ] Random movement
+    - [ ] Candles w/ tendency to go up (>50% chance of going up)
+    - [ ] Candles w/ tendency to go down (>50% chance of going down)
+- [ ] (feat) Add more tests based on the random candle generator
 
 ---
 
@@ -81,11 +86,6 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Implement the following strategies using the chosen backtesting library
     - [ ] Trend following system
     - [ ] Mean reversion
-- [ ] (feat) Add configurable candle generator with these parameters
-    - [ ] Random movement
-    - [ ] Candles w/ tendency to go up (>50% chance of going up)
-    - [ ] Candles w/ tendency to go down (>50% chance of going down)
-- [ ] (feat) Add more tests based on the random candle generator
 
 ## v0.9
 - [x] (fix) Instead of replacing `NaN` with `0.0` for indicators during their warmup time, use `WhiteSpaceData` in lightweight charts

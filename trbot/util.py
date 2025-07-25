@@ -25,63 +25,14 @@ def alpaca_keys(acct_name: str) -> tuple[str, str]:
     """ Access my keys from alpaca """
     return (ALPACA_SECRETS[acct_name]["api_key"], ALPACA_SECRETS[acct_name]["secret_key"])
 
-def alpaca_get_historical(symbols: list[str], api_key: str, secret_key: str, start: datetime,
-    end: datetime, mult: int = 1, timespan: Timespan = Timespan.HOUR
-) -> pd.DataFrame:
-    stock_historical_data_client = StockHistoricalDataClient(api_key, secret_key, raw_data=False)
-    print(f"[{symbols}] {start} -> {end}")
-
-    # Convert from my timespan to alpaca's time frame
-    timeframe = TimeFrameUnit.Hour
+def detect_new_timespan(timespan: Timespan, t: datetime, now: datetime) -> bool:
     match timespan:
+        case Timespan.DAY:
+            return now.day > t.day
         case Timespan.HOUR:
-            timeframe = TimeFrameUnit.Hour
+            return now.hour > t.hour
         case Timespan.MINUTE:
-            timeframe = TimeFrameUnit.Minute
-        case _:
-            raise ValueError(f"Unknown timespan: {timespan.value}")
-
-    req = StockBarsRequest(
-        symbol_or_symbols=symbols,
-        timeframe=TimeFrame(amount=mult, unit=timeframe),
-        start=start,
-        end=end
-    )
-
-    df: pd.DataFrame = pd.DataFrame()
-    t: float = time.time()
-    bars = stock_historical_data_client.get_stock_bars(req)
-    if not isinstance(bars, BarSet):
-        raise TypeError(f"bars is of type {type(bars)} instead of BarSet.")
-
-    diff: float = time.time() - t
-    print(f"Took {diff:.4f}s to gather bars")
-
-    # Reset index to make it a regular column
-    df = bars.df.copy()
-    df.reset_index(inplace=True)
-    # Modify the timestamp column
-    df["timestamp"] = df["timestamp"].apply(
-        lambda x: datetime.fromisoformat(str(x)).astimezone(MY_TIMEZONE)
-    )
-    # Set it back as (part of) the index
-    df.set_index(["symbol", "timestamp"], inplace=True)
-
-    return df
-
-def alpaca_df_to_individual(alpaca_df: pd.DataFrame) -> Iterator[tuple[str, pd.DataFrame]]:
-    alpaca_df.reset_index(inplace=True)
-    symbols: set[str] = set(alpaca_df["symbol"])
-
-    for symbol in sorted(symbols):
-        sliced_df = alpaca_df[alpaca_df["symbol"] == symbol].copy()
-        if not isinstance(sliced_df, pd.DataFrame):
-            raise TypeError(f"sliced_df is of type {type(sliced_df)} instead of pd.DataFrame")
-
-        del sliced_df["trade_count"]
-        del sliced_df["vwap"]
-        sliced_df.drop("symbol", axis=1, inplace=True)
-        yield symbol, sliced_df
+            return now.minute > t.minute
 
 def aggregate_cnds(smaller_cnds: list[Candle], now: datetime,
     small_timespan: Timespan = Timespan.MINUTE, large_timespan: Timespan = Timespan.HOUR

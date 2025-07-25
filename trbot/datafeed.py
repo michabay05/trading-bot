@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Awaitable, Callable
+from typing import Callable
 
-import asyncio
 import yfinance as yf
 from alpaca.data import RawData
 from alpaca.data.historical.stock import StockHistoricalDataClient
@@ -19,7 +18,7 @@ from .candles import Candle, Timespan
 
 class TBDataFeed(ABC):
     @abstractmethod
-    def set_candle_callback(self, callback: Callable[[str, Candle], Awaitable[None]]) -> None:
+    def set_candle_callback(self, callback: Callable[[str, Candle], None]) -> None:
         pass
 
     @abstractmethod
@@ -47,79 +46,72 @@ class TBDataFeed(ABC):
 class YahooDataFeed(TBDataFeed):
     def __init__(self, symbols: list[str]) -> None:
         self._symbols: list[str] = symbols
+
+        self._cnd_dict: dict[str, dict] = {}
+        self._first: dict[str, bool] = {}
         self._prices: dict[str, list[float]] = {}
         for symbol in self._symbols:
             self._prices[symbol] = []
+            self._first[symbol] = True
 
-        self._cnd_dict: dict = {}
         self._candles: list[Candle] = []
 
-        self._a_ws: yf.AsyncWebSocket = yf.AsyncWebSocket()
+        self._ws: yf.WebSocket = yf.WebSocket()
 
         self._t: datetime = datetime.now(tz=util.MY_TIMEZONE)
-        self._first: bool = True
 
-        self._candle_callback: Callable[[str, Candle], Awaitable[None]] | None = None
+        self._candle_callback: Callable[[str, Candle], None] | None = None
 
-    def set_candle_callback(self, callback: Callable[[str, Candle], Awaitable[None]]) -> None:
+    def set_candle_callback(self, callback: Callable[[str, Candle], None]) -> None:
         self._candle_callback = callback
 
     def get_latest_price(self, symbol: str) -> float:
         return self._prices[symbol][-1]
 
-    async def ws_callback(self, msg: dict):
-        output: dict = {
-            "symbol": msg["id"],
-            "timestamp": datetime.fromtimestamp(int(msg["time"]) / 1000)
-                .astimezone(tz=util.MY_TIMEZONE),
-            "price": msg["price"]
-        }
-        if self._first or output["timestamp"].minute > self._t.minute:
-            if not self._first:
+    def ws_callback(self, msg: dict):
+        timestamp = datetime.fromtimestamp(int(msg["time"]) / 1000).astimezone(tz=util.MY_TIMEZONE)
+        symbol = msg["id"]
+        price = msg["price"]
+        if self._first[symbol] or timestamp.minute > self._t.minute:
+            if not self._first[symbol]:
                 if self._candle_callback is not None:
-                    cnd: Candle = Candle(**self._cnd_dict, volume=-1.0)
+                    cnd: Candle = Candle(**self._cnd_dict[symbol], volume=-1.0)
                     self._candles.append(cnd)
-                    await self._candle_callback(output["symbol"], cnd)
+                    self._candle_callback(symbol, cnd)
             else:
-                self._first = False
+                self._first[symbol] = False
 
-            self._cnd_dict = {
-                "timestamp": output["timestamp"],
-                "open": output["price"],
-                "high": output["price"],
-                "low": output["price"],
-                "close": output["price"],
+            self._cnd_dict[symbol] = {
+                "timestamp": timestamp,
+                "open": price,
+                "high": price,
+                "low": price,
+                "close": price,
             }
             self._t = datetime.now(tz=util.MY_TIMEZONE)
         else:
-            self._cnd_dict["high"] = max(output["price"], self._cnd_dict["high"])
-            self._cnd_dict["low"] = min(output["price"], self._cnd_dict["low"])
-            self._cnd_dict["close"] = output["price"]
+            self._cnd_dict[symbol]["high"] = max(price, self._cnd_dict[symbol]["high"])
+            self._cnd_dict[symbol]["low"] = min(price, self._cnd_dict[symbol]["low"])
+            self._cnd_dict[symbol]["close"] = price
 
-        self._prices[output["symbol"]].append(output["price"])
-        log.debug(f"Received message: {output}")
+        self._prices[symbol].append(price)
 
-    async def __async__start_live(self):
-        await self._a_ws.subscribe(self._symbols)
-        await self._a_ws.listen()
-
-    async def __async__end_live(self) -> None:
-        await self._a_ws.close()
+        log.debug(f"{symbol:4}: {{ {str(timestamp)}, {price:6} }}")
 
     def start_live(self) -> None:
-        asyncio.run(self.__async__start_live())
+        self._ws.subscribe(self._symbols)
+        self._ws.listen(self.ws_callback)
 
     def end_live(self) -> None:
-        asyncio.run(self.__async__end_live())
+        self._ws.close()
 
     def get_historical(self,
         symbols: list[str], timespan: Timespan, start: datetime, end: datetime = datetime.now()
     ) -> MultStockFrame:
-        log.warn("YahooDataFeed.get_historical(): parameter `end` is not used")
         log.debug(f"{timespan.as_yf()}")
         df = yf.download(
-            symbols, group_by="ticker", prepost=True, period="1mo", interval=timespan.as_yf(),
-            start=start
+            symbols, group_by="ticker", prepost=True, interval=timespan.as_yf(),
+            start=start, end=end,
         )
         if df is None:
             raise TypeError(f"df is of type {type(df)} instead of pd.DataFrame")
@@ -137,9 +129,9 @@ class AlpacaDataFeed(TBDataFeed):
         )
 
         self._conn_alive: bool = False
-        self._candle_callback: Callable[[str, Candle], Awaitable[None]] | None = None
+        self._candle_callback: Callable[[str, Candle], None] | None = None
 
-    def set_candle_callback(self, callback: Callable[[str, Candle], Awaitable[None]]) -> None:
+    def set_candle_callback(self, callback: Callable[[str, Candle], None]) -> None:
         self._candle_callback = callback
 
     def get_latest_price(self, symbol: str) -> float:
@@ -152,16 +144,15 @@ class AlpacaDataFeed(TBDataFeed):
             # I have no idea what is inside this dict
             raise ValueError(f"data is of type {type(bar)}, expected type `Bar`")
 
-        cnd: Candle = Candle(
-            timestamp=bar.timestamp.astimezone(tz=util.MY_TIMEZONE),
-            open=bar.open,
-            high=bar.high,
-            low=bar.low,
-            close=bar.close,
-            volume=bar.volume,
-        )
         if self._candle_callback is not None:
-            await self._candle_callback(bar.symbol, cnd)
+            self._candle_callback(bar.symbol, Candle(
+                timestamp=bar.timestamp.astimezone(tz=util.MY_TIMEZONE),
+                open=bar.open,
+                high=bar.high,
+                low=bar.low,
+                close=bar.close,
+                volume=bar.volume,
+            ))
 
     def start_live(self) -> None:
         self._live_data_stream.subscribe_bars(
@@ -192,10 +183,3 @@ class AlpacaDataFeed(TBDataFeed):
 
         return MultStockFrame.from_alpaca(timespan, bars.df)
 
-
-adf = AlpacaDataFeed(["AAPL", "SPY"], "YF Bot")
-# x1 = adf.get_historical(["AAPL", "SPY"], Timespan.HOUR, datetime(2025, 7, 13, 9, 30))
-# print("\n\n------------------------------------------------------------------------\n\n")
-# ydf = YahooDataFeed(["AAPL", "SPY"])
-# x2 = ydf.get_historical(["AAPL", "SPY"], Timespan.HOUR, datetime(2025, 7, 13, 9, 30))
-# print(x2.get_symbol("AAPL"))
