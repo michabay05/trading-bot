@@ -4,7 +4,7 @@ from trbot.strategy import Indicator, LiveStrategy
 from trbot.portfolio import TBMarketOrder
 from trbot import log, util
 
-class MyLiveStrat(LiveStrategy):
+class TrendFollowingStrat(LiveStrategy):
     def setup(self) -> None:
         self.fast_ma = self.add_indicator(
             Indicator(kind="ema", part=["close"], period=5)
@@ -54,7 +54,7 @@ log.init(
     log_output_dir=f"trout/logs/{dt_str}"
 )
 
-ls = MyLiveStrat(acct_name="Alpaca Bot", data_source="alpaca")
+ls = TrendFollowingStrat(acct_name="Alpaca Bot", data_source="alpaca")
 try:
     ls.start()
 except KeyboardInterrupt:
