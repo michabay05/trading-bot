@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, asdict
 from abc import abstractmethod
 from datetime import datetime
+from warnings import deprecated
 from dateutil.relativedelta import relativedelta
 from typing import Any, Literal
 import json, time, os, shutil
@@ -12,7 +13,7 @@ import talib
 from . import util, log
 from .broker import LiveBroker
 from .candles import Candle, Timespan
-from .datafeed import AlpacaDataFeed, TBDataFeed, YahooDataFeed
+from .datafeed import AlpacaDataFeed, AlpacaUpdateFeed, TBDataFeed, YahooDataFeed
 from .portfolio import (
     OrderIntent, TBOrderDir, TBMarketOrder, TBOrderAmount,
     StopLossTrigger, TakeProfitTrigger
@@ -125,8 +126,11 @@ class LiveStrategy:
             self._data_feed = AlpacaDataFeed(self._symbols, acct_name)
         else:
             self._data_feed = YahooDataFeed(self._symbols)
-
         self._data_feed.set_candle_callback(self._on_new_candle)
+
+        self._update_feed = AlpacaUpdateFeed(acct_name)
+        self._update_feed.set_update_callback(self._broker._on_update_event)
+
         self._conn_alive: bool = False
 
         self._indicators: set[Indicator] = set()
@@ -136,8 +140,13 @@ class LiveStrategy:
         self._current_hour: int = self._time.hour
         self._next_close: datetime = self._time
 
+    @deprecated("Use `self.current_price()` instead")
     def last_close(self, symbol: str) -> float:
+        # NOTE: for live trading, instead of using last_close, use curr_price
         return self._live_data[symbol].agg_cnds[-1].close
+
+    def current_price(self, symbol: str) -> float:
+        return self._data_feed.get_latest_price(symbol)
 
     @property
     def curr_dt_str(self) -> str:
@@ -187,6 +196,10 @@ class LiveStrategy:
         log.info(f"Symbols: {self._symbols}")
         log.info(f"Cash: ${self._broker._portfolio.cash:.2f}")
 
+        # Update current hour variable
+        self._time = datetime.now(tz=util.MY_TIMEZONE)
+        self._current_hour = self._time.hour
+
         if not self._conn_alive:
             self._conn_alive = True
             log.debug("Starting data stream...")
@@ -219,15 +232,13 @@ class LiveStrategy:
         # Export the state of the portfolio
         self._broker.portfolio.save_to_json(f"{dir}/portfolio.json")
 
-    def _on_market_close(self) -> None:
+    def _on_market_close(self, next_open: datetime) -> None:
         # Export all info pertaining to how the day went today
         self.export_info()
 
         # Reset blacklist
         self._broker.reset_symbols(self._symbols)
 
-        status: dict = self._broker.get_market_status()
-        next_open: datetime = status["next_open"]
         self._time = datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
         while self._time < next_open:
@@ -238,17 +249,22 @@ class LiveStrategy:
             time.sleep(sleep_time)
             self._time = datetime.now(tz=util.MY_TIMEZONE)
 
-        self.start()
-
     def start(self) -> None:
         status: dict = self._broker.get_market_status()
         self._next_close = status["next_close"]
-        if status["is_open"]:
-            # Market is currently open
-            self._on_market_open()
-        else:
+        if not status["is_open"]:
             # Market is currently closed
-            self._on_market_close()
+            self._on_market_close(status["next_open"])
+
+        while True:
+            self._on_market_open()
+
+            log.debug("Starting data stream...")
+            self._data_feed.start_live()
+
+            status = self._broker.get_market_status()
+            self._next_close = status["next_close"]
+            self._on_market_close(status["next_open"])
 
     def _on_new_candle(self, symbol: str, cnd: Candle) -> None:
         ld = self._live_data[symbol]
@@ -295,7 +311,7 @@ class LiveStrategy:
 
         if self._time > self._next_close:
             # Market is closed
-            self._on_market_close()
+            self._data_feed.end_live()
 
     @abstractmethod
     def setup(self) -> None:

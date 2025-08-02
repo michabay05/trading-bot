@@ -1,7 +1,9 @@
 from enum import Enum
 from dataclasses import asdict, dataclass, field
+from datetime import datetime
 import enum
 import json, os
+from uuid import UUID
 
 
 class TBOrderType(Enum):
@@ -31,11 +33,10 @@ class TBOrderState(Enum):
 class Position:
     symbol: str
     quantity: float
-    price: float
     side: TBOrderDir
-
-    def market_value(self) -> float:
-        return self.quantity * self.price
+    created_by: UUID
+    # @PDT: the earliest possible time to close a position
+    earliest_close: datetime
 
     def close(self) -> None:
         pass
@@ -145,20 +146,10 @@ class TBOrder:
     type: TBOrderType
     id: int = field(init=False)
     status: TBOrderState = TBOrderState.WORKING
-    purchase_qty: float | None = None
-    purchase_dt: str | None = None
-    purchase_price: float | None = None
+    filled_qty: float | None = None
+    filled_dt: str | None = None
     take_profit: TakeProfitTrigger | None = None
     stop_loss: StopLossTrigger | None = None
-
-    def __post_init__(self):
-        global ORDER_ID_COUNTER
-        # Use object.__setattr__ to bypass our custom __setattr__ during init
-        # object.__setattr__(self, 'id', ORDER_ID_COUNTER)
-        self.id = ORDER_ID_COUNTER
-        ORDER_ID_COUNTER += 1
-        # Flag used for partial immutability (used in __setattr__())
-        self._initialized: bool = True
 
     def __setattr__(self, name: str, value) -> None:
         if not getattr(self, "_initialized", False):
@@ -219,8 +210,6 @@ class Portfolio:
         self._pl: float = 0.0
         self._capital_pct: float = 0.0
 
-        self.update_pl()
-
     @property
     def pl(self) -> float:
         return self._pl
@@ -241,10 +230,6 @@ class Portfolio:
     def positions(self) -> dict[str, Position]:
         return self._positions
 
-    @positions.setter
-    def positions(self, new_positions: dict[str, Position]) -> None:
-        self._positions = new_positions
-
     @property
     def orders(self) -> list[TBOrder]:
         return self._orders
@@ -254,13 +239,6 @@ class Portfolio:
 
     def __repr__(self) -> str:
         return json.dumps(Portfolio.to_dict(self), indent=4)
-
-    def find_order_by_id(self, id: int) -> TBOrder | None:
-        for ord in self._orders:
-            if ord.id == id:
-                return ord
-
-        return None
 
     def save_to_json(self, filepath: str) -> None:
         with open(filepath, "w") as f:
@@ -284,7 +262,6 @@ class Portfolio:
 
         self._positions = psts
         self._orders = ords
-        self.update_pl()
 
     @staticmethod
     def to_dict(pft: 'Portfolio') -> dict:
@@ -300,11 +277,3 @@ class Portfolio:
             },
             "orders": [ TBOrder.to_dict(ord) for ord in pft.orders ]
         }
-
-    def update_pl(self):
-        pst_total: float = 0.0
-        for pst in self.positions.values():
-            pst_total += abs(pst.market_value())
-
-        self._pl = (self._cash + pst_total) - self._initial_capital
-        self._capital_pct = 100.0 * (self._cash / self._initial_capital)

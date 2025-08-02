@@ -33,17 +33,17 @@ class TrendFollowingStrat(LiveStrategy):
 
     def on_candle(self, symbol: str) -> TBMarketOrder | None:
         last_atr = self.last_ind_value(symbol, self.atr)
-        last_close = self.last_close(symbol)
+        price = self.current_price(symbol)
         sz: TBOrderAmount = TBOrderAmount.cash_pct(0.3)
 
         if self.ind_crossover(symbol, self.fast_ma, self.slow_ma):
-            (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=True)
+            (tp, sl) = self.calc_tp_sl(price, last_atr, long=True)
             # sl = self.last_close - 5*last_atr
             # tp = self.last_close + 10*last_atr
             log.debug(f"{symbol}: Going long...\n\n")
             return self.market_buy(symbol, size=sz, tp_limit=tp, sl_limit=sl)
         elif self.ind_crossover(symbol, self.slow_ma, self.fast_ma):
-            (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=False)
+            (tp, sl) = self.calc_tp_sl(price, last_atr, long=False)
             # sl = self.last_close + 5*last_atr
             # tp = self.last_close - 10*last_atr
             log.debug(f"{symbol}: Going short...\n\n")

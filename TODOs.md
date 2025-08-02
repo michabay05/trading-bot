@@ -67,8 +67,10 @@ Currently, the laws pertaining to PDT are something I am forced to bother myself
 - [x] (refactor) Move blacklisting from `strategy.py` to `broker.py`
 - [x] (fix) Ensure that tp limits are at least a penny more/less than the market price
 - [x] (fix) Ensure that sl limits are at least a penny less/more than the market price
+- [ ] (feat) Subscribe to trading stream updates
 - [ ] (feat) Implement a way to limit the frequency with which the bot trades (buys and sells, and vice versa)
     - This is purely to comply with the PDT rules. The way it currently works is as intended (for the future).
+- [x] (fix) Adjust new timespan detection system
 
 ## v0.10
 - [x] (feat) Add Yahoo as an official data source

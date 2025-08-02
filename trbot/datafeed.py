@@ -9,6 +9,7 @@ from alpaca.data.live.stock import StockDataStream
 from alpaca.data.models.bars import Bar
 from alpaca.data.models import BarSet
 from alpaca.data.requests import StockBarsRequest, StockLatestTradeRequest
+from alpaca.trading.stream import TradingStream
 from alpaca.data.timeframe import TimeFrame
 
 from . import log, util
@@ -45,7 +46,7 @@ class AlpacaDataFeed(TBDataFeed):
         self._symbols: list[str] = symbols
         api_key, secret_key = util.alpaca_keys(acct_name)
         self._live_stream: StockDataStream = StockDataStream(api_key, secret_key)
-        self._hist_stream = StockHistoricalDataClient(
+        self._hist_data_stream = StockHistoricalDataClient(
             api_key, secret_key, raw_data=False
         )
 
@@ -57,7 +58,7 @@ class AlpacaDataFeed(TBDataFeed):
 
     def get_latest_price(self, symbol: str) -> float:
         sltr = StockLatestTradeRequest(symbol_or_symbols=symbol)
-        output = self._hist_stream.get_stock_latest_trade(sltr)
+        output = self._hist_data_stream.get_stock_latest_trade(sltr)
         return output[symbol].price
 
     async def ws_callback(self, bar: Bar | dict) -> None:
@@ -98,11 +99,39 @@ class AlpacaDataFeed(TBDataFeed):
             end=end
         )
 
-        bars: BarSet | RawData = self._hist_stream.get_stock_bars(req)
+        bars: BarSet | RawData = self._hist_data_stream.get_stock_bars(req)
         if not isinstance(bars, BarSet):
             raise TypeError(f"Expected `bars` to be of type BarSet, got {type(bars)}")
 
         return MultStockFrame.from_alpaca(timespan, bars.df)
+
+
+class AlpacaUpdateFeed:
+    def __init__(self, acct_name: str, paper: bool = True) -> None:
+        api_key, secret_key = util.alpaca_keys(acct_name)
+        self._update_stream: TradingStream = TradingStream(
+            api_key, secret_key, paper=paper, raw_data=False
+        )
+
+        self._update_callback: Callable[[dict], None] | None = None
+        self._conn_alive: bool = False
+
+    def set_update_callback(self, callback: Callable[[dict], None]) -> None:
+        self._update_callback = callback
+
+    def _ws_callback(self, data: Callable) -> None:
+        if self._update_callback is not None:
+            self._update_callback(data) # type: ignore
+
+    def start_live(self) -> None:
+        self._update_stream.subscribe_trade_updates(self._ws_callback)
+
+        self._conn_alive = True
+        self._update_stream.run()
+
+    def end_live(self) -> None:
+        self._update_stream.stop()
+        self._conn_alive = False
 
 
 # Disable logging

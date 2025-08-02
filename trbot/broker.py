@@ -1,4 +1,6 @@
 from typing import Literal
+from datetime import datetime, timedelta
+from uuid import UUID
 
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import (
@@ -21,8 +23,11 @@ from .portfolio import (
 class LiveBroker:
     def __init__(self, acct_name: str, symbols: list[str], paper: bool = True) -> None:
         api_key, secret_key = util.alpaca_keys(acct_name)
-        self._trade_client: TradingClient = TradingClient(api_key, secret_key, paper=paper)
+        self._trade_client: TradingClient = TradingClient(
+            api_key, secret_key, paper=paper, raw_data=False
+        )
 
+        # Set account configurations
         acct_config = self._trade_client.get_account_configurations()
         assert isinstance(acct_config, AccountConfiguration)
         acct_config.fractional_trading = True
@@ -49,13 +54,15 @@ class LiveBroker:
         self._portfolio.cash = float(cash)
 
         # Sync w/ remote's open orders
-        open_orders = self._trade_client.get_orders(filter=GetOrdersRequest(status=QueryOrderStatus.OPEN))
+        open_orders = self._trade_client.get_orders(
+            filter=GetOrdersRequest(status=QueryOrderStatus.OPEN)
+        )
         if not isinstance(open_orders, list):
             raise TypeError(f"open_orders was of type {type(open_orders)} instead of list[Order]")
 
         orders = []
         for ord in open_orders:
-            # TODO: Add more details here. alpaca differentiates between `Order` and `OrderRequest`
+            # TODO: Add more details here. alpaca distinguishes between `Order` and `OrderRequest`
             #       My order class models the OrderRequest class rather than the `Order`
             tmp_dict = {
                 "symbol": ord.symbol,
@@ -180,3 +187,18 @@ class LiveBroker:
         self._symbols = symbols.copy()
         self._long_symbols.clear()
         self._short_symbols.clear()
+
+    def _on_update_event(self, data: dict) -> None:
+        # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events
+        match data["event"]:
+            case "fill":
+                symbol = data["order"]["symbol"]
+                id = data["order"]["id"]
+                timestamp: datetime = datetime.fromisoformat(data["timestamp"])
+
+                self._portfolio.positions[symbol].created_by = UUID(id)
+                self._portfolio.positions[symbol].earliest_close = (
+                    timestamp + timedelta(days=1)
+                )
+            case _:
+                raise ValueError(f"Unknown update: {data["event"]}")
