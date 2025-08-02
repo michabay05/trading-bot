@@ -1,3 +1,5 @@
+from typing import Literal
+
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import (
     OrderClass, OrderSide, OrderType, PDTCheck, QueryOrderStatus, TimeInForce, OrderStatus
@@ -8,17 +10,16 @@ from alpaca.trading.requests import (
     StopLossRequest, TakeProfitRequest
 )
 
-
-from . import util
+from . import log, util
 from .datafeed import TBDataFeed
 from .portfolio import (
-    OrderIntent, TBOrderDir, TBOrder, Portfolio, TBMarketOrder, TBOrderState, Position,
+    OrderIntent, TBOrderAmountKind, TBOrderDir, TBOrder, Portfolio, TBMarketOrder, TBOrderState, Position,
     TBOrderType
 )
 
 
 class LiveBroker:
-    def __init__(self, acct_name: str, paper: bool = True) -> None:
+    def __init__(self, acct_name: str, symbols: list[str], paper: bool = True) -> None:
         api_key, secret_key = util.alpaca_keys(acct_name)
         self._trade_client: TradingClient = TradingClient(api_key, secret_key, paper=paper)
 
@@ -30,6 +31,10 @@ class LiveBroker:
 
         self._portfolio: Portfolio = Portfolio()
         self.sync_portfolio()
+
+        self._symbols: list[str] = symbols.copy()
+        self._long_symbols: list[str] = []
+        self._short_symbols: list[str] = []
 
     def sync_portfolio(self):
         # Sync w/ remote's available cash
@@ -99,6 +104,15 @@ class LiveBroker:
             raise TypeError(f"`clock` was type `{type(clock)}` instead of `Clock`.")
 
     def execute_open_order(self, order: TBMarketOrder, data_feed: TBDataFeed) -> None:
+        if (
+            (order.symbol in self._long_symbols and not order.is_long()) or
+            (order.symbol in self._short_symbols and order.is_long())
+        ):
+            # If this is true, then order is going against the stock's daily direction
+            # classification.
+            log.warn(f"{order.symbol} is going against its daily direction label (long or short)")
+            return
+
         tp = None
         sl = None
         if order.take_profit is not None:
@@ -111,9 +125,18 @@ class LiveBroker:
         else:
             ord_class: OrderClass = OrderClass.SIMPLE
 
+        order_value: float = 0.0
+        match order.requested_qty.kind:
+            case TBOrderAmountKind.SHARES:
+                order_value = order.requested_qty.amount * data_feed.get_latest_price(order.symbol)
+            case TBOrderAmountKind.NOTIONAL:
+                order_value = order.requested_qty.amount
+            case TBOrderAmountKind.CASH_PCT:
+                order_value = self._portfolio.cash * order.requested_qty.amount
+
         req = MarketOrderRequest(
             symbol=order.symbol,
-            qty=order.requested_qty,
+            notional=order.requested_qty,
             side=OrderSide.BUY if order.is_long() else OrderSide.SELL,
             type=OrderType.MARKET,
             time_in_force=TimeInForce.DAY,
@@ -122,11 +145,11 @@ class LiveBroker:
             stop_loss=sl,
         )
 
-        order_value: float = order.requested_qty * data_feed.get_latest_price(order.symbol)
         if order_value <= self._portfolio.cash:
-            sub_order = self._trade_client.submit_order(req)
-            assert isinstance(sub_order, Order)
-            if sub_order.status == OrderStatus.FILLED:
+            submitted_order = self._trade_client.submit_order(req)
+            self._dir_label_symbol(order.symbol, "long" if order.is_long() else "short")
+            assert isinstance(submitted_order, Order)
+            if submitted_order.status == OrderStatus.FILLED:
                 order.status = TBOrderState.FILLED
         else:
             order.status = TBOrderState.INSUFF_FUNDS
@@ -140,3 +163,20 @@ class LiveBroker:
         )
         self._portfolio.add_orders(order)
 
+    def _dir_label_symbol(self, symbol: str, dir: Literal["long", "short"]) -> None:
+        assert dir in ["long", "short"]
+        assert symbol in self._symbols
+
+        self._symbols.remove(symbol)
+        match dir:
+            case "long":
+                self._long_symbols.append(symbol)
+            case "short":
+                self._short_symbols.append(symbol)
+            case _:
+                raise ValueError(f"Unknown direction label for '{symbol}'")
+
+    def reset_symbols(self, symbols: list[str]) -> None:
+        self._symbols = symbols.copy()
+        self._long_symbols.clear()
+        self._short_symbols.clear()

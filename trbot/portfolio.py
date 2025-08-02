@@ -1,5 +1,6 @@
 from enum import Enum
 from dataclasses import asdict, dataclass, field
+import enum
 import json, os
 
 
@@ -96,11 +97,49 @@ class StopLossTrigger:
 
 ORDER_ID_COUNTER: int = 0
 
+class TBOrderAmountKind(enum.Enum):
+    # Absolute: amount of shares to buy
+    SHARES = "shares"
+    # Absolute: amount of shares to buy in dollars
+    NOTIONAL = "notional"
+    # Relative: Percentage of available cash in account
+    CASH_PCT = "percentage"
+
+class TBOrderAmount:
+    # NOTE: Do not use `__init__()` directly. Use the other class methods
+    def __init__(self, amount: float, kind: TBOrderAmountKind) -> None:
+        self._amount: float = amount
+        self._kind: TBOrderAmountKind = kind
+
+    @classmethod
+    def shares(cls, shares: float) -> "TBOrderAmount":
+        assert 0.0 < shares, f"Share error: 0.0 shares < {shares} shares"
+        return cls(shares, TBOrderAmountKind.SHARES)
+
+    @classmethod
+    def notional(cls, notional: float) -> "TBOrderAmount":
+        assert 0.0 < notional, f"Notional error: $0.0 < ${notional}"
+        return cls(notional, TBOrderAmountKind.NOTIONAL)
+
+    @classmethod
+    def cash_pct(cls, pct: float) -> "TBOrderAmount":
+        assert 0 < pct < 1, f"Cash percentage error: 0.0 < {pct} < 1.0"
+        return cls(pct, TBOrderAmountKind.CASH_PCT)
+
+    @property
+    def amount(self) -> float:
+        return self._amount
+
+    @property
+    def kind(self) -> TBOrderAmountKind:
+        return self._kind
+
+
 @dataclass
 class TBOrder:
     symbol: str
     side: TBOrderDir
-    requested_qty: float
+    requested_qty: TBOrderAmount
     requested_dt: str
     intent: OrderIntent
     type: TBOrderType

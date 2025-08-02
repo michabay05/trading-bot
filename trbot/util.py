@@ -25,14 +25,14 @@ def alpaca_keys(acct_name: str) -> tuple[str, str]:
     """ Access my keys from alpaca """
     return (ALPACA_SECRETS[acct_name]["api_key"], ALPACA_SECRETS[acct_name]["secret_key"])
 
-def detect_new_timespan(timespan: Timespan, t: datetime, now: datetime) -> bool:
+def detect_new_timespan(timespan: Timespan, old_val: int, now: datetime) -> bool:
     match timespan:
         case Timespan.DAY:
-            return now.day > t.day
+            return now.day > old_val
         case Timespan.HOUR:
-            return now.hour > t.hour
+            return now.hour > old_val
         case Timespan.MINUTE:
-            return now.minute > t.minute
+            return now.minute > old_val
 
 def aggregate_cnds(smaller_cnds: list[Candle], now: datetime,
     small_timespan: Timespan = Timespan.MINUTE, large_timespan: Timespan = Timespan.HOUR

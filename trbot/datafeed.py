@@ -12,8 +12,8 @@ from alpaca.data.requests import StockBarsRequest, StockLatestTradeRequest
 from alpaca.data.timeframe import TimeFrame
 
 from . import log, util
-from .stockframe import MultStockFrame
 from .candles import Candle, Timespan
+from .stockframe import MultStockFrame
 
 
 class TBDataFeed(ABC):
@@ -40,9 +40,73 @@ class TBDataFeed(ABC):
         pass
 
 
+class AlpacaDataFeed(TBDataFeed):
+    def __init__(self, symbols: list[str], acct_name: str) -> None:
+        self._symbols: list[str] = symbols
+        api_key, secret_key = util.alpaca_keys(acct_name)
+        self._live_stream: StockDataStream = StockDataStream(api_key, secret_key)
+        self._hist_stream = StockHistoricalDataClient(
+            api_key, secret_key, raw_data=False
+        )
+
+        self._conn_alive: bool = False
+        self._candle_callback: Callable[[str, Candle], None] | None = None
+
+    def set_candle_callback(self, callback: Callable[[str, Candle], None]) -> None:
+        self._candle_callback = callback
+
+    def get_latest_price(self, symbol: str) -> float:
+        sltr = StockLatestTradeRequest(symbol_or_symbols=symbol)
+        output = self._hist_stream.get_stock_latest_trade(sltr)
+        return output[symbol].price
+
+    async def ws_callback(self, bar: Bar | dict) -> None:
+        if isinstance(bar, dict):
+            # I have no idea what is inside this dict
+            raise ValueError(f"data is of type {type(bar)}, expected type `Bar`")
+
+        if self._candle_callback is not None:
+            self._candle_callback(bar.symbol, Candle(
+                timestamp=bar.timestamp.astimezone(tz=util.MY_TIMEZONE),
+                open=bar.open,
+                high=bar.high,
+                low=bar.low,
+                close=bar.close,
+                volume=bar.volume,
+            ))
+
+    def start_live(self) -> None:
+        self._live_stream.subscribe_bars(
+            self.ws_callback, *self._symbols
+        )
+
+        self._conn_alive = True
+        self._live_stream.run()
+
+    def end_live(self) -> None:
+        self._live_stream.stop()
+        self._conn_alive = False
+
+    def get_historical(self,
+        symbols: list[str], timespan: Timespan, start: datetime, end: datetime = datetime.now(),
+    ) -> MultStockFrame:
+        # NOTE: this could take a while, depending the time range supplied
+        req = StockBarsRequest(
+            symbol_or_symbols=symbols,
+            timeframe=TimeFrame(amount=1, unit=timespan.as_alpaca()), # type: ignore
+            start=start,
+            end=end
+        )
+
+        bars: BarSet | RawData = self._hist_stream.get_stock_bars(req)
+        if not isinstance(bars, BarSet):
+            raise TypeError(f"Expected `bars` to be of type BarSet, got {type(bars)}")
+
+        return MultStockFrame.from_alpaca(timespan, bars.df)
+
+
 # Disable logging
 # - https://stackoverflow.com/questions/8391411/how-to-block-calls-to-print
-
 class YahooDataFeed(TBDataFeed):
     def __init__(self, symbols: list[str]) -> None:
         self._symbols: list[str] = symbols
@@ -118,68 +182,4 @@ class YahooDataFeed(TBDataFeed):
 
         return MultStockFrame.from_yf(timespan, df)
 
-
-class AlpacaDataFeed(TBDataFeed):
-    def __init__(self, symbols: list[str], acct_name: str) -> None:
-        self._symbols: list[str] = symbols
-        api_key, secret_key = util.alpaca_keys(acct_name)
-        self._live_data_stream: StockDataStream = StockDataStream(api_key, secret_key)
-        self._hist_data_stream = StockHistoricalDataClient(
-            api_key, secret_key, raw_data=False
-        )
-
-        self._conn_alive: bool = False
-        self._candle_callback: Callable[[str, Candle], None] | None = None
-
-    def set_candle_callback(self, callback: Callable[[str, Candle], None]) -> None:
-        self._candle_callback = callback
-
-    def get_latest_price(self, symbol: str) -> float:
-        sltr = StockLatestTradeRequest(symbol_or_symbols=symbol)
-        output = self._hist_data_stream.get_stock_latest_trade(sltr)
-        return output[symbol].price
-
-    async def ws_callback(self, bar: Bar | dict) -> None:
-        if isinstance(bar, dict):
-            # I have no idea what is inside this dict
-            raise ValueError(f"data is of type {type(bar)}, expected type `Bar`")
-
-        if self._candle_callback is not None:
-            self._candle_callback(bar.symbol, Candle(
-                timestamp=bar.timestamp.astimezone(tz=util.MY_TIMEZONE),
-                open=bar.open,
-                high=bar.high,
-                low=bar.low,
-                close=bar.close,
-                volume=bar.volume,
-            ))
-
-    def start_live(self) -> None:
-        self._live_data_stream.subscribe_bars(
-            self.ws_callback, *self._symbols
-        )
-
-        self._conn_alive = True
-        self._live_data_stream.run()
-
-    def end_live(self) -> None:
-        self._live_data_stream.stop()
-        self._conn_alive = False
-
-    def get_historical(self,
-        symbols: list[str], timespan: Timespan, start: datetime, end: datetime = datetime.now(),
-    ) -> MultStockFrame:
-        # NOTE: this could take a while, depending the time range supplied
-        req = StockBarsRequest(
-            symbol_or_symbols=symbols,
-            timeframe=TimeFrame(amount=1, unit=timespan.as_alpaca()), # type: ignore
-            start=start,
-            end=end
-        )
-
-        bars: BarSet | RawData = self._hist_data_stream.get_stock_bars(req)
-        if not isinstance(bars, BarSet):
-            raise TypeError(f"Expected `bars` to be of type BarSet, got {type(bars)}")
-
-        return MultStockFrame.from_alpaca(timespan, bars.df)
 

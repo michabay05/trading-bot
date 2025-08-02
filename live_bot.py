@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from trbot.strategy import Indicator, LiveStrategy
-from trbot.portfolio import TBMarketOrder
+from trbot.portfolio import TBMarketOrder, TBOrderAmount
 from trbot import log, util
 
 class TrendFollowingStrat(LiveStrategy):
@@ -34,7 +34,8 @@ class TrendFollowingStrat(LiveStrategy):
     def on_candle(self, symbol: str) -> TBMarketOrder | None:
         last_atr = self.last_ind_value(symbol, self.atr)
         last_close = self.last_close(symbol)
-        sz: float = 1
+        sz: TBOrderAmount = TBOrderAmount.cash_pct(0.3)
+
         if self.ind_crossover(symbol, self.fast_ma, self.slow_ma):
             (tp, sl) = self.calc_tp_sl(last_close, last_atr, long=True)
             # sl = self.last_close - 5*last_atr
@@ -54,7 +55,17 @@ log.init(
     log_output_dir=f"trout/logs/{dt_str}"
 )
 
-ls = TrendFollowingStrat(acct_name="Alpaca Bot", data_source="alpaca")
+symbols: list[str] = [
+    "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
+    "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS", "AMZN"
+]
+
+# ls = TrendFollowingStrat(acct_name="Alpaca Bot", data_source="alpaca")
+# ls = TrendFollowingStrat(acct_name="Bot 03", data_source="yahoo")
+ls = TrendFollowingStrat(
+    acct_name="Bot 03", data_source="yahoo",
+    symbols=symbols.copy()
+)
 try:
     ls.start()
 except KeyboardInterrupt:

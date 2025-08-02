@@ -9,13 +9,12 @@ import numpy as np
 from numpy.typing import NDArray
 import talib
 
-
 from . import util, log
 from .broker import LiveBroker
 from .candles import Candle, Timespan
 from .datafeed import AlpacaDataFeed, TBDataFeed, YahooDataFeed
 from .portfolio import (
-    OrderIntent, TBOrderDir, TBMarketOrder,
+    OrderIntent, TBOrderDir, TBMarketOrder, TBOrderAmount,
     StopLossTrigger, TakeProfitTrigger
 )
 from .stockframe import SingleStockFrame
@@ -112,20 +111,15 @@ class _LiveData:
 
 
 class LiveStrategy:
-    def __init__(self, acct_name: str, data_source: Literal["alpaca", "yahoo"]) -> None:
-        self._broker: LiveBroker = LiveBroker(acct_name)
-
-        self._all_symbols: list[str] = [
-            "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
-            "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS"
-        ]
-        self._symbols: list[str] = self._all_symbols.copy()
-        self._blacklist: list[str] = []
+    def __init__(self,
+        acct_name: str, data_source: Literal["alpaca", "yahoo"], symbols: list[str]
+    ) -> None:
+        self._symbols: list[str] = symbols
         self._live_data: dict[str, _LiveData] = {}
-        for sym in self._all_symbols:
+        for sym in self._symbols:
             self._live_data[sym] = _LiveData()
 
-
+        self._broker: LiveBroker = LiveBroker(acct_name, self._symbols)
         self._data_feed: TBDataFeed
         if data_source == "alpaca":
             self._data_feed = AlpacaDataFeed(self._symbols, acct_name)
@@ -226,16 +220,11 @@ class LiveStrategy:
         self._broker.portfolio.save_to_json(f"{dir}/portfolio.json")
 
     def _on_market_close(self) -> None:
-        if self._conn_alive:
-            self._data_feed.end_live()
-            self._conn_alive = False
-
         # Export all info pertaining to how the day went today
         self.export_info()
 
         # Reset blacklist
-        self._symbols = self._all_symbols.copy()
-        self._blacklist.clear()
+        self._broker.reset_symbols(self._symbols)
 
         status: dict = self._broker.get_market_status()
         next_open: datetime = status["next_open"]
@@ -264,13 +253,14 @@ class LiveStrategy:
     def _on_new_candle(self, symbol: str, cnd: Candle) -> None:
         ld = self._live_data[symbol]
         ld.add_live(cnd)
-        log.warn(f"[{symbol:4}] Minute: {cnd}")
+        log.debug(f"[{symbol:4}] Minute: {cnd}")
 
-        if util.detect_new_timespan(ld.agg_timespan, t=self._time, now=cnd.timestamp):
-        # if cnd.timestamp.hour > self._current_hour:
+        self._time = datetime.now(tz=util.MY_TIMEZONE)
+        if util.detect_new_timespan(ld.agg_timespan, self._current_hour, cnd.timestamp):
             self._current_hour = cnd.timestamp.hour
+            log.info("Detected new hour...")
 
-            for symbol in self._all_symbols:
+            for symbol in self._symbols:
                 log.info(f"Hourly update for {symbol}...")
                 symbol_ld = self._live_data[symbol]
                 # On new target-timespan, do the following ...
@@ -291,22 +281,16 @@ class LiveStrategy:
 
                 # ... and apply strategy on the new target-timespan candle
                 order: TBMarketOrder | None = self.on_candle(symbol)
-                if (order is not None) and (order.symbol not in self._blacklist):
+                if order is not None:
                     self._broker.sync_portfolio()
                     self._broker.execute_open_order(order, self._data_feed)
                     log.debug(f"Submitted order: {order}")
-
-                    # Blacklist stock for the rest of the day
-                    self._blacklist.append(order.symbol)
-                    if order.symbol in self._symbols:
-                        self._symbols.remove(order.symbol)
                 else:
                     log.debug(f"No order")
 
                 log.debug("------------------")
 
  
-        self._time = datetime.now(tz=util.MY_TIMEZONE)
         update_live_aggregates(self._live_data)
 
         if self._time > self._next_close:
@@ -348,9 +332,9 @@ class LiveStrategy:
             return False
 
     def market_buy(self, symbol: str,
-        size: float, tp_limit: float | None = None, sl_limit: float | None = None
+        size: TBOrderAmount, tp_limit: float | None = None, sl_limit: float | None = None
     ) -> TBMarketOrder:
-        assert size > 0, "Negative size provided. (size > 0)"
+        assert size.amount > 0, "Negative size provided. (size > 0)"
         assert symbol in self._symbols, f"Provided ({symbol}) is not in list of symbols ({self._symbols})"
 
         if tp_limit is not None and sl_limit is not None:
@@ -365,23 +349,25 @@ class LiveStrategy:
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.BUY_TO_OPEN
         )
+
+        curr_price = self._data_feed.get_latest_price(symbol)
         if tp_limit is not None:
             mkt_ord.take_profit = TakeProfitTrigger(
-                tp_limit=tp_limit,
+                tp_limit=max(tp_limit, curr_price + 0.01),
                 intent=mkt_ord.intent.opp_close()
             )
         if sl_limit is not None:
             mkt_ord.stop_loss = StopLossTrigger(
-                sl_limit=sl_limit,
+                sl_limit=min(sl_limit, curr_price - 0.01),
                 intent=mkt_ord.intent.opp_close()
             )
 
         return mkt_ord
 
     def market_sell(self, symbol: str,
-        size: float, tp_limit: float | None = None, sl_limit: float | None = None
+        size: TBOrderAmount, tp_limit: float | None = None, sl_limit: float | None = None
     ) -> TBMarketOrder:
-        assert size > 0, "Negative size provided. (size > 0)"
+        assert size.amount > 0, "Negative size provided. (size > 0)"
         assert symbol in self._symbols, f"Provided ({symbol}) is not in list of symbols ({self._symbols})"
 
         if tp_limit is not None and sl_limit is not None:
@@ -396,14 +382,16 @@ class LiveStrategy:
             requested_dt=self.curr_dt_str,
             intent=OrderIntent.SELL_TO_OPEN
         )
+
+        curr_price = self._data_feed.get_latest_price(symbol)
         if tp_limit is not None:
             mkt_ord.take_profit = TakeProfitTrigger(
-                tp_limit=tp_limit,
+                tp_limit=min(tp_limit, curr_price - 0.01),
                 intent=mkt_ord.intent.opp_close()
             )
         if sl_limit is not None:
             mkt_ord.stop_loss = StopLossTrigger(
-                sl_limit=sl_limit,
+                sl_limit=max(sl_limit, curr_price + 0.01),
                 intent=mkt_ord.intent.opp_close()
             )
 

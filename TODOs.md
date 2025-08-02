@@ -5,10 +5,11 @@ A list of all the TODOs needed to be completed before each release
 - Why are there are differences in the data between polygon.io, webull, and tradingview?
 - Research better sources for live market data streaming (list here)
     - Interactive brokers
-    - Alpaca
+    - Alpaca (current choice)
     - Alphavantage
 - Research a trading platform that would allow the bot to make automated trading decision
     - Webull (their API does not work anymore)
+    - Alpaca (current choice)
     - Robinhood
     - Interactive brokers
 - Pattern Day Trading??
@@ -59,6 +60,16 @@ A list of all the TODOs needed to be completed before each release
 
 ---
 
+## v0.11
+Currently, the laws pertaining to PDT are something I am forced to bother myself with.
+
+- [x] (feat) Added distinction between absolute shares, absolute notional amounts, and relative portfolio percentage
+- [x] (refactor) Move blacklisting from `strategy.py` to `broker.py`
+- [x] (fix) Ensure that tp limits are at least a penny more/less than the market price
+- [x] (fix) Ensure that sl limits are at least a penny less/more than the market price
+- [ ] (feat) Implement a way to limit the frequency with which the bot trades (buys and sells, and vice versa)
+    - This is purely to comply with the PDT rules. The way it currently works is as intended (for the future).
+
 ## v0.10
 - [x] (feat) Add Yahoo as an official data source
     - [x] Convert price points to a single minute candle
@@ -79,8 +90,8 @@ A list of all the TODOs needed to be completed before each release
     - This will eventually be used to compute daily performance metrics.
 - [x] (feat) Add a second bot that uses Yahoo Finance as a data source
 - [x] (feat) Consider replacing my custom backtester with either one of these python libraries
-    - `backtesting.py` (Chosen as replacement)
-    - `vectorbt`
+    - `backtesting.py`
+    - `vectorbt` (Chosen as replacement)
 - [x] (fix) Logging error (it overwrote `logs.txt` instead of appending to it)
 - [x] (refactor) Add blacklisting of stocks for a single day trade
 - [ ] (feat) Implement the following strategies using the chosen backtesting library

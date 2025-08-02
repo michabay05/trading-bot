@@ -18,7 +18,7 @@ def test_detect_timespan():
         # now += timedelta(minutes=dmin)
         now += timedelta(minutes=rnd.uniform(1, 3))
 
-        if util.detect_new_timespan(Timespan.HOUR, t, now):
+        if util.detect_new_timespan(Timespan.HOUR, t.hour, now):
             t = now
             # print(f"New hour: {t}")
             count += 1
