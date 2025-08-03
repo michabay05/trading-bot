@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field, asdict
 from abc import abstractmethod
 from datetime import datetime
-from warnings import deprecated
 from dateutil.relativedelta import relativedelta
 from typing import Any, Literal
 import json, time, os, shutil
@@ -140,9 +139,9 @@ class LiveStrategy:
         self._current_hour: int = self._time.hour
         self._next_close: datetime = self._time
 
-    @deprecated("Use `self.current_price()` instead")
+    # NOTE: For live trading, instead of using last_close, use curr_price
+    # NOTE: Use `self.current_price()` instead
     def last_close(self, symbol: str) -> float:
-        # NOTE: for live trading, instead of using last_close, use curr_price
         return self._live_data[symbol].agg_cnds[-1].close
 
     def current_price(self, symbol: str) -> float:

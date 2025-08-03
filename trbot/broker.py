@@ -92,7 +92,7 @@ class LiveBroker:
             }
             positions[d["symbol"]] = Position(**d)
 
-        self._portfolio.positions = positions
+        self._portfolio.replace_all_positions(positions)
 
     @property
     def portfolio(self) -> Portfolio:
@@ -192,6 +192,7 @@ class LiveBroker:
         # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events
         match data["event"]:
             case "fill":
+                log.debug("Event: FILL")
                 symbol = data["order"]["symbol"]
                 id = data["order"]["id"]
                 timestamp: datetime = datetime.fromisoformat(data["timestamp"])

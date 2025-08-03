@@ -230,6 +230,9 @@ class Portfolio:
     def positions(self) -> dict[str, Position]:
         return self._positions
 
+    def replace_all_positions(self, new_positions: dict[str, Position]) -> None:
+        self._positions = new_positions
+
     @property
     def orders(self) -> list[TBOrder]:
         return self._orders
