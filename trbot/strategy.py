@@ -200,11 +200,6 @@ class LiveStrategy:
         self._time = datetime.now(tz=util.MY_TIMEZONE)
         self._current_hour = self._time.hour
 
-        if not self._conn_alive:
-            self._conn_alive = True
-            log.debug("Starting data stream...")
-            self._data_feed.start_live()
-
     def export_info(self) -> None:
         date_str: str = datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
         dir: str = f"trout/logs/{date_str}/"
