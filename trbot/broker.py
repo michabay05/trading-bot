@@ -87,7 +87,6 @@ class LiveBroker:
             d = {
                 "symbol": pos.symbol,
                 "quantity": float(pos.qty),
-                "price": pos.current_price,
                 "side": pos.side,
             }
             positions[d["symbol"]] = Position(**d)
@@ -202,4 +201,4 @@ class LiveBroker:
                     timestamp + timedelta(days=1)
                 )
             case _:
-                raise ValueError(f"Unknown update: {data["event"]}")
+                raise ValueError(f"Unknown update: {data['event']}")

@@ -51,7 +51,6 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
 - [ ] (fix) Handle missing candle values
     - As it stands, if the bot was stopped for some reason at 10:25 and is restarted at 13:25, there will be a 3-hour gap in the data.
-- [ ] (rsch) Look into alpaca's `TradingStream` and what updates it could provide
 - [ ] (feat) Add configurable candle generator with these parameters
     - [ ] Random movement
     - [ ] Candles w/ tendency to go up (>50% chance of going up)
@@ -71,6 +70,9 @@ Currently, the laws pertaining to PDT are something I am forced to bother myself
 - [ ] (feat) Implement a way to limit the frequency with which the bot trades (buys and sells, and vice versa)
     - This is purely to comply with the PDT rules. The way it currently works is as intended (for the future).
 - [x] (fix) Adjust new timespan detection system
+- [x] (rsch) Look into alpaca's `TradingStream` and what updates it could provide
+    - It provides various events I could subscribe to like `new`, `fill`
+- [ ] (feat) Subscribe to trade stream updates
 
 ## v0.10
 - [x] (feat) Add Yahoo as an official data source
