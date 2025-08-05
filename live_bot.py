@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 
 from trbot.strategy import Indicator, LiveStrategy
 from trbot.portfolio import TBMarketOrder, TBOrderAmount
@@ -50,6 +51,10 @@ class TrendFollowingStrat(LiveStrategy):
             return self.market_sell(symbol, size=sz, tp_limit=tp, sl_limit=sl)
 
 
+dir = "trout"
+for subdir in [ "aggs", "logs", "ohlcv-1hr", "pfts" ]:
+    os.makedirs(f"{dir}/{subdir}", exist_ok=True)
+
 dt_str = datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
 log.init(
     log_output_dir=f"trout/logs/{dt_str}"
@@ -60,10 +65,8 @@ symbols: list[str] = [
     "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS", "AMZN"
 ]
 
-# ls = TrendFollowingStrat(acct_name="Alpaca Bot", data_source="alpaca")
-# ls = TrendFollowingStrat(acct_name="Bot 03", data_source="yahoo")
 ls = TrendFollowingStrat(
-    acct_name="Bot 03", data_source="yahoo",
+    acct_name="Alpaca Bot", data_source="alpaca",
     symbols=symbols.copy()
 )
 try:

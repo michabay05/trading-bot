@@ -34,9 +34,9 @@ class Position:
     symbol: str
     quantity: float
     side: TBOrderDir
-    created_by: UUID
+    created_by: UUID | None = None
     # @PDT: the earliest possible time to close a position
-    earliest_close: datetime
+    earliest_close: datetime | None = None
 
     def close(self) -> None:
         pass
