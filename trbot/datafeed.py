@@ -108,6 +108,7 @@ class AlpacaDataFeed(TBDataFeed):
 
 class AlpacaUpdateFeed:
     def __init__(self, acct_name: str, paper: bool = True) -> None:
+        log.warn("Temporarily deprecated......")
         api_key, secret_key = util.alpaca_keys(acct_name)
         self._update_stream: TradingStream = TradingStream(
             api_key, secret_key, paper=paper, raw_data=False
@@ -119,7 +120,7 @@ class AlpacaUpdateFeed:
     def set_update_callback(self, callback: Callable[[dict], None]) -> None:
         self._update_callback = callback
 
-    def _ws_callback(self, data: Callable) -> None:
+    async def _ws_callback(self, data: Callable) -> None:
         if self._update_callback is not None:
             self._update_callback(data) # type: ignore
 

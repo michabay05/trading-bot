@@ -66,13 +66,13 @@ Currently, the laws pertaining to PDT are something I am forced to bother myself
 - [x] (refactor) Move blacklisting from `strategy.py` to `broker.py`
 - [x] (fix) Ensure that tp limits are at least a penny more/less than the market price
 - [x] (fix) Ensure that sl limits are at least a penny less/more than the market price
-- [ ] (feat) Subscribe to trading stream updates
 - [ ] (feat) Implement a way to limit the frequency with which the bot trades (buys and sells, and vice versa)
     - This is purely to comply with the PDT rules. The way it currently works is as intended (for the future).
+- [x] (fix) Handle API related errors which prevent hourly update from taking place for other stocks
+    - The hourly update ceases the moment an error or exception is triggered.
 - [x] (fix) Adjust new timespan detection system
 - [x] (rsch) Look into alpaca's `TradingStream` and what updates it could provide
     - It provides various events I could subscribe to like `new`, `fill`
-- [ ] (feat) Subscribe to trade stream updates
 - [x] (fix) Added immediate creation of important output directories on startup
     - If the repo was just cloned, the important directories inside `trout` won't be created
       automatically causing an OSError because those directories are not created by default.

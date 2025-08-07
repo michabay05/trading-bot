@@ -8,14 +8,13 @@ from alpaca.trading.enums import (
 )
 from alpaca.trading.models import AccountConfiguration, Clock, Order, TradeAccount
 from alpaca.trading.requests import (
-    ClosePositionRequest, GetOrdersRequest, MarketOrderRequest,
-    StopLossRequest, TakeProfitRequest
+    ClosePositionRequest, GetOrdersRequest, MarketOrderRequest
 )
 
 from . import log, util
 from .datafeed import TBDataFeed
 from .portfolio import (
-    OrderIntent, TBOrderAmountKind, TBOrderDir, TBOrder, Portfolio, TBMarketOrder, TBOrderState, Position,
+    TBIntent, TBOrder, TBOrderAmountKind, TBOrderDir, TBOrderReq, Portfolio, TBMarketReq, TBOrderState, Position,
     TBOrderType
 )
 
@@ -62,20 +61,20 @@ class LiveBroker:
 
         orders = []
         for ord in open_orders:
-            # TODO: Add more details here. alpaca distinguishes between `Order` and `OrderRequest`
-            #       My order class models the OrderRequest class rather than the `Order`
-            tmp_dict = {
-                "symbol": ord.symbol,
-                "side": TBOrderDir.LONG if ord.side == OrderSide.BUY else TBOrderDir.SHORT,
-                "requested_qty": ord.qty,
-                "requested_dt": ord.created_at,
-                "intent": OrderIntent(ord.position_intent),
-                "type": TBOrderType(ord.order_type),
-                "status": TBOrderState.FILLED if ord.status == OrderStatus.FILLED else TBOrderState.WORKING,
-                "purchase_dt": ord.filled_at,
-                "purchase_qty": ord.filled_qty,
-            }
-            orders.append(TBOrder(**tmp_dict))
+            # # TODO: Add more details here. alpaca distinguishes between `Order` and `OrderRequest`
+            # #       My order class models the OrderRequest class rather than the `Order`
+            # tmp_dict = {
+            #     "symbol": ord.symbol,
+            #     "side": TBOrderDir.LONG if ord.side == OrderSide.BUY else TBOrderDir.SHORT,
+            #     "requested_qty": ord.qty,
+            #     "requested_dt": ord.created_at,
+            #     "intent": TBIntent(ord.position_intent),
+            #     "type": TBOrderType(ord.order_type),
+            #     "status": TBOrderState.FILLED if ord.status == OrderStatus.FILLED else TBOrderState.WORKING,
+            #     "purchase_dt": ord.filled_at,
+            #     "purchase_qty": ord.filled_qty,
+            # }
+            orders.append(TBOrder.from_alpaca(ord))
 
         # Sync w/ remote's open positions
         open_positions = self._trade_client.get_all_positions()
@@ -109,7 +108,7 @@ class LiveBroker:
         else:
             raise TypeError(f"`clock` was type `{type(clock)}` instead of `Clock`.")
 
-    def execute_open_order(self, order: TBMarketOrder, data_feed: TBDataFeed) -> None:
+    def execute_open_order(self, order: TBMarketReq, data_feed: TBDataFeed) -> None:
         if (
             (order.symbol in self._long_symbols and not order.is_long()) or
             (order.symbol in self._short_symbols and order.is_long())
@@ -119,17 +118,18 @@ class LiveBroker:
             log.warn(f"{order.symbol} is going against its daily direction label (long or short)")
             return
 
-        tp = None
-        sl = None
-        if order.take_profit is not None:
-            tp = TakeProfitRequest(limit_price=round(order.take_profit.tp_limit, 2))
-        if order.stop_loss is not None:
-            sl = StopLossRequest(stop_price=round(order.stop_loss.sl_limit, 2))
+        # TODO: redo the take profit and stop loss system
+        # tp = None
+        # sl = None
+        # if order.take_profit is not None:
+        #     tp = TakeProfitRequest(limit_price=round(order.take_profit.tp_limit, 2))
+        # if order.stop_loss is not None:
+            # sl = StopLossRequest(stop_price=round(order.stop_loss.sl_limit, 2))
 
-        if tp is not None or sl is not None:
-            ord_class: OrderClass = OrderClass.BRACKET
-        else:
-            ord_class: OrderClass = OrderClass.SIMPLE
+        # if tp is not None or sl is not None:
+        #     ord_class: OrderClass = OrderClass.BRACKET
+        # else:
+        #     ord_class: OrderClass = OrderClass.SIMPLE
 
         order_value: float = 0.0
         match order.requested_qty.kind:
@@ -142,13 +142,13 @@ class LiveBroker:
 
         req = MarketOrderRequest(
             symbol=order.symbol,
-            notional=order.requested_qty,
+            notional=round(order_value, 2),
             side=OrderSide.BUY if order.is_long() else OrderSide.SELL,
             type=OrderType.MARKET,
             time_in_force=TimeInForce.DAY,
-            order_class=ord_class,
-            take_profit=tp,
-            stop_loss=sl,
+            order_class=OrderClass.SIMPLE,
+            # take_profit=tp,
+            # stop_loss=sl,
         )
 
         if order_value <= self._portfolio.cash:
@@ -157,12 +157,12 @@ class LiveBroker:
             assert isinstance(submitted_order, Order)
             if submitted_order.status == OrderStatus.FILLED:
                 order.status = TBOrderState.FILLED
+
+            self._portfolio.add_orders(submitted_order)
         else:
             order.status = TBOrderState.INSUFF_FUNDS
 
-        self._portfolio.add_orders(order)
-
-    def execute_close_order(self, order: TBMarketOrder) -> None:
+    def execute_close_order(self, order: TBMarketReq) -> None:
         self._trade_client.close_position(
             order.symbol,
             close_options=ClosePositionRequest(qty=str(order.requested_qty))

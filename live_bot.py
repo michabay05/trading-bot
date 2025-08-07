@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 
 from trbot.strategy import Indicator, LiveStrategy
-from trbot.portfolio import TBMarketOrder, TBOrderAmount
+from trbot.portfolio import TBMarketReq, TBOrderAmount
 from trbot import log, util
 
 class TrendFollowingStrat(LiveStrategy):
@@ -32,7 +32,7 @@ class TrendFollowingStrat(LiveStrategy):
 
         return (tp, sl)
 
-    def on_candle(self, symbol: str) -> TBMarketOrder | None:
+    def on_candle(self, symbol: str) -> TBMarketReq | None:
         last_atr = self.last_ind_value(symbol, self.atr)
         price = self.current_price(symbol)
         sz: TBOrderAmount = TBOrderAmount.cash_pct(0.3)
@@ -66,11 +66,13 @@ symbols: list[str] = [
 ]
 
 ls = TrendFollowingStrat(
+    # acct_name="Bot 03", data_source="alpaca",
     acct_name="Alpaca Bot", data_source="alpaca",
     symbols=symbols.copy()
 )
+
 try:
-    ls.start()
+    ls.start_loop()
 except KeyboardInterrupt:
     log.error("Received keyboard interrupt, ctrl-c...")
 

@@ -5,6 +5,9 @@ import enum
 import json, os
 from uuid import UUID
 
+from alpaca.trading.enums import OrderSide, OrderStatus, OrderType, PositionIntent
+from alpaca.trading.models import Order
+
 
 class TBOrderType(Enum):
     MARKET = "market"
@@ -47,24 +50,36 @@ class Position:
         return d
 
 
-class OrderIntent(Enum):
+class TBIntent(Enum):
     BUY_TO_OPEN = "buy_to_open"
     SELL_TO_OPEN = "sell_to_open"
     BUY_TO_CLOSE = "buy_to_close"
     SELL_TO_CLOSE = "sell_to_close"
 
-    def opp_close(self) -> 'OrderIntent':
-        if self == OrderIntent.BUY_TO_OPEN:
-            return OrderIntent.SELL_TO_CLOSE
-        elif self == OrderIntent.SELL_TO_OPEN:
-            return OrderIntent.BUY_TO_CLOSE
+    def opp_close(self) -> 'TBIntent':
+        if self == TBIntent.BUY_TO_OPEN:
+            return TBIntent.SELL_TO_CLOSE
+        elif self == TBIntent.SELL_TO_OPEN:
+            return TBIntent.BUY_TO_CLOSE
         else:
             raise ValueError(f"There is no opposite close for {self.value}")
+
+    @staticmethod
+    def from_alpaca(ord_type: PositionIntent) -> 'TBIntent':
+        match ord_type:
+            case PositionIntent.BUY_TO_OPEN:
+                return TBIntent.BUY_TO_OPEN
+            case PositionIntent.BUY_TO_CLOSE:
+                return TBIntent.BUY_TO_CLOSE
+            case PositionIntent.SELL_TO_OPEN:
+                return TBIntent.SELL_TO_OPEN
+            case PositionIntent.SELL_TO_CLOSE:
+                return TBIntent.SELL_TO_CLOSE
 
 
 @dataclass
 class TakeProfitTrigger:
-    intent: OrderIntent
+    intent: TBIntent
     tp_limit: float
     purchase_price: float | None = None
     purchase_dt: str | None = None
@@ -81,7 +96,7 @@ class TakeProfitTrigger:
 
 @dataclass
 class StopLossTrigger:
-    intent: OrderIntent
+    intent: TBIntent
     sl_limit: float
     purchase_price: float | None = None
     purchase_dt: str | None = None
@@ -96,8 +111,6 @@ class StopLossTrigger:
             return {}
 
 
-ORDER_ID_COUNTER: int = 0
-
 class TBOrderAmountKind(enum.Enum):
     # Absolute: amount of shares to buy
     SHARES = "shares"
@@ -105,6 +118,7 @@ class TBOrderAmountKind(enum.Enum):
     NOTIONAL = "notional"
     # Relative: Percentage of available cash in account
     CASH_PCT = "percentage"
+
 
 class TBOrderAmount:
     # NOTE: Do not use `__init__()` directly. Use the other class methods
@@ -137,14 +151,13 @@ class TBOrderAmount:
 
 
 @dataclass
-class TBOrder:
+class TBOrderReq:
     symbol: str
     side: TBOrderDir
     requested_qty: TBOrderAmount
     requested_dt: str
-    intent: OrderIntent
+    intent: TBIntent
     type: TBOrderType
-    id: int = field(init=False)
     status: TBOrderState = TBOrderState.WORKING
     filled_qty: float | None = None
     filled_dt: str | None = None
@@ -171,21 +184,21 @@ class TBOrder:
 
     def is_to_open(self) -> bool:
         return (
-            self.intent == OrderIntent.BUY_TO_OPEN or
-            self.intent == OrderIntent.SELL_TO_OPEN
+            self.intent == TBIntent.BUY_TO_OPEN or
+            self.intent == TBIntent.SELL_TO_OPEN
         )
 
     def is_to_close(self) -> bool:
         return (
-            self.intent == OrderIntent.BUY_TO_CLOSE or
-            self.intent == OrderIntent.SELL_TO_CLOSE
+            self.intent == TBIntent.BUY_TO_CLOSE or
+            self.intent == TBIntent.SELL_TO_CLOSE
         )
 
     def __repr__(self) -> str:
-        return json.dumps(TBOrder.to_dict(self), indent=4)
+        return json.dumps(TBOrderReq.to_dict(self), indent=4)
 
     @staticmethod
-    def to_dict(ord: 'TBOrder') -> dict:
+    def to_dict(ord: 'TBOrderReq') -> dict:
         d = asdict(ord)
         d["side"] = ord.side.value
         d["type"] = ord.type.value
@@ -196,8 +209,62 @@ class TBOrder:
         return d
 
 @dataclass
-class TBMarketOrder(TBOrder):
+class TBMarketReq(TBOrderReq):
     type: TBOrderType = TBOrderType.MARKET
+
+
+@dataclass
+class TBOrder:
+    filled_at: datetime
+    symbol: str
+    filled_qty: float
+    type: TBOrderType
+    side: TBOrderDir
+    amount: TBOrderAmount
+    intent: TBIntent
+    status: TBOrderState
+
+    @classmethod
+    def from_alpaca(cls, order: Order) -> 'TBOrder':
+        assert order.filled_at is not None
+        assert order.symbol is not None
+        assert order.filled_qty is not None
+        assert order.type is not None
+        assert order.side is not None
+
+        match order.type:
+            case OrderType.MARKET:
+                ord_type = TBOrderType.MARKET
+            case _:
+                raise ValueError(f"Unknown order type: {order.type}")
+
+        match order.side:
+            case OrderSide.BUY:
+                ord_dir = TBOrderDir.LONG
+            case OrderSide.SELL:
+                ord_dir = TBOrderDir.SHORT
+            case _:
+                raise ValueError(f"Unknown order side: {order.side}")
+
+        if order.qty is not None:
+            amount = TBOrderAmount.shares(float(order.qty))
+        else:
+            assert order.notional is not None
+            amount = TBOrderAmount.shares(float(order.notional))
+
+        assert order.position_intent is not None
+        assert order.status == OrderStatus.FILLED
+
+        return cls(
+            filled_at=order.filled_at,
+            symbol=order.symbol,
+            filled_qty=float(order.filled_qty),
+            type=ord_type,
+            side=ord_dir,
+            amount=amount,
+            intent=TBIntent.from_alpaca(order.position_intent),
+            status=TBOrderState.FILLED
+        )
 
 
 class Portfolio:
@@ -237,8 +304,8 @@ class Portfolio:
     def orders(self) -> list[TBOrder]:
         return self._orders
 
-    def add_orders(self, order: TBOrder) -> None:
-        self._orders.append(order)
+    def add_orders(self, order: Order) -> None:
+        self._orders.append(TBOrder.from_alpaca(order))
 
     def __repr__(self) -> str:
         return json.dumps(Portfolio.to_dict(self), indent=4)
@@ -259,9 +326,9 @@ class Portfolio:
             for k, v in root["positions"].items():
                 psts[k] = Position(**v)
 
-            ords: list[TBOrder] = []
+            ords: list[TBOrderReq] = []
             for ord in root["orders"]:
-                ords.append(TBOrder(**ord))
+                ords.append(TBOrderReq(**ord))
 
         self._positions = psts
         self._orders = ords
@@ -278,5 +345,5 @@ class Portfolio:
                 symbol: Position.to_dict(position)
                 for symbol, position in pft.positions.items()
             },
-            "orders": [ TBOrder.to_dict(ord) for ord in pft.orders ]
+            "orders": [ TBOrderReq.to_dict(ord) for ord in pft.orders ]
         }

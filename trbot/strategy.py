@@ -12,9 +12,9 @@ import talib
 from . import util, log
 from .broker import LiveBroker
 from .candles import Candle, Timespan
-from .datafeed import AlpacaDataFeed, AlpacaUpdateFeed, TBDataFeed, YahooDataFeed
+from .datafeed import AlpacaDataFeed, TBDataFeed, YahooDataFeed
 from .portfolio import (
-    OrderIntent, TBOrderDir, TBMarketOrder, TBOrderAmount,
+    TBIntent, TBOrderDir, TBMarketReq, TBOrderAmount,
     StopLossTrigger, TakeProfitTrigger
 )
 from .stockframe import SingleStockFrame
@@ -126,9 +126,6 @@ class LiveStrategy:
         else:
             self._data_feed = YahooDataFeed(self._symbols)
         self._data_feed.set_candle_callback(self._on_new_candle)
-
-        self._update_feed = AlpacaUpdateFeed(acct_name)
-        self._update_feed.set_update_callback(self._broker._on_update_event)
 
         self._conn_alive: bool = False
 
@@ -243,7 +240,7 @@ class LiveStrategy:
             time.sleep(sleep_time)
             self._time = datetime.now(tz=util.MY_TIMEZONE)
 
-    def start(self) -> None:
+    def start_loop(self) -> None:
         status: dict = self._broker.get_market_status()
         self._next_close = status["next_close"]
         if not status["is_open"]:
@@ -271,33 +268,10 @@ class LiveStrategy:
             log.info("Detected new hour...")
 
             for symbol in self._symbols:
-                log.info(f"Hourly update for {symbol}...")
-                symbol_ld = self._live_data[symbol]
-                # On new target-timespan, do the following ...
-                # ... aggregate the minute candles into a single target-timespan candle, ...
-                hour_cnd: Candle = util.aggregate_cnds(symbol_ld.live_cnds, self._time)
-                symbol_ld.add_agg(hour_cnd)
-                log.debug(f"\n\n{symbol:4}: {hour_cnd}\n\n")
-
-                # ... recalculate the indicator values, ...
-                log.debug("Indicator values: [")
-                for ind in self._indicators:
-                    values = ind.compute_from_candles(symbol_ld.agg_cnds)
-                    name = ind.name()
-                    symbol_ld.set_indicator(name, values)
-                    log.debug(f"    {name}: {values[-1]}")
-
-                log.debug("]")
-
-                # ... and apply strategy on the new target-timespan candle
-                order: TBMarketOrder | None = self.on_candle(symbol)
-                if order is not None:
-                    self._broker.sync_portfolio()
-                    self._broker.execute_open_order(order, self._data_feed)
-                    log.debug(f"Submitted order: {order}")
-                else:
-                    log.debug(f"No order")
-
+                try:
+                    self.hourly_update(symbol)
+                except Exception as e:
+                    log.error(f"{e}");
                 log.debug("------------------")
 
  
@@ -307,13 +281,41 @@ class LiveStrategy:
             # Market is closed
             self._data_feed.end_live()
 
+    def hourly_update(self, symbol: str) -> None:
+        log.info(f"Hourly update for {symbol}...")
+        symbol_ld = self._live_data[symbol]
+        # On new target-timespan, do the following ...
+        # ... aggregate the minute candles into a single target-timespan candle, ...
+        hour_cnd: Candle = util.aggregate_cnds(symbol_ld.live_cnds, self._time)
+        symbol_ld.add_agg(hour_cnd)
+        log.debug(f"\n\n{symbol:4}: {hour_cnd}\n\n")
+
+        # ... recalculate the indicator values, ...
+        log.debug("Indicator values: [")
+        for ind in self._indicators:
+            values = ind.compute_from_candles(symbol_ld.agg_cnds)
+            name = ind.name()
+            symbol_ld.set_indicator(name, values)
+            log.debug(f"    {name}: {values[-1]}")
+
+        log.debug("]")
+
+        # ... and apply strategy on the new target-timespan candle
+        order: TBMarketReq | None = self.on_candle(symbol)
+        if order is not None:
+            self._broker.sync_portfolio()
+            self._broker.execute_open_order(order, self._data_feed)
+            log.debug(f"Submitted order: {order}")
+        else:
+            log.debug(f"No order")
+
     @abstractmethod
     def setup(self) -> None:
         """ Called once to setup strategy """
         pass
 
     @abstractmethod
-    def on_candle(self, symbol: str) -> TBMarketOrder | None:
+    def on_candle(self, symbol: str) -> TBMarketReq | None:
         """ Called on each new candle """
         pass
 
@@ -343,7 +345,7 @@ class LiveStrategy:
 
     def market_buy(self, symbol: str,
         size: TBOrderAmount, tp_limit: float | None = None, sl_limit: float | None = None
-    ) -> TBMarketOrder:
+    ) -> TBMarketReq:
         assert size.amount > 0, "Negative size provided. (size > 0)"
         assert symbol in self._symbols, f"Provided ({symbol}) is not in list of symbols ({self._symbols})"
 
@@ -352,12 +354,12 @@ class LiveStrategy:
                 f"$0.00 < SL(${tp_limit:.3f}) < TP(${sl_limit:.3f})"
             )
 
-        mkt_ord: TBMarketOrder = TBMarketOrder(
+        mkt_ord: TBMarketReq = TBMarketReq(
             symbol=symbol,
             side=TBOrderDir.LONG,
             requested_qty=size,
             requested_dt=self.curr_dt_str,
-            intent=OrderIntent.BUY_TO_OPEN
+            intent=TBIntent.BUY_TO_OPEN
         )
 
         curr_price = self._data_feed.get_latest_price(symbol)
@@ -376,7 +378,7 @@ class LiveStrategy:
 
     def market_sell(self, symbol: str,
         size: TBOrderAmount, tp_limit: float | None = None, sl_limit: float | None = None
-    ) -> TBMarketOrder:
+    ) -> TBMarketReq:
         assert size.amount > 0, "Negative size provided. (size > 0)"
         assert symbol in self._symbols, f"Provided ({symbol}) is not in list of symbols ({self._symbols})"
 
@@ -385,12 +387,12 @@ class LiveStrategy:
                 f"TP(${tp_limit:.3f}) < SL(${sl_limit:.3f})"
             )
 
-        mkt_ord: TBMarketOrder = TBMarketOrder(
+        mkt_ord: TBMarketReq = TBMarketReq(
             symbol=symbol,
             side=TBOrderDir.SHORT,
             requested_qty=size,
             requested_dt=self.curr_dt_str,
-            intent=OrderIntent.SELL_TO_OPEN
+            intent=TBIntent.SELL_TO_OPEN
         )
 
         curr_price = self._data_feed.get_latest_price(symbol)
