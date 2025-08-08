@@ -8,14 +8,15 @@ from alpaca.trading.enums import (
 )
 from alpaca.trading.models import AccountConfiguration, Clock, Order, TradeAccount
 from alpaca.trading.requests import (
-    ClosePositionRequest, GetOrdersRequest, MarketOrderRequest
+    ClosePositionRequest, GetOrdersRequest, MarketOrderRequest,
+    StopLossRequest, TakeProfitRequest
 )
 
 from . import log, util
 from .datafeed import TBDataFeed
 from .portfolio import (
-    TBIntent, TBOrder, TBOrderAmountKind, TBOrderDir, TBOrderReq, Portfolio, TBMarketReq, TBOrderState, Position,
-    TBOrderType
+    TBOrder, TBOrderAmountKind, Portfolio,
+    TBMarketReq, TBOrderReq, TBOrderState, Position,
 )
 
 
@@ -33,12 +34,18 @@ class LiveBroker:
         acct_config.pdt_check = PDTCheck.BOTH
         self._trade_client.set_account_configurations(acct_config)
 
+        self._req_history: list[TBOrderReq] = []
         self._portfolio: Portfolio = Portfolio()
         self.sync_portfolio()
 
         self._symbols: list[str] = symbols.copy()
         self._long_symbols: list[str] = []
         self._short_symbols: list[str] = []
+
+        # If set to true, take profit and stop loss orders are sent to the
+        # remote broker. When set to false, market orders are manually sent to
+        # the local broker once the thresholds have been passed.
+        self._auto_exit: bool = False
 
     def sync_portfolio(self):
         # Sync w/ remote's available cash
@@ -50,7 +57,7 @@ class LiveBroker:
         if cash is None:
             raise ValueError("`account.cash: str | None` was None.")
 
-        self._portfolio.cash = float(cash)
+        new_pft: Portfolio = Portfolio(initial_capital=float(cash))
 
         # Sync w/ remote's open orders
         open_orders = self._trade_client.get_orders(
@@ -59,22 +66,9 @@ class LiveBroker:
         if not isinstance(open_orders, list):
             raise TypeError(f"open_orders was of type {type(open_orders)} instead of list[Order]")
 
-        orders = []
-        for ord in open_orders:
-            # # TODO: Add more details here. alpaca distinguishes between `Order` and `OrderRequest`
-            # #       My order class models the OrderRequest class rather than the `Order`
-            # tmp_dict = {
-            #     "symbol": ord.symbol,
-            #     "side": TBOrderDir.LONG if ord.side == OrderSide.BUY else TBOrderDir.SHORT,
-            #     "requested_qty": ord.qty,
-            #     "requested_dt": ord.created_at,
-            #     "intent": TBIntent(ord.position_intent),
-            #     "type": TBOrderType(ord.order_type),
-            #     "status": TBOrderState.FILLED if ord.status == OrderStatus.FILLED else TBOrderState.WORKING,
-            #     "purchase_dt": ord.filled_at,
-            #     "purchase_qty": ord.filled_qty,
-            # }
-            orders.append(TBOrder.from_alpaca(ord))
+        order_history = [ TBOrder.from_alpaca(ord) for ord in open_orders ]
+
+        new_pft.update_history(order_history)
 
         # Sync w/ remote's open positions
         open_positions = self._trade_client.get_all_positions()
@@ -90,7 +84,8 @@ class LiveBroker:
             }
             positions[d["symbol"]] = Position(**d)
 
-        self._portfolio.replace_all_positions(positions)
+        new_pft.replace_all_positions(positions)
+        self._portfolio = new_pft
 
     @property
     def portfolio(self) -> Portfolio:
@@ -108,66 +103,118 @@ class LiveBroker:
         else:
             raise TypeError(f"`clock` was type `{type(clock)}` instead of `Clock`.")
 
-    def execute_open_order(self, order: TBMarketReq, data_feed: TBDataFeed) -> None:
+    def add_order_req(self, order: TBMarketReq) -> None:
+        self._req_history.append(order)
+
+    def check_exits(self, symbol: str, close_price: float) -> TBMarketReq | None:
+        if self._auto_exit:
+            return None
+
+        for req in self._req_history:
+            if req.completed or req.symbol != symbol:
+                continue
+
+            # If no (tp) and no (sl), then no additional follow up is needed
+            if req.take_profit is None and req.stop_loss is None:
+                req.completed = True
+                continue
+
+            # Handle take profit
+            if req.take_profit is not None:
+                if req.is_long():
+                    tp_passed = close_price >= req.take_profit.tp_limit
+                else:
+                    tp_passed = close_price <= req.take_profit.tp_limit
+
+                if tp_passed:
+                    dt_str = str(datetime.now())
+                    req.take_profit.purchase_price = close_price
+                    req.take_profit.purchase_dt = dt_str
+                    req.completed = True
+                    return TBMarketReq(
+                        symbol=symbol,
+                        side=req.side.opposite(),
+                        requested_qty=req.requested_qty,
+                        requested_dt=dt_str,
+                        intent=req.take_profit.intent
+                    )
+
+            # Handle stop loss
+            if req.stop_loss is not None:
+                if req.is_long():
+                    sl_passed = close_price <= req.stop_loss.sl_limit
+                else:
+                    sl_passed = close_price >= req.stop_loss.sl_limit
+
+                if sl_passed:
+                    dt_str = str(datetime.now())
+                    req.stop_loss.purchase_price = close_price
+                    req.stop_loss.purchase_dt = dt_str
+                    req.completed = True
+                    return TBMarketReq(
+                        symbol=symbol,
+                        side=req.side.opposite(),
+                        requested_qty=req.requested_qty,
+                        requested_dt=dt_str,
+                        intent=req.stop_loss.intent
+                    )
+
+    def execute_open_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
         if (
-            (order.symbol in self._long_symbols and not order.is_long()) or
-            (order.symbol in self._short_symbols and order.is_long())
+            (ord_req.symbol in self._long_symbols and not ord_req.is_long()) or
+            (ord_req.symbol in self._short_symbols and ord_req.is_long())
         ):
             # If this is true, then order is going against the stock's daily direction
             # classification.
-            log.warn(f"{order.symbol} is going against its daily direction label (long or short)")
+            log.warn(f"{ord_req.symbol} is going against its daily direction label (long or short)")
             return
 
-        # TODO: redo the take profit and stop loss system
-        # tp = None
-        # sl = None
-        # if order.take_profit is not None:
-        #     tp = TakeProfitRequest(limit_price=round(order.take_profit.tp_limit, 2))
-        # if order.stop_loss is not None:
-            # sl = StopLossRequest(stop_price=round(order.stop_loss.sl_limit, 2))
+        tp = None
+        sl = None
+        ord_class: OrderClass = OrderClass.SIMPLE
+        if self._auto_exit:
+            if ord_req.take_profit is not None:
+                tp = TakeProfitRequest(limit_price=round(ord_req.take_profit.tp_limit, 2))
+            if ord_req.stop_loss is not None:
+                sl = StopLossRequest(stop_price=round(ord_req.stop_loss.sl_limit, 2))
 
-        # if tp is not None or sl is not None:
-        #     ord_class: OrderClass = OrderClass.BRACKET
-        # else:
-        #     ord_class: OrderClass = OrderClass.SIMPLE
+            if tp is not None or sl is not None:
+                ord_class: OrderClass = OrderClass.BRACKET
 
-        order_value: float = 0.0
-        match order.requested_qty.kind:
-            case TBOrderAmountKind.SHARES:
-                order_value = order.requested_qty.amount * data_feed.get_latest_price(order.symbol)
-            case TBOrderAmountKind.NOTIONAL:
-                order_value = order.requested_qty.amount
-            case TBOrderAmountKind.CASH_PCT:
-                order_value = self._portfolio.cash * order.requested_qty.amount
-
+        latest_price_per_share: float = data_feed.get_latest_price(ord_req.symbol)
+        order_value: float = ord_req.requested_qty.to_notional(latest_price_per_share)
         req = MarketOrderRequest(
-            symbol=order.symbol,
+            symbol=ord_req.symbol,
             notional=round(order_value, 2),
-            side=OrderSide.BUY if order.is_long() else OrderSide.SELL,
+            side=OrderSide.BUY if ord_req.is_long() else OrderSide.SELL,
             type=OrderType.MARKET,
             time_in_force=TimeInForce.DAY,
-            order_class=OrderClass.SIMPLE,
-            # take_profit=tp,
-            # stop_loss=sl,
+            order_class=ord_class,
+            take_profit=tp,
+            stop_loss=sl,
         )
 
         if order_value <= self._portfolio.cash:
             submitted_order = self._trade_client.submit_order(req)
-            self._dir_label_symbol(order.symbol, "long" if order.is_long() else "short")
+            self._dir_label_symbol(ord_req.symbol, "long" if ord_req.is_long() else "short")
             assert isinstance(submitted_order, Order)
             if submitted_order.status == OrderStatus.FILLED:
-                order.status = TBOrderState.FILLED
+                ord_req.status = TBOrderState.FILLED
 
-            self._portfolio.add_orders(submitted_order)
+            self._portfolio.add_to_history(submitted_order)
         else:
-            order.status = TBOrderState.INSUFF_FUNDS
+            ord_req.status = TBOrderState.INSUFF_FUNDS
 
-    def execute_close_order(self, order: TBMarketReq) -> None:
-        self._trade_client.close_position(
-            order.symbol,
-            close_options=ClosePositionRequest(qty=str(order.requested_qty))
+    def execute_close_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
+        latest_price = data_feed.get_latest_price(ord_req.symbol)
+        submitted_order = self._trade_client.close_position(
+            ord_req.symbol,
+            close_options=ClosePositionRequest(
+                qty=str(ord_req.requested_qty.to_shares(latest_price))
+            )
         )
-        self._portfolio.add_orders(order)
+        assert isinstance(submitted_order, Order)
+        self._portfolio.add_to_history(submitted_order)
 
     def _dir_label_symbol(self, symbol: str, dir: Literal["long", "short"]) -> None:
         assert dir in ["long", "short"]

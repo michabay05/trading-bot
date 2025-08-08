@@ -8,17 +8,17 @@ from trbot import log, util
 class TrendFollowingStrat(LiveStrategy):
     def setup(self) -> None:
         self.fast_ma = self.add_indicator(
-            Indicator(kind="ema", part=["close"], period=5)
+            Indicator(kind="ema", part=["close"], period=21)
         )
         self.slow_ma = self.add_indicator(
-            Indicator(kind="ema", part=["close"], period=35)
+            Indicator(kind="ema", part=["close"], period=50)
         )
         self.atr = self.add_indicator(
             Indicator(kind="atr", part=["high", "low", "close"], period=14)
         )
 
     def calc_tp_sl(self, last_close: float, last_atr: float, long: bool,
-        rr_ratio: int = 10
+        rr_ratio: int = 5
     ) -> tuple[float, float]:
         sl: float = 0.0
         tp: float = 0.0
@@ -35,7 +35,7 @@ class TrendFollowingStrat(LiveStrategy):
     def on_candle(self, symbol: str) -> TBMarketReq | None:
         last_atr = self.last_ind_value(symbol, self.atr)
         price = self.current_price(symbol)
-        sz: TBOrderAmount = TBOrderAmount.cash_pct(0.3)
+        sz: TBOrderAmount = TBOrderAmount.cash_pct(0.1, self.available_cash)
 
         if self.ind_crossover(symbol, self.fast_ma, self.slow_ma):
             (tp, sl) = self.calc_tp_sl(price, last_atr, long=True)

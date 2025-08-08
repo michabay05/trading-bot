@@ -76,6 +76,8 @@ Currently, the laws pertaining to PDT are something I am forced to bother myself
 - [x] (fix) Added immediate creation of important output directories on startup
     - If the repo was just cloned, the important directories inside `trout` won't be created
       automatically causing an OSError because those directories are not created by default.
+- [x] (refactor) Manually execute take profit and stop losses
+- [ ] (refactor) Compare local vs remote version of portfolio
 
 ## v0.10
 - [x] (feat) Add Yahoo as an official data source

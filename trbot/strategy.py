@@ -148,6 +148,10 @@ class LiveStrategy:
     def curr_dt_str(self) -> str:
         return self._time.strftime("%Y-%m-%d %H:%M:%S")
 
+    @property
+    def available_cash(self) -> float:
+        return self._broker.portfolio.cash
+
     def last_ind_value(self, symbol: str, ind_name: str) -> float:
         return self._live_data[symbol].agg_inds[ind_name][-1]
 
@@ -203,7 +207,7 @@ class LiveStrategy:
             assert os.path.isdir(dir)
             shutil.rmtree(dir)
 
-        os.mkdir(dir)
+        os.makedirs(dir)
         for symbol, ld in self._live_data.items():
             ssf: SingleStockFrame = SingleStockFrame.from_parts(
                 symbol, ld.live_timespan, ld.live_cnds
@@ -225,7 +229,10 @@ class LiveStrategy:
 
     def _on_market_close(self, next_open: datetime) -> None:
         # Export all info pertaining to how the day went today
-        self.export_info()
+        try:
+            self.export_info()
+        except Exception as e:
+            log.error(f"Failed to export portfolio: {e}")
 
         # Reset blacklist
         self._broker.reset_symbols(self._symbols)
@@ -261,6 +268,14 @@ class LiveStrategy:
         ld = self._live_data[symbol]
         ld.add_live(cnd)
         log.debug(f"[{symbol:4}] Minute: {cnd}")
+
+        order: TBMarketReq | None = self._broker.check_exits(symbol, cnd.close)
+        if order is not None:
+            self._broker.sync_portfolio()
+            assert order.is_to_close()
+            self._broker.execute_close_order(order, self._data_feed)
+            log.debug(f"Submitted order: {order}")
+            self._broker.add_order_req(order)
 
         self._time = datetime.now(tz=util.MY_TIMEZONE)
         if util.detect_new_timespan(ld.agg_timespan, self._current_hour, cnd.timestamp):
@@ -306,6 +321,7 @@ class LiveStrategy:
             self._broker.sync_portfolio()
             self._broker.execute_open_order(order, self._data_feed)
             log.debug(f"Submitted order: {order}")
+            self._broker.add_order_req(order)
         else:
             log.debug(f"No order")
 

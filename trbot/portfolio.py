@@ -1,5 +1,5 @@
 from enum import Enum
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from datetime import datetime
 import enum
 import json, os
@@ -87,9 +87,12 @@ class TakeProfitTrigger:
     @staticmethod
     def to_dict(tpr: 'TakeProfitTrigger | None') -> dict:
         if tpr is not None:
-            d = asdict(tpr)
-            d["intent"] = tpr.intent.value
-            return d
+            return {
+                "intent": tpr.intent,
+                "tp_limit": tpr.tp_limit,
+                "purchase_price": tpr.purchase_dt,
+                "purchase_dt": tpr.purchase_dt
+            }
         else:
             return {}
 
@@ -104,9 +107,12 @@ class StopLossTrigger:
     @staticmethod
     def to_dict(slr: 'StopLossTrigger | None') -> dict:
         if slr is not None:
-            d = asdict(slr)
-            d["intent"] = slr.intent.value
-            return d
+            return {
+                "intent": slr.intent,
+                "sl_limit": slr.sl_limit,
+                "purchase_price": slr.purchase_price,
+                "purchase_dt": slr.purchase_dt
+            }
         else:
             return {}
 
@@ -116,9 +122,6 @@ class TBOrderAmountKind(enum.Enum):
     SHARES = "shares"
     # Absolute: amount of shares to buy in dollars
     NOTIONAL = "notional"
-    # Relative: Percentage of available cash in account
-    CASH_PCT = "percentage"
-
 
 class TBOrderAmount:
     # NOTE: Do not use `__init__()` directly. Use the other class methods
@@ -137,9 +140,10 @@ class TBOrderAmount:
         return cls(notional, TBOrderAmountKind.NOTIONAL)
 
     @classmethod
-    def cash_pct(cls, pct: float) -> "TBOrderAmount":
+    def cash_pct(cls, pct: float, avaiable_cash: float) -> "TBOrderAmount":
         assert 0 < pct < 1, f"Cash percentage error: 0.0 < {pct} < 1.0"
-        return cls(pct, TBOrderAmountKind.CASH_PCT)
+        assert 0 < avaiable_cash, f"Amount of avaiable cash: 0.0 < {avaiable_cash}"
+        return cls(pct * avaiable_cash, TBOrderAmountKind.NOTIONAL)
 
     @property
     def amount(self) -> float:
@@ -149,6 +153,42 @@ class TBOrderAmount:
     def kind(self) -> TBOrderAmountKind:
         return self._kind
 
+    def to_shares(self, latest_price_per_share: float) -> float:
+        match self._kind:
+            case TBOrderAmountKind.SHARES:
+                return self.amount
+            case TBOrderAmountKind.NOTIONAL:
+                return self.amount / latest_price_per_share
+
+    def to_notional(self, latest_price_per_share: float) -> float:
+        match self._kind:
+            case TBOrderAmountKind.SHARES:
+                return self.amount * latest_price_per_share
+            case TBOrderAmountKind.NOTIONAL:
+                return self.amount
+
+    @staticmethod
+    def to_dict(ord_amount: 'TBOrderAmount') -> dict:
+        return {
+            "amount": ord_amount.amount,
+            "kind": ord_amount.kind
+        }
+
+
+# =============================================================================
+#             --- Distinction between TBOrderReq and TBOrder ---
+# TBOrderReq is meant to be used by LiveBroker to keep track of all the order
+# requests that have been sent by the bot. LiveBroker will also keep a list of
+# all "TBOrderReq"s initiated by the bot.
+#
+# On other hand, TBOrder is meant to be used by Portfolio to keep track of all
+# orders that have already been submitted to the remote broker. Portfolio will
+# also keep a list of "TBOrder"s.
+#
+# Simply put,
+#   >> list[TBOrderReq] -> Broker && list[TBOrder] -> Portfolio
+#   >> request (TBOrderReq) vs actual instance of the order (TBOrder)
+# =============================================================================
 
 @dataclass
 class TBOrderReq:
@@ -163,21 +203,7 @@ class TBOrderReq:
     filled_dt: str | None = None
     take_profit: TakeProfitTrigger | None = None
     stop_loss: StopLossTrigger | None = None
-
-    def __setattr__(self, name: str, value) -> None:
-        if not getattr(self, "_initialized", False):
-            super().__setattr__(name, value)
-            return
-
-        # After initialization, enforce immutability
-        mutable_fields = [
-            "status", "take_profit", "stop_loss", "purchase_dt", "purchase_price"
-        ]
-
-        if name not in mutable_fields and name != '_initialized':
-            raise AttributeError(f"Cannot modify immutable attribute: '{name}'")
-
-        super().__setattr__(name, value)
+    completed: bool = False
 
     def is_long(self) -> bool:
         return self.side == TBOrderDir.LONG
@@ -201,9 +227,10 @@ class TBOrderReq:
     def to_dict(ord: 'TBOrderReq') -> dict:
         d = asdict(ord)
         d["side"] = ord.side.value
+        d["requested_qty"] = TBOrderAmount.to_dict(ord.requested_qty)
+        d["intent"] = ord.intent.value
         d["type"] = ord.type.value
         d["status"] = ord.status.value
-        d["intent"] = ord.intent.value
         d["take_profit"] = TakeProfitTrigger.to_dict(ord.take_profit)
         d["stop_loss"] = StopLossTrigger.to_dict(ord.stop_loss)
         return d
@@ -252,7 +279,9 @@ class TBOrder:
             assert order.notional is not None
             amount = TBOrderAmount.shares(float(order.notional))
 
+
         assert order.position_intent is not None
+        intent = TBIntent.from_alpaca(order.position_intent)
         assert order.status == OrderStatus.FILLED
 
         return cls(
@@ -262,9 +291,20 @@ class TBOrder:
             type=ord_type,
             side=ord_dir,
             amount=amount,
-            intent=TBIntent.from_alpaca(order.position_intent),
+            intent=intent,
             status=TBOrderState.FILLED
         )
+
+    @staticmethod
+    def to_dict(ord: 'TBOrder') -> dict:
+        d = asdict(ord)
+        d["filled_at"] = str(ord.filled_at)
+        d["type"] = ord.type.value
+        d["side"] = ord.side.value
+        d["amount"] = TBOrderAmount.to_dict(ord.amount)
+        d["intent"] = ord.intent.value
+        d["status"] = ord.status.value
+        return d
 
 
 class Portfolio:
@@ -273,17 +313,8 @@ class Portfolio:
         self._cash: float = self._initial_capital
         # Stores currently open positions
         self._positions: dict[str, Position] = {}
-        self._orders: list[TBOrder] = []
-        self._pl: float = 0.0
-        self._capital_pct: float = 0.0
-
-    @property
-    def pl(self) -> float:
-        return self._pl
-
-    @property
-    def pl_pct(self) -> float:
-        return self._capital_pct
+        # Contains a record of all the orders that have been submitted to the broker
+        self._history: list[TBOrder] = []
 
     @property
     def cash(self) -> float:
@@ -300,12 +331,11 @@ class Portfolio:
     def replace_all_positions(self, new_positions: dict[str, Position]) -> None:
         self._positions = new_positions
 
-    @property
-    def orders(self) -> list[TBOrder]:
-        return self._orders
+    def update_history(self, new_history: list[TBOrder]) -> None:
+        self._history = new_history
 
-    def add_orders(self, order: Order) -> None:
-        self._orders.append(TBOrder.from_alpaca(order))
+    def add_to_history(self, order: Order) -> None:
+        self._history.append(TBOrder.from_alpaca(order))
 
     def __repr__(self) -> str:
         return json.dumps(Portfolio.to_dict(self), indent=4)
@@ -326,24 +356,22 @@ class Portfolio:
             for k, v in root["positions"].items():
                 psts[k] = Position(**v)
 
-            ords: list[TBOrderReq] = []
+            ords: list[TBOrder] = []
             for ord in root["orders"]:
-                ords.append(TBOrderReq(**ord))
+                ords.append(TBOrder(**ord))
 
         self._positions = psts
-        self._orders = ords
+        self._history = ords
 
     @staticmethod
     def to_dict(pft: 'Portfolio') -> dict:
         return {
             "capital": pft.cash,
-            "pl": pft.pl,
-            "capital_pct": pft._capital_pct,
             "position_count": len(pft.positions),
-            "orders_count": len(pft.orders),
+            "orders_count": len(pft._history),
             "positions": {
                 symbol: Position.to_dict(position)
                 for symbol, position in pft.positions.items()
             },
-            "orders": [ TBOrderReq.to_dict(ord) for ord in pft.orders ]
+            "order_history": [ TBOrder.to_dict(ord) for ord in pft._history ]
         }
