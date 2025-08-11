@@ -66,9 +66,9 @@ symbols: list[str] = [
 ]
 
 ls = TrendFollowingStrat(
-    # acct_name="Bot 03", data_source="alpaca",
-    acct_name="Alpaca Bot", data_source="alpaca",
-    symbols=symbols.copy()
+    acct_name="Bot 03", data_source="alpaca",
+    # acct_name="LIVE", data_source="alpaca",
+    symbols=symbols.copy(), paper=False
 )
 
 try:

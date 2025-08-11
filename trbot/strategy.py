@@ -112,14 +112,14 @@ class _LiveData:
 
 class LiveStrategy:
     def __init__(self,
-        acct_name: str, data_source: Literal["alpaca", "yahoo"], symbols: list[str]
+        acct_name: str, data_source: Literal["alpaca", "yahoo"], symbols: list[str], paper: bool
     ) -> None:
         self._symbols: list[str] = symbols
         self._live_data: dict[str, _LiveData] = {}
         for sym in self._symbols:
             self._live_data[sym] = _LiveData()
 
-        self._broker: LiveBroker = LiveBroker(acct_name, self._symbols)
+        self._broker: LiveBroker = LiveBroker(acct_name, self._symbols, paper=paper)
         self._data_feed: TBDataFeed
         if data_source == "alpaca":
             self._data_feed = AlpacaDataFeed(self._symbols, acct_name)
@@ -135,6 +135,8 @@ class LiveStrategy:
         self._time = datetime.now(tz=util.MY_TIMEZONE)
         self._current_hour: int = self._time.hour
         self._next_close: datetime = self._time
+        # `new_interval` amount of seconds, a new timespan will have been declared
+        self._new_interval: int = 15 * 60
 
     # NOTE: For live trading, instead of using last_close, use curr_price
     # NOTE: Use `self.current_price()` instead
@@ -269,6 +271,7 @@ class LiveStrategy:
         ld.add_live(cnd)
         log.debug(f"[{symbol:4}] Minute: {cnd}")
 
+        # Manual exits
         order: TBMarketReq | None = self._broker.check_exits(symbol, cnd.close)
         if order is not None:
             self._broker.sync_portfolio()
@@ -278,7 +281,7 @@ class LiveStrategy:
             self._broker.add_order_req(order)
 
         self._time = datetime.now(tz=util.MY_TIMEZONE)
-        if util.detect_new_timespan(ld.agg_timespan, self._current_hour, cnd.timestamp):
+        if cnd.timestamp.timestamp() % self._new_interval == 0:
             self._current_hour = cnd.timestamp.hour
             log.info("Detected new hour...")
 

@@ -4,8 +4,7 @@ from enum import Enum
 
 from alpaca.data.timeframe import TimeFrameUnit
 
-from trbot import util
-
+from .util import MY_TIMEZONE
 
 @dataclass
 class Candle:
@@ -17,7 +16,7 @@ class Candle:
     volume: float
 
     def __post_init__(self):
-        self.timestamp = self.timestamp.astimezone(tz=util.MY_TIMEZONE)
+        self.timestamp = self.timestamp.astimezone(tz=MY_TIMEZONE)
 
     def __repr__(self) -> str:
         return str(self.to_dict())
