@@ -316,6 +316,7 @@ class LiveStrategy:
             "volume": "sum"
         })
         ssf._df = df.dropna() # type: ignore
+        ssf._df.reset_index(inplace=True)
 
         hour_cnd: Candle = ssf.row_to_candle(-1)
         symbol_ld.add_agg(hour_cnd)
