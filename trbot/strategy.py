@@ -287,7 +287,7 @@ class LiveStrategy:
 
             for symbol in self._symbols:
                 try:
-                    self.hourly_update(symbol)
+                    self.new_timespan_update(symbol)
                 except Exception as e:
                     log.error(f"{e}");
                 log.debug("------------------")
@@ -299,12 +299,25 @@ class LiveStrategy:
             # Market is closed
             self._data_feed.end_live()
 
-    def hourly_update(self, symbol: str) -> None:
+    def new_timespan_update(self, symbol: str) -> None:
         log.info(f"Hourly update for {symbol}...")
         symbol_ld = self._live_data[symbol]
         # On new target-timespan, do the following ...
         # ... aggregate the minute candles into a single target-timespan candle, ...
-        hour_cnd: Candle = util.aggregate_cnds(symbol_ld.live_cnds, self._time)
+
+        # TODO: refactor timespan to include a time multiple like 15 mins
+        ssf = SingleStockFrame.from_parts(symbol, symbol_ld.live_timespan, symbol_ld.live_cnds)
+        ssf._df.set_index("timestamp", inplace=True)
+        df = ssf._df.resample("15min", label="left", closed="left").aggregate({
+            "open": "first",
+            "high": "max",
+            "low": "min",
+            "close": "last",
+            "volume": "sum"
+        })
+        ssf._df = df.dropna() # type: ignore
+
+        hour_cnd: Candle = ssf.row_to_candle(-1)
         symbol_ld.add_agg(hour_cnd)
         log.debug(f"\n\n{symbol:4}: {hour_cnd}\n\n")
 
