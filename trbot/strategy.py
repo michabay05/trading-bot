@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, asdict
 from abc import abstractmethod
-from datetime import datetime
+import datetime as dt
 from dateutil.relativedelta import relativedelta
 from typing import Any, Literal
 import json, time, os, shutil
@@ -132,9 +132,9 @@ class LiveStrategy:
         self._indicators: set[Indicator] = set()
         self._max_period: int = 0
 
-        self._time = datetime.now(tz=util.MY_TIMEZONE)
-        self._current_hour: int = self._time.hour
-        self._next_close: datetime = self._time
+        self._time: dt.datetime = dt.datetime.now(tz=util.MY_TIMEZONE)
+        self._last_update: dt.datetime = self._time
+        self._next_close: dt.datetime = self._time
         # `new_interval` amount of seconds, a new timespan will have been declared
         self._new_interval: int = 15 * 60
 
@@ -180,7 +180,7 @@ class LiveStrategy:
 
     def _on_market_open(self) -> None:
         # Bring historical data up to date
-        start = datetime.now() - relativedelta(months=1)
+        start = dt.datetime.now() - relativedelta(months=1)
 
         # Export the most recent data fetched from the data feed
         msf = self._data_feed.get_historical(self._symbols, Timespan.HOUR, start)
@@ -199,11 +199,11 @@ class LiveStrategy:
         log.info(f"Cash: ${self._broker._portfolio.cash:.2f}")
 
         # Update current hour variable
-        self._time = datetime.now(tz=util.MY_TIMEZONE)
-        self._current_hour = self._time.hour
+        self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
+        self._last_update = self._time
 
     def export_info(self) -> None:
-        date_str: str = datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
+        date_str: str = dt.datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
         dir: str = f"trout/logs/{date_str}/"
         if os.path.exists(dir):
             assert os.path.isdir(dir)
@@ -229,7 +229,7 @@ class LiveStrategy:
         # Export the state of the portfolio
         self._broker.portfolio.save_to_json(f"{dir}/portfolio.json")
 
-    def _on_market_close(self, next_open: datetime) -> None:
+    def _on_market_close(self, next_open: dt.datetime) -> None:
         # Export all info pertaining to how the day went today
         try:
             self.export_info()
@@ -239,7 +239,7 @@ class LiveStrategy:
         # Reset blacklist
         self._broker.reset_symbols(self._symbols)
 
-        self._time = datetime.now(tz=util.MY_TIMEZONE)
+        self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
         while self._time < next_open:
             log.info(f"Current time: {self._time}")
@@ -247,7 +247,7 @@ class LiveStrategy:
             sleep_time = min(diff.total_seconds(), 30 * 60)
             log.info(f"Sleeping for {sleep_time} seconds...")
             time.sleep(sleep_time)
-            self._time = datetime.now(tz=util.MY_TIMEZONE)
+            self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
 
     def start_loop(self) -> None:
         status: dict = self._broker.get_market_status()
@@ -280,10 +280,10 @@ class LiveStrategy:
             log.debug(f"Submitted order: {order}")
             self._broker.add_order_req(order)
 
-        self._time = datetime.now(tz=util.MY_TIMEZONE)
-        if cnd.timestamp.timestamp() % self._new_interval == 0:
-            self._current_hour = cnd.timestamp.hour
-            log.info("Detected new hour...")
+        self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
+        if (self._time - self._last_update).total_seconds() >= self._new_interval:
+            self._last_update = self._time
+            log.info("Detected new timespan...")
 
             for symbol in self._symbols:
                 try:
@@ -300,7 +300,7 @@ class LiveStrategy:
             self._data_feed.end_live()
 
     def new_timespan_update(self, symbol: str) -> None:
-        log.info(f"Hourly update for {symbol}...")
+        log.info(f"New timespan update for {symbol}...")
         symbol_ld = self._live_data[symbol]
         # On new target-timespan, do the following ...
         # ... aggregate the minute candles into a single target-timespan candle, ...
@@ -453,8 +453,8 @@ def update_live_aggregates(live_datas: dict[str, _LiveData]) -> None:
     export_dir: str = f"./charts-v2/public"
     output: dict = {}
 
-    now: datetime = datetime.now(tz=util.MY_TIMEZONE)
-    todays_open: datetime = datetime(
+    now: dt.datetime = dt.datetime.now(tz=util.MY_TIMEZONE)
+    todays_open: dt.datetime = dt.datetime(
         year=now.year, month=now.month, day=now.month, hour=9, minute=30,
         tzinfo=util.MY_TIMEZONE
     )
