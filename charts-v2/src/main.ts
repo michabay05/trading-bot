@@ -52,6 +52,7 @@ async function fetchInfo(): Promise<_ISymbolsInfo> {
 
 async function fetchLastUpdate(symbol: string): Promise<_ILastUpdate> {
     const updateResp = await fetch("updates.json");
+    console.log(updateResp);
     const updateJSON = await updateResp.json();
     return updateJSON[symbol];
 }
@@ -115,7 +116,6 @@ function reformatIndicatorData(indicatorData: _IIndsRenderData[]): _LWIndicatorD
         }
         output.push(indData);
     }
-    console.error("Unimplemented: reformatIndicatorData");
     return output;
 }
 
@@ -128,7 +128,7 @@ async function visualizeData(
     candleSeries.setData(ohlcData);
     volumeSeries.setData(volumeData);
 
-    if (indicatorData.length != Object.keys(multIndSeries.length).length) {
+    if (indicatorData.length != Object.keys(multIndSeries).length) {
         console.error(
             `indicatorData.length (${indicatorData.length}) != lineSeriesArr.length(${multIndSeries.length})`);
         throw Error();
@@ -140,7 +140,6 @@ async function visualizeData(
         //       probably through some kind of assert
         multIndSeries[indicatorData[i].name].setData(multipleIndData[i]);
     }
-    console.warn("Indicators are yet to be implemented.");
 }
 
 
