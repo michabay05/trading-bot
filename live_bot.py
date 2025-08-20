@@ -8,10 +8,10 @@ from trbot import log, util
 class TrendFollowingStrat(LiveStrategy):
     def setup(self) -> None:
         self.fast_ma = self.add_indicator(
-            Indicator(kind="ema", part=["close"], period=21)
+            Indicator(kind="sma", part=["close"], period=5)
         )
         self.slow_ma = self.add_indicator(
-            Indicator(kind="ema", part=["close"], period=50)
+            Indicator(kind="sma", part=["close"], period=35)
         )
         self.atr = self.add_indicator(
             Indicator(kind="atr", part=["high", "low", "close"], period=14)
@@ -61,14 +61,15 @@ log.init(
 )
 
 symbols: list[str] = [
-    "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
-    "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS", "AMZN"
+    "GOOG", "SPY", "AAPL", "AMZN"
+    # "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
+    # "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS", "AMZN"
 ]
 
 ls = TrendFollowingStrat(
-    acct_name="Bot 03", data_source="alpaca",
+    acct_name="Alpaca Bot", data_source="alpaca",
     # acct_name="LIVE", data_source="alpaca",
-    symbols=symbols.copy(), paper=False
+    symbols=symbols.copy(), paper=True
 )
 
 try:

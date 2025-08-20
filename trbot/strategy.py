@@ -132,11 +132,12 @@ class LiveStrategy:
         self._indicators: set[Indicator] = set()
         self._max_period: int = 0
 
-        self._time: dt.datetime = dt.datetime.now(tz=util.MY_TIMEZONE)
-        self._last_update: dt.datetime = self._time
-        self._next_close: dt.datetime = self._time
+        now = dt.datetime.now(tz=util.MY_TIMEZONE)
+        self._last_update: dt.datetime = now
+        self._next_close: dt.datetime = now
         # `new_interval` amount of seconds, a new timespan will have been declared
-        self._new_interval: int = 15 * 60
+        self._new_interval_min: int = 15
+        self._new_interval: int = self._new_interval_min * 60
 
     # NOTE: For live trading, instead of using last_close, use curr_price
     # NOTE: Use `self.current_price()` instead
@@ -239,20 +240,34 @@ class LiveStrategy:
         # Reset blacklist
         self._broker.reset_symbols(self._symbols)
 
-        self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
+        now = dt.datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
-        while self._time < next_open:
-            log.info(f"Current time: {self._time}")
-            diff = next_open - self._time
+        while now < next_open:
+            log.info(f"Current time: {now}")
+            diff = next_open - now
             sleep_time = min(diff.total_seconds(), 30 * 60)
-            log.info(f"Sleeping for {sleep_time} seconds...")
+            log.info(f"Sleeping for {sleep_time:.4f} seconds...")
             time.sleep(sleep_time)
-            self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
+            now = dt.datetime.now(tz=util.MY_TIMEZONE)
 
     def start_loop(self) -> None:
         status: dict = self._broker.get_market_status()
         self._next_close = status["next_close"]
-        if not status["is_open"]:
+        if status["is_open"]:
+            # Market is currently open
+            now = dt.datetime.now(tz=util.MY_TIMEZONE)
+            time_til_divisible = now.timestamp() % self._new_interval
+            time_til_divisible = self._new_interval - time_til_divisible
+            # If current time is not divisible by the new interval,
+            # (like interval=15min, then divisible = xx:00, xx:15, xx:30, xx:45))
+            # then wait until the current time is divisible
+            if time_til_divisible != 0.0:
+                log.info(
+                    f"Waiting for {time_til_divisible:.4f} more seconds "
+                    "until time is divisible by interval"
+                )
+                time.sleep(time_til_divisible)
+        else:
             # Market is currently closed
             self._on_market_close(status["next_open"])
 
@@ -280,22 +295,23 @@ class LiveStrategy:
             log.debug(f"Submitted order: {order}")
             self._broker.add_order_req(order)
 
-        self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
-        if (self._time - self._last_update).total_seconds() >= self._new_interval:
-            self._last_update = self._time
+        now = dt.datetime.now(tz=util.MY_TIMEZONE)
+        if (now - self._last_update).total_seconds() >= self._new_interval:
+            self._last_update = now
             log.info("Detected new timespan...")
 
             for symbol in self._symbols:
                 try:
                     self.new_timespan_update(symbol)
                 except Exception as e:
-                    log.error(f"{e}");
+                    log.error(f"Timespan update error: {str(e)}");
                 log.debug("------------------")
 
  
+        # Used for live data visualizing
         update_live_aggregates(self._live_data)
 
-        if self._time > self._next_close:
+        if now > self._next_close:
             # Market is closed
             self._data_feed.end_live()
 
@@ -307,6 +323,9 @@ class LiveStrategy:
 
         # TODO: refactor timespan to include a time multiple like 15 mins
         ssf = SingleStockFrame.from_parts(symbol, symbol_ld.live_timespan, symbol_ld.live_cnds)
+        ssf._df["timestamp"] = ssf._df["timestamp"].apply(
+            lambda x: dt.datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
+        )
         ssf._df.set_index("timestamp", inplace=True)
         df = ssf._df.resample("15min", label="left", closed="left").aggregate({
             "open": "first",
@@ -318,9 +337,9 @@ class LiveStrategy:
         ssf._df = df.dropna() # type: ignore
         ssf._df.reset_index(inplace=True)
 
-        hour_cnd: Candle = ssf.row_to_candle(-1)
-        symbol_ld.add_agg(hour_cnd)
-        log.debug(f"\n\n{symbol:4}: {hour_cnd}\n\n")
+        agg_cnd: Candle = ssf.row_to_candle(-1)
+        symbol_ld.add_agg(agg_cnd)
+        log.debug(f"\n\n{symbol:4}: {agg_cnd}\n\n")
 
         # ... recalculate the indicator values, ...
         log.debug("Indicator values: [")

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from .candles import Timespan

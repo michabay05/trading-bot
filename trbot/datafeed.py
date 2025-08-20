@@ -45,8 +45,10 @@ class AlpacaDataFeed(TBDataFeed):
     def __init__(self, symbols: list[str], acct_name: str) -> None:
         self._symbols: list[str] = symbols
         api_key, secret_key = util.alpaca_keys(acct_name)
-        self._live_stream: StockDataStream = StockDataStream(api_key, secret_key)
-        self._hist_data_stream = StockHistoricalDataClient(
+        self._live_stream: StockDataStream = StockDataStream(
+            api_key, secret_key, raw_data=False
+        )
+        self._hist_data_stream: StockHistoricalDataClient = StockHistoricalDataClient(
             api_key, secret_key, raw_data=False
         )
 
