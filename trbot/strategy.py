@@ -137,7 +137,7 @@ class LiveStrategy:
         self._next_close: dt.datetime = now
         # `new_interval` amount of seconds, a new timespan will have been declared
         self._new_interval_min: int = 15
-        self._new_interval: int = self._new_interval_min * 60
+        self._new_timespan_interval: int = self._new_interval_min * 60
 
     # NOTE: For live trading, instead of using last_close, use curr_price
     # NOTE: Use `self.current_price()` instead
@@ -159,15 +159,22 @@ class LiveStrategy:
         return self._live_data[symbol].agg_inds[ind_name][-1]
 
     def _init_all_live_data(self) -> None:
-        assert self._max_period > 0
-
+        assert self._max_period > 0, f"Max period can not be negative"
         log.debug(f"Max period: {self._max_period}")
         log.debug(f"Loading data of {self._max_period + 5} candles...")
+
+        end = dt.datetime.now()
+        start = end - dt.timedelta(hours=4)
+        msf = self._data_feed.get_historical(
+            self._symbols, Timespan.MINUTE, start, mult=1, end=end
+        )
+
         for symbol in self._symbols:
             log.debug(f"    Symbol: {symbol}")
             ld = self._live_data[symbol]
-            path = f"trout/ohlcv-1hr/{symbol}.csv"
-            ssf = SingleStockFrame.from_csv(symbol, Timespan.HOUR, path)
+            # path = f"trout/ohlcv-1hr/{symbol}.csv"
+            # ssf = SingleStockFrame.from_csv(symbol, Timespan.HOUR, path)
+            ssf = msf.get_symbol(symbol)
             n: int = len(ssf) - (self._max_period + 5)
             # Populate enough historical candles so that the indicators can produce values
             # on market open (not be in their warmup phase)
@@ -207,7 +214,7 @@ class LiveStrategy:
         date_str: str = dt.datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
         dir: str = f"trout/logs/{date_str}/"
         if os.path.exists(dir):
-            assert os.path.isdir(dir)
+            assert os.path.isdir(dir), f"Provided path ({dir}) must be a directory"
             shutil.rmtree(dir)
 
         os.makedirs(dir)
@@ -215,17 +222,11 @@ class LiveStrategy:
             ssf: SingleStockFrame = SingleStockFrame.from_parts(
                 symbol, ld.live_timespan, ld.live_cnds
             )
-            ssf.save_to_csv(
-                f"{dir}/live-{symbol}-{ld.live_timespan.value}.csv",
-                index=False
-            )
+            ssf.save_to_csv(f"{dir}/live-{symbol}-{ld.live_timespan.value}.csv")
             ssf: SingleStockFrame = SingleStockFrame.from_parts(
                 symbol, ld.agg_timespan, ld.agg_cnds
             )
-            ssf.save_to_csv(
-                f"{dir}/agg-{symbol}-{ld.agg_timespan.value}.csv",
-                index=False
-            )
+            ssf.save_to_csv(f"{dir}/agg-{symbol}-{ld.agg_timespan.value}.csv")
 
         # Export the state of the portfolio
         self._broker.portfolio.save_to_json(f"{dir}/portfolio.json")
@@ -235,7 +236,7 @@ class LiveStrategy:
         try:
             self.export_info()
         except Exception as e:
-            log.error(f"Failed to export portfolio: {e}")
+            log.error(f"Failed to export portfolio: {repr(e)} ({str(e)})")
 
         # Reset blacklist
         self._broker.reset_symbols(self._symbols)
@@ -256,8 +257,8 @@ class LiveStrategy:
         if status["is_open"]:
             # Market is currently open
             now = dt.datetime.now(tz=util.MY_TIMEZONE)
-            time_til_divisible = now.timestamp() % self._new_interval
-            time_til_divisible = self._new_interval - time_til_divisible
+            time_til_divisible = now.timestamp() % self._new_timespan_interval
+            time_til_divisible = self._new_timespan_interval - time_til_divisible
             # If current time is not divisible by the new interval,
             # (like interval=15min, then divisible = xx:00, xx:15, xx:30, xx:45))
             # then wait until the current time is divisible
@@ -290,13 +291,13 @@ class LiveStrategy:
         order: TBMarketReq | None = self._broker.check_exits(symbol, cnd.close)
         if order is not None:
             self._broker.sync_portfolio()
-            assert order.is_to_close()
+            assert order.is_to_close(), "Local broker's exit orders must be with the intention to close"
             self._broker.execute_close_order(order, self._data_feed)
             log.debug(f"Submitted order: {order}")
             self._broker.add_order_req(order)
 
         now = dt.datetime.now(tz=util.MY_TIMEZONE)
-        if (now - self._last_update).total_seconds() >= self._new_interval:
+        if (now - self._last_update).total_seconds() >= self._new_timespan_interval:
             self._last_update = now
             log.info("Detected new timespan...")
 
@@ -304,7 +305,7 @@ class LiveStrategy:
                 try:
                     self.new_timespan_update(symbol)
                 except Exception as e:
-                    log.error(f"Timespan update error: {str(e)}");
+                    log.error(f"Timespan update error: {repr(e)} ({str(e)})")
                 log.debug("------------------")
 
  
@@ -323,9 +324,9 @@ class LiveStrategy:
 
         # TODO: refactor timespan to include a time multiple like 15 mins
         ssf = SingleStockFrame.from_parts(symbol, symbol_ld.live_timespan, symbol_ld.live_cnds)
-        ssf._df["timestamp"] = ssf._df["timestamp"].apply(
-            lambda x: dt.datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
-        )
+        # ssf._df["timestamp"] = ssf._df["timestamp"].apply(
+        #     lambda x: dt.datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
+        # )
         ssf._df.set_index("timestamp", inplace=True)
         df = ssf._df.resample("15min", label="left", closed="left").aggregate({
             "open": "first",
@@ -335,7 +336,6 @@ class LiveStrategy:
             "volume": "sum"
         })
         ssf._df = df.dropna() # type: ignore
-        ssf._df.reset_index(inplace=True)
 
         agg_cnd: Candle = ssf.row_to_candle(-1)
         symbol_ld.add_agg(agg_cnd)
@@ -498,4 +498,3 @@ def update_live_aggregates(live_datas: dict[str, _LiveData]) -> None:
 
     with open(f"{export_dir}/updates.json", "w") as f:
         json.dump(output, f, indent=4)
-

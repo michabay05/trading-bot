@@ -45,7 +45,8 @@ class SingleStockFrame:
 
     def row_to_candle(self, i: int) -> Candle:
         row: pd.Series = self._df.iloc[i]
-        return Candle(**row.to_dict())
+        timestamp = self._df.index[i]        
+        return Candle(timestamp, **row.to_dict())
 
     def save_to_csv(self, out_path: str, index: bool = False) -> None:
         self._df.to_csv(out_path, index=index)
@@ -65,6 +66,15 @@ class MultStockFrame:
         self._df: pd.DataFrame = df
         self._symbols: set[str] = set(self._df["symbols"])
         self._timespan: Timespan = timespan
+
+    @classmethod
+    def from_csv(cls, timespan: Timespan, csv_path: str) -> 'MultStockFrame':
+        df = pd.read_csv(csv_path, index_col=False)
+        df["timestamp"] = df["timestamp"].apply(
+            lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
+        )
+        df.set_index("timestamp", inplace=True)
+        return cls(timespan, df)
 
     @classmethod
     def from_yf(cls, timespan: Timespan, yf_df: pd.DataFrame) -> 'MultStockFrame':
@@ -108,18 +118,32 @@ class MultStockFrame:
             del df["trade_count"]
         if "vwap" in df.columns:
             del df["vwap"]
+        
+        df.set_index("timestamp", inplace=True)
 
         return cls(timespan, df)
+
+    @property
+    def symbols(self) -> set[str]:
+        return self._symbols
 
     def get_symbol(self, symbol: str) -> SingleStockFrame:
         if not symbol in self._symbols:
             raise KeyError(f"Could not find '{symbol}' in dataframe")
 
         symbol_df = self._df[self._df["symbols"] == symbol].copy()
-        assert isinstance(symbol_df, pd.DataFrame)
+        assert isinstance(symbol_df, pd.DataFrame), f"symbol_df is not of type DataFrame; it is {type(symbol_df)}"
         symbol_df.drop("symbols", axis=1, inplace=True)
+    
+        # symbol_df["timestamp"] = symbol_df["timestamp"].apply(
+        #     lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
+        # )
+        # symbol_df.set_index("timestamp", inplace=True)
 
         return SingleStockFrame(symbol, self._timespan, symbol_df)
+
+    def save_to_csv(self, out_path: str, index: bool = False) -> None:
+        self._df.to_csv(out_path, index=index)
 
     def __repr__(self) -> str:
         output: str = f"Symbol: {self._symbols}\n"

@@ -8,6 +8,8 @@ from uuid import UUID
 from alpaca.trading.enums import OrderSide, OrderStatus, OrderType, PositionIntent
 from alpaca.trading.models import Order
 
+from . import log
+
 
 class TBOrderType(Enum):
     MARKET = "market"
@@ -240,6 +242,7 @@ class TBMarketReq(TBOrderReq):
     type: TBOrderType = TBOrderType.MARKET
 
 
+# Deprecated
 @dataclass
 class TBOrder:
     filled_at: datetime
@@ -253,11 +256,11 @@ class TBOrder:
 
     @classmethod
     def from_alpaca(cls, order: Order) -> 'TBOrder':
-        assert order.filled_at is not None
-        assert order.symbol is not None
-        assert order.filled_qty is not None
-        assert order.type is not None
-        assert order.side is not None
+        assert order.filled_at is not None, f"alpaca conv: order fill price is None"
+        assert order.symbol is not None, f"alpaca conv: order symbol is None"
+        assert order.filled_qty is not None, f"alpaca conv: order fill qty is None"
+        assert order.type is not None, f"alpaca conv: order type is None"
+        assert order.side is not None, f"alpaca conv: order side is None"
 
         match order.type:
             case OrderType.MARKET:
@@ -276,13 +279,13 @@ class TBOrder:
         if order.qty is not None:
             amount = TBOrderAmount.shares(float(order.qty))
         else:
-            assert order.notional is not None
+            assert order.notional is not None, f"alpaca conv: order notional value is None"
             amount = TBOrderAmount.shares(float(order.notional))
 
 
-        assert order.position_intent is not None
+        assert order.position_intent is not None, f"alpaca conv: order position intent is None"
         intent = TBIntent.from_alpaca(order.position_intent)
-        assert order.status == OrderStatus.FILLED
+        assert order.status == OrderStatus.FILLED, f"alpaca conv: to convert to local order type, alpaca orders must be filled"
 
         return cls(
             filled_at=order.filled_at,
@@ -313,8 +316,6 @@ class Portfolio:
         self._cash: float = self._initial_capital
         # Stores currently open positions
         self._positions: dict[str, Position] = {}
-        # Contains a record of all the orders that have been submitted to the broker
-        self._history: list[TBOrder] = []
 
     @property
     def cash(self) -> float:
@@ -331,12 +332,6 @@ class Portfolio:
     def replace_all_positions(self, new_positions: dict[str, Position]) -> None:
         self._positions = new_positions
 
-    def update_history(self, new_history: list[TBOrder]) -> None:
-        self._history = new_history
-
-    def add_to_history(self, order: Order) -> None:
-        self._history.append(TBOrder.from_alpaca(order))
-
     def __repr__(self) -> str:
         return json.dumps(Portfolio.to_dict(self), indent=4)
 
@@ -345,33 +340,15 @@ class Portfolio:
             json.dump(Portfolio.to_dict(self), f, indent=4)
 
     def init_from_json(self, filepath: str) -> None:
-        if not os.path.exists(filepath):
-            print(f"[ERROR] Unable to find '{filepath}'")
-            return
-
-        with open(filepath, "r") as f:
-            root = json.load(f)
-            self._cash = float(root["capital"])
-            psts: dict[str, Position] = {}
-            for k, v in root["positions"].items():
-                psts[k] = Position(**v)
-
-            ords: list[TBOrder] = []
-            for ord in root["orders"]:
-                ords.append(TBOrder(**ord))
-
-        self._positions = psts
-        self._history = ords
+        raise NotImplementedError()
 
     @staticmethod
     def to_dict(pft: 'Portfolio') -> dict:
         return {
             "capital": pft.cash,
             "position_count": len(pft.positions),
-            "orders_count": len(pft._history),
             "positions": {
                 symbol: Position.to_dict(position)
                 for symbol, position in pft.positions.items()
             },
-            "order_history": [ TBOrder.to_dict(ord) for ord in pft._history ]
         }

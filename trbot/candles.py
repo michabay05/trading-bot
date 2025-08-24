@@ -3,6 +3,7 @@ from datetime import datetime
 from enum import Enum
 
 from alpaca.data.timeframe import TimeFrameUnit
+import numpy as np
 
 from .util import MY_TIMEZONE
 
@@ -28,10 +29,11 @@ class Candle:
         return output
 
     def __eq__(self, other) -> bool:
-        return (self.open == other.open and
-                self.high == other.high and
-                self.low == other.low and
-                self.close == other.close and
+        eps: float = 1e-4
+        return (self.open   - other.open <= eps and
+                self.high   - other.high <= eps and
+                self.low    - other.low <= eps and
+                self.close  - other.close <= eps and
                 self.volume == other.volume and
                 self.timestamp == other.timestamp)
 

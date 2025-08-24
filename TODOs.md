@@ -30,9 +30,6 @@ A list of all the TODOs needed to be completed before each release
     - Remove it from the list of positions
 - [ ] (refactor) Change candle csv naming scheme to match that of the portfolios
 - [ ] (feat) Add time in force for orders (DAY or Good-til-Cancelled)
-- [ ] (feat) Add the notion of a trade and also FYI:
-    - Trade = A completed buy-sell transaction pair
-    - Position = Current market exposure (open trades)
 - [ ] (feat) Resize charts upon window resize
 - [ ] (feat) Implement commissions setting for Broker
 - [ ] (fix) Deal with timezones when importing stockframe data from csv
@@ -56,6 +53,7 @@ A list of all the TODOs needed to be completed before each release
     - [ ] Candles w/ tendency to go up (>50% chance of going up)
     - [ ] Candles w/ tendency to go down (>50% chance of going down)
 - [ ] (feat) Add more tests based on the random candle generator
+- [ ] (feat) Create an additional script to make sense of all the logs and portfolio saved as files.
 
 ---
 
@@ -78,6 +76,9 @@ Currently, the laws pertaining to PDT are something I am forced to bother myself
       automatically causing an OSError because those directories are not created by default.
 - [x] (refactor) Manually execute take profit and stop losses
 - [ ] (refactor) Compare local vs remote version of portfolio
+- [x] (feat) Add the notion of a trade and also FYI:
+    - Trade = A completed buy-sell transaction pair
+    - Position = Current market exposure (open trades)
 
 ## v0.10
 - [x] (feat) Add Yahoo as an official data source

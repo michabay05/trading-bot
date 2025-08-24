@@ -29,7 +29,7 @@ class LiveBroker:
 
         # Set account configurations
         acct_config = self._trade_client.get_account_configurations()
-        assert isinstance(acct_config, AccountConfiguration)
+        assert isinstance(acct_config, AccountConfiguration), f"acct_config is not of type AccountConfiguration; it is {type(acct_config)}"
         acct_config.fractional_trading = True
         acct_config.pdt_check = PDTCheck.BOTH
         self._trade_client.set_account_configurations(acct_config)
@@ -58,17 +58,6 @@ class LiveBroker:
             raise ValueError("`account.cash: str | None` was None.")
 
         new_pft: Portfolio = Portfolio(initial_capital=float(cash))
-
-        # Sync w/ remote's open orders
-        open_orders = self._trade_client.get_orders(
-            filter=GetOrdersRequest(status=QueryOrderStatus.OPEN)
-        )
-        if not isinstance(open_orders, list):
-            raise TypeError(f"open_orders was of type {type(open_orders)} instead of list[Order]")
-
-        order_history = [ TBOrder.from_alpaca(ord) for ord in open_orders ]
-
-        new_pft.update_history(order_history)
 
         # Sync w/ remote's open positions
         open_positions = self._trade_client.get_all_positions()
@@ -166,7 +155,7 @@ class LiveBroker:
         ):
             # If this is true, then order is going against the stock's daily direction
             # classification.
-            log.warn(f"{ord_req.symbol} is going against its daily direction label (long or short)")
+            log.warn(f"DENIED: {ord_req.symbol} is going against its daily direction label (long or short)")
             return
 
         tp = None
@@ -197,11 +186,11 @@ class LiveBroker:
         if order_value <= self._portfolio.cash:
             submitted_order = self._trade_client.submit_order(req)
             self._dir_label_symbol(ord_req.symbol, "long" if ord_req.is_long() else "short")
-            assert isinstance(submitted_order, Order)
+            assert isinstance(submitted_order, Order), f"submitted_order is not of type Order; it is {type(submitted_order)}"
             if submitted_order.status == OrderStatus.FILLED:
                 ord_req.status = TBOrderState.FILLED
 
-            self._portfolio.add_to_history(submitted_order)
+            # self._portfolio.add_to_history(submitted_order)
         else:
             ord_req.status = TBOrderState.INSUFF_FUNDS
 
@@ -213,12 +202,12 @@ class LiveBroker:
                 qty=str(ord_req.requested_qty.to_shares(latest_price))
             )
         )
-        assert isinstance(submitted_order, Order)
-        self._portfolio.add_to_history(submitted_order)
+        assert isinstance(submitted_order, Order), f"submitted_order is not of type Order; it is {type(submitted_order)}"
+        # self._portfolio.add_to_history(submitted_order)
 
     def _dir_label_symbol(self, symbol: str, dir: Literal["long", "short"]) -> None:
-        assert dir in ["long", "short"]
-        assert symbol in self._symbols
+        assert dir in ["long", "short"], f"Unknown direction label: {dir}"
+        assert symbol in self._symbols, f"Symbol({symbol}) is not in symbol list({self._symbols})"
 
         self._symbols.remove(symbol)
         match dir:

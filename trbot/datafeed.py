@@ -36,7 +36,7 @@ class TBDataFeed(ABC):
 
     @abstractmethod
     def get_historical(self,
-        symbols: list[str], timespan: Timespan, start: datetime, end: datetime = datetime.now(),
+        symbols: list[str], timespan: Timespan, start: datetime,  mult: int = 1, end: datetime = datetime.now(),
     ) -> MultStockFrame:
         pass
 
@@ -91,12 +91,13 @@ class AlpacaDataFeed(TBDataFeed):
         self._conn_alive = False
 
     def get_historical(self,
-        symbols: list[str], timespan: Timespan, start: datetime, end: datetime = datetime.now(),
+        symbols: list[str], timespan: Timespan, start: datetime,
+        mult: int = 1, end: datetime = datetime.now(),
     ) -> MultStockFrame:
         # NOTE: this could take a while, depending the time range supplied
         req = StockBarsRequest(
             symbol_or_symbols=symbols,
-            timeframe=TimeFrame(amount=1, unit=timespan.as_alpaca()), # type: ignore
+            timeframe=TimeFrame(amount=mult, unit=timespan.as_alpaca()), # type: ignore
             start=start,
             end=end
         )
@@ -202,12 +203,14 @@ class YahooDataFeed(TBDataFeed):
         self._ws.close()
 
     def get_historical(self,
-        symbols: list[str], timespan: Timespan, start: datetime, end: datetime = datetime.now()
+        symbols: list[str], timespan: Timespan, start: datetime,
+        mult: int = 1, end: datetime = datetime.now()
     ) -> MultStockFrame:
         log.debug(f"{timespan.as_yf()}")
         df = yf.download(
-            symbols, group_by="ticker", prepost=True, interval=timespan.as_yf(),
-            start=start, end=end,
+            symbols, group_by="ticker", prepost=True,
+            interval=timespan.as_yf(mult=mult),
+            start=start, end=end, auto_adjust=True
         )
         if df is None:
             raise TypeError(f"df is of type {type(df)} instead of pd.DataFrame")

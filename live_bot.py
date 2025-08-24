@@ -8,21 +8,21 @@ from trbot import log, util
 class TrendFollowingStrat(LiveStrategy):
     def setup(self) -> None:
         self.fast_ma = self.add_indicator(
-            Indicator(kind="sma", part=["close"], period=5)
+            Indicator(kind="ema", part=["close"], period=5)
         )
         self.slow_ma = self.add_indicator(
-            Indicator(kind="sma", part=["close"], period=35)
+            Indicator(kind="ema", part=["close"], period=35)
         )
         self.atr = self.add_indicator(
             Indicator(kind="atr", part=["high", "low", "close"], period=14)
         )
 
     def calc_tp_sl(self, last_close: float, last_atr: float, long: bool,
-        rr_ratio: int = 5
+        rr_ratio: int = 2
     ) -> tuple[float, float]:
         sl: float = 0.0
         tp: float = 0.0
-        diff: float = last_atr
+        diff: float = 2 * last_atr
         if long:
             sl = last_close - diff
             tp = last_close + (rr_ratio * diff)
@@ -39,14 +39,10 @@ class TrendFollowingStrat(LiveStrategy):
 
         if self.ind_crossover(symbol, self.fast_ma, self.slow_ma):
             (tp, sl) = self.calc_tp_sl(price, last_atr, long=True)
-            # sl = self.last_close - 5*last_atr
-            # tp = self.last_close + 10*last_atr
             log.debug(f"{symbol}: Going long...\n\n")
             return self.market_buy(symbol, size=sz, tp_limit=tp, sl_limit=sl)
         elif self.ind_crossover(symbol, self.slow_ma, self.fast_ma):
             (tp, sl) = self.calc_tp_sl(price, last_atr, long=False)
-            # sl = self.last_close + 5*last_atr
-            # tp = self.last_close - 10*last_atr
             log.debug(f"{symbol}: Going short...\n\n")
             return self.market_sell(symbol, size=sz, tp_limit=tp, sl_limit=sl)
 
@@ -61,9 +57,8 @@ log.init(
 )
 
 symbols: list[str] = [
-    "GOOG", "SPY", "AAPL", "AMZN"
-    # "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
-    # "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS", "AMZN"
+    "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
+    "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS", "AMZN"
 ]
 
 ls = TrendFollowingStrat(
