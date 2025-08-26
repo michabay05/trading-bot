@@ -45,7 +45,8 @@ class SingleStockFrame:
 
     def row_to_candle(self, i: int) -> Candle:
         row: pd.Series = self._df.iloc[i]
-        timestamp = self._df.index[i]        
+        timestamp = self._df.index[i]
+        assert isinstance(timestamp, datetime), f"timestamp in row_to_candle() is not of type datetime; instead is {type(timestamp)}"
         return Candle(timestamp, **row.to_dict())
 
     def save_to_csv(self, out_path: str, index: bool = False) -> None:
@@ -134,7 +135,8 @@ class MultStockFrame:
         symbol_df = self._df[self._df["symbols"] == symbol].copy()
         assert isinstance(symbol_df, pd.DataFrame), f"symbol_df is not of type DataFrame; it is {type(symbol_df)}"
         symbol_df.drop("symbols", axis=1, inplace=True)
-    
+
+        # symbol_df.reset_index(inplace=True)
         # symbol_df["timestamp"] = symbol_df["timestamp"].apply(
         #     lambda x: datetime.fromisoformat(str(x)).astimezone(util.MY_TIMEZONE)
         # )

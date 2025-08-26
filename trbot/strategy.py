@@ -163,18 +163,24 @@ class LiveStrategy:
         log.debug(f"Max period: {self._max_period}")
         log.debug(f"Loading data of {self._max_period + 5} candles...")
 
+        # TODO: come here and adjust the start date depending on if the program
+        # started running on a Monday or not. On a Monday, you should go upto 4 or 5
+        # days backwards.
         end = dt.datetime.now()
-        start = end - dt.timedelta(hours=4)
+        start = end - dt.timedelta(days=4)
+        log.debug(f"Date range: {str(start)}...{str(end)}")
+
         msf = self._data_feed.get_historical(
             self._symbols, Timespan.MINUTE, start, mult=1, end=end
         )
 
-        for symbol in self._symbols:
+        for symbol in msf.symbols:
             log.debug(f"    Symbol: {symbol}")
             ld = self._live_data[symbol]
             # path = f"trout/ohlcv-1hr/{symbol}.csv"
             # ssf = SingleStockFrame.from_csv(symbol, Timespan.HOUR, path)
             ssf = msf.get_symbol(symbol)
+            print(len(ssf))
             n: int = len(ssf) - (self._max_period + 5)
             # Populate enough historical candles so that the indicators can produce values
             # on market open (not be in their warmup phase)
