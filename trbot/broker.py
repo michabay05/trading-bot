@@ -1,23 +1,28 @@
 from typing import Literal
 from datetime import datetime, timedelta
+from dataclasses import dataclass, asdict
 from uuid import UUID
+import json, os
 
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import (
-    OrderClass, OrderSide, OrderType, PDTCheck, QueryOrderStatus, TimeInForce, OrderStatus
+    OrderClass, OrderSide, OrderType, PDTCheck, TimeInForce, OrderStatus
 )
 from alpaca.trading.models import AccountConfiguration, Clock, Order, TradeAccount
 from alpaca.trading.requests import (
-    ClosePositionRequest, GetOrdersRequest, MarketOrderRequest,
+    ClosePositionRequest, MarketOrderRequest,
     StopLossRequest, TakeProfitRequest
 )
 
 from . import log, util
 from .datafeed import TBDataFeed
-from .portfolio import (
-    TBOrder, TBOrderAmountKind, Portfolio,
-    TBMarketReq, TBOrderReq, TBOrderState, Position,
-)
+from .portfolio import Portfolio, TBMarketReq, TBOrderReq, TBOrderState, Position
+
+
+@dataclass
+class DirectionLabel:
+    direction: Literal["long", "short"]
+    created_at: datetime
 
 
 class LiveBroker:
@@ -38,14 +43,23 @@ class LiveBroker:
         self._portfolio: Portfolio = Portfolio()
         self.sync_portfolio()
 
-        self._symbols: list[str] = symbols.copy()
-        self._long_symbols: list[str] = []
-        self._short_symbols: list[str] = []
+        self._all_symbols: set[str] = set(symbols)
+        self._symbols: set[str] = self._all_symbols.copy()
+        self._symbol_labels: dict[str, DirectionLabel] = {}
 
         # If set to true, take profit and stop loss orders are sent to the
         # remote broker. When set to false, market orders are manually sent to
         # the local broker once the thresholds have been passed.
         self._auto_exit: bool = False
+
+        # This dictates how long a symbol has to wait before being removed from
+        # the direction label and re-added into the symbols list. Once a symbol
+        # with no direction is either long or short, it will take
+        # `self.time_til_reset` until it loses its label
+        self._time_til_reset: timedelta = timedelta(days=1)
+
+        self._broker_info_path: str = "broker_info.json"
+        self.import_info()
 
     def sync_portfolio(self):
         # Sync w/ remote's available cash
@@ -76,6 +90,48 @@ class LiveBroker:
         new_pft.replace_all_positions(positions)
         self._portfolio = new_pft
 
+    def import_info(self) -> None:
+        if not os.path.exists(self._broker_info_path):
+            log.warn(f"No broker information found at '{self._broker_info_path}'")
+            return
+
+        with open(self._broker_info_path, "r") as f:
+            content = json.load(f)
+        
+        self._symbol_labels.clear()
+        for symbol, lbl in content["symbol_labels"].items():
+            self._symbol_labels[symbol] = DirectionLabel(**lbl)
+
+        self._req_history.clear()
+        for req in content["requests"]:
+            self._req_history.append(TBOrderReq(**req))
+
+    def export_info(self) -> None:
+        # This function exists purely to resolve the following issue:
+        # When the program runs and executes trades, it comes up with certain
+        # take profits and stop losses. However, when the program stops, then
+        # it "forgets" the previously assigned take profit and stop loss thresholds
+        # Exporting this information to a json file then reading them in on startup
+        # should resolve this issue
+        #
+        # In addition, doing this method also allows for the direction labels to persist
+        # across restarts.
+        
+        requests: list[dict] = []
+        for req in self._req_history:
+            requests.append(TBOrderReq.to_dict(req))
+
+        symbol_labels: dict[str, dict] = {}
+        for symbol, label in self._symbol_labels.items():
+            symbol_labels[symbol] = asdict(label)
+
+        output: dict = {
+            "symbol_labels": symbol_labels,
+            "requests": requests
+        }
+        with open(self._broker_info_path, "w") as f:
+            json.dump(output, f, indent=4)
+
     @property
     def portfolio(self) -> Portfolio:
         return self._portfolio
@@ -94,6 +150,17 @@ class LiveBroker:
 
     def add_order_req(self, order: TBMarketReq) -> None:
         self._req_history.append(order)
+
+    def check_if_labels_should_reset(self, symbol) -> None:
+        now = datetime.now()
+        if symbol not in self._symbol_labels.keys():
+            return
+
+        label = self._symbol_labels[symbol]
+        if now - label.created_at > self._time_til_reset:
+            # Label can now be reset
+            self._symbols.add(symbol)
+            del self._symbol_labels[symbol]
 
     def check_exits(self, symbol: str, close_price: float) -> TBMarketReq | None:
         if self._auto_exit:
@@ -149,13 +216,9 @@ class LiveBroker:
                     )
 
     def execute_open_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
-        if (
-            (ord_req.symbol in self._long_symbols and not ord_req.is_long()) or
-            (ord_req.symbol in self._short_symbols and ord_req.is_long())
-        ):
+        if self._order_aligns_w_dir(ord_req, "open"):
             # If this is true, then order is going against the stock's daily direction
             # classification.
-            log.warn(f"DENIED: {ord_req.symbol} is going against its daily direction label (long or short)")
             return
 
         tp = None
@@ -195,6 +258,11 @@ class LiveBroker:
             ord_req.status = TBOrderState.INSUFF_FUNDS
 
     def execute_close_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
+        if self._order_aligns_w_dir(ord_req, "close"):
+            # If this is true, then order is going against the stock's daily direction
+            # classification.
+            return
+
         latest_price = data_feed.get_latest_price(ord_req.symbol)
         submitted_order = self._trade_client.close_position(
             ord_req.symbol,
@@ -210,21 +278,30 @@ class LiveBroker:
         assert symbol in self._symbols, f"Symbol({symbol}) is not in symbol list({self._symbols})"
 
         self._symbols.remove(symbol)
-        match dir:
-            case "long":
-                self._long_symbols.append(symbol)
-            case "short":
-                self._short_symbols.append(symbol)
-            case _:
-                raise ValueError(f"Unknown direction label for '{symbol}'")
+        self._symbol_labels[symbol] = DirectionLabel(dir, datetime.now())
 
-    def reset_symbols(self, symbols: list[str]) -> None:
-        self._symbols = symbols.copy()
-        self._long_symbols.clear()
-        self._short_symbols.clear()
+    def _order_aligns_w_dir(self, ord_req: TBMarketReq, action: str) -> bool:
+        # If this is true, then order is going against the stock's daily
+        # direction classification.
+        dir = self._symbol_labels[ord_req.symbol].direction
+        if (
+            (dir == "long" and not ord_req.is_long()) or
+            (dir == "short" and ord_req.is_long())
+        ):
+            # If this is true, then order is going against the stock's daily direction
+            # classification.
+            log.warn(
+                f"DENIED: {ord_req.symbol} is going against its daily "
+                "direction label (long or short)"
+            )
+            log.warn(f"Order is long?: {ord_req.is_long()}; action = {action}")
+            return False
+
+        return True
 
     def _on_update_event(self, data: dict) -> None:
         # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events
+        log.warn("May not be a good idea to use this...")
         match data["event"]:
             case "fill":
                 log.debug("Event: FILL")

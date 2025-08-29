@@ -236,6 +236,9 @@ class LiveStrategy:
 
         # Export the state of the portfolio
         self._broker.portfolio.save_to_json(f"{dir}/portfolio.json")
+        
+        # Export the broker's temporary information
+        self._broker.export_info()
 
     def _on_market_close(self, next_open: dt.datetime) -> None:
         # Export all info pertaining to how the day went today
@@ -243,9 +246,6 @@ class LiveStrategy:
             self.export_info()
         except Exception as e:
             log.error(f"Failed to export portfolio: {repr(e)} ({str(e)})")
-
-        # Reset blacklist
-        self._broker.reset_symbols(self._symbols)
 
         now = dt.datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
@@ -324,6 +324,11 @@ class LiveStrategy:
 
     def new_timespan_update(self, symbol: str) -> None:
         log.info(f"New timespan update for {symbol}...")
+        
+        # Reset long and short direction labels if enough time has passed.
+        # "enough time" is defined by the attribute inside the broker
+        self._broker.check_if_labels_should_reset(symbol)
+
         symbol_ld = self._live_data[symbol]
         # On new target-timespan, do the following ...
         # ... aggregate the minute candles into a single target-timespan candle, ...

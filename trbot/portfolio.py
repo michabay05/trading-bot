@@ -2,13 +2,11 @@ from enum import Enum
 from dataclasses import asdict, dataclass
 from datetime import datetime
 import enum
-import json, os
+import json
 from uuid import UUID
 
 from alpaca.trading.enums import OrderSide, OrderStatus, OrderType, PositionIntent
 from alpaca.trading.models import Order
-
-from . import log
 
 
 class TBOrderType(Enum):
