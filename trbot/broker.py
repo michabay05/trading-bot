@@ -277,7 +277,6 @@ class LiveBroker:
         assert dir in ["long", "short"], f"Unknown direction label: {dir}"
         assert symbol in self._symbols, f"Symbol({symbol}) is not in symbol list({self._symbols})"
 
-        self._symbols.remove(symbol)
         self._symbol_labels[symbol] = DirectionLabel(dir, datetime.now())
 
     def _order_aligns_w_dir(self, ord_req: TBMarketReq, action: str) -> bool:
@@ -301,7 +300,10 @@ class LiveBroker:
 
     def _on_update_event(self, data: dict) -> None:
         # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events
+
+        # This method needs to be reworked before being used.
         log.warn("May not be a good idea to use this...")
+
         match data["event"]:
             case "fill":
                 log.debug("Event: FILL")
