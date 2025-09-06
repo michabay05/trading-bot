@@ -48,14 +48,28 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
 - [ ] (fix) Handle missing candle values
     - As it stands, if the bot was stopped for some reason at 10:25 and is restarted at 13:25, there will be a 3-hour gap in the data.
-- [ ] (feat) Add configurable candle generator with these parameters
-    - [ ] Random movement
-    - [ ] Candles w/ tendency to go up (>50% chance of going up)
-    - [ ] Candles w/ tendency to go down (>50% chance of going down)
-- [ ] (feat) Add more tests based on the random candle generator
 - [ ] (feat) Create an additional script to make sense of all the logs and portfolio saved as files.
+- [ ] (refactor) Compare local vs remote version of portfolio
+- [ ] (feat) Add sudden jumps to the random data feed simulator
 
 ---
+
+## v0.12
+- [x] (feat) Add subscription to Alpaca's Trading Stream
+    - Specifically, only for the fill event. (That's the only one I need for now)
+- [x] (refactor) Make datafeeds asynchronous
+    - Converting them to asynchronous allows for multiple data streams to run in parallel
+      For example: the data feed and update feed.
+- [x] (feat) Add configurable candle generator with these parameters
+    - [x] Random movement
+    - [x] Candles w/ tendency to go up (>50% chance of going up)
+    - [x] Candles w/ tendency to go down (>50% chance of going down)
+- [x] (feat) Make the broker export its data
+    - Prior to this, the broker would come up with a take profit and stop loss for a certain
+      stock then proceeds to "forget" everything when the bot is terminated and restarted. Therefore,
+      it needs to preserve its "thought processes" across restarts. Doing so also allows the bot to
+      remember which symbols had directional labels across restarts, which was also a big problem.
+- [ ] (feat) Add more tests based on the random candle generator
 
 ## v0.11
 Currently, the laws pertaining to PDT are something I am forced to bother myself with.
@@ -64,7 +78,7 @@ Currently, the laws pertaining to PDT are something I am forced to bother myself
 - [x] (refactor) Move blacklisting from `strategy.py` to `broker.py`
 - [x] (fix) Ensure that tp limits are at least a penny more/less than the market price
 - [x] (fix) Ensure that sl limits are at least a penny less/more than the market price
-- [ ] (feat) Implement a way to limit the frequency with which the bot trades (buys and sells, and vice versa)
+- [x] (feat) Implement a way to limit the frequency with which the bot trades (buys and sells, and vice versa)
     - This is purely to comply with the PDT rules. The way it currently works is as intended (for the future).
 - [x] (fix) Handle API related errors which prevent hourly update from taking place for other stocks
     - The hourly update ceases the moment an error or exception is triggered.
@@ -75,7 +89,6 @@ Currently, the laws pertaining to PDT are something I am forced to bother myself
     - If the repo was just cloned, the important directories inside `trout` won't be created
       automatically causing an OSError because those directories are not created by default.
 - [x] (refactor) Manually execute take profit and stop losses
-- [ ] (refactor) Compare local vs remote version of portfolio
 - [x] (feat) Add the notion of a trade and also FYI:
     - Trade = A completed buy-sell transaction pair
     - Position = Current market exposure (open trades)

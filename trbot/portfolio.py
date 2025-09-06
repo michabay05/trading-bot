@@ -5,8 +5,7 @@ import enum
 import json
 from uuid import UUID
 
-from alpaca.trading.enums import OrderSide, OrderStatus, OrderType, PositionIntent
-from alpaca.trading.models import Order
+from alpaca.trading.enums import PositionIntent
 
 
 class TBOrderType(Enum):
@@ -26,7 +25,7 @@ class TBOrderDir(Enum):
             raise ValueError(f"Unknown side: {self.value}")
 
 
-class TBOrderState(Enum):
+class TBOrderStatus(Enum):
     FILLED = "filled"
     WORKING = "working"
     INSUFF_FUNDS = "insufficient funds"
@@ -171,24 +170,9 @@ class TBOrderAmount:
     def to_dict(ord_amount: 'TBOrderAmount') -> dict:
         return {
             "amount": ord_amount.amount,
-            "kind": ord_amount.kind
+            "kind": ord_amount.kind.value
         }
 
-
-# =============================================================================
-#             --- Distinction between TBOrderReq and TBOrder ---
-# TBOrderReq is meant to be used by LiveBroker to keep track of all the order
-# requests that have been sent by the bot. LiveBroker will also keep a list of
-# all "TBOrderReq"s initiated by the bot.
-#
-# On other hand, TBOrder is meant to be used by Portfolio to keep track of all
-# orders that have already been submitted to the remote broker. Portfolio will
-# also keep a list of "TBOrder"s.
-#
-# Simply put,
-#   >> list[TBOrderReq] -> Broker && list[TBOrder] -> Portfolio
-#   >> request (TBOrderReq) vs actual instance of the order (TBOrder)
-# =============================================================================
 
 @dataclass
 class TBOrderReq:
@@ -198,12 +182,13 @@ class TBOrderReq:
     requested_dt: str
     intent: TBIntent
     type: TBOrderType
-    status: TBOrderState = TBOrderState.WORKING
+    status: TBOrderStatus = TBOrderStatus.WORKING
     filled_qty: float | None = None
     filled_dt: str | None = None
     take_profit: TakeProfitTrigger | None = None
     stop_loss: StopLossTrigger | None = None
     completed: bool = False
+    alpaca_id: UUID | None = None
 
     def is_long(self) -> bool:
         return self.side == TBOrderDir.LONG
@@ -238,74 +223,6 @@ class TBOrderReq:
 @dataclass
 class TBMarketReq(TBOrderReq):
     type: TBOrderType = TBOrderType.MARKET
-
-
-# Deprecated
-@dataclass
-class TBOrder:
-    filled_at: datetime
-    symbol: str
-    filled_qty: float
-    type: TBOrderType
-    side: TBOrderDir
-    amount: TBOrderAmount
-    intent: TBIntent
-    status: TBOrderState
-
-    @classmethod
-    def from_alpaca(cls, order: Order) -> 'TBOrder':
-        assert order.filled_at is not None, f"alpaca conv: order fill price is None"
-        assert order.symbol is not None, f"alpaca conv: order symbol is None"
-        assert order.filled_qty is not None, f"alpaca conv: order fill qty is None"
-        assert order.type is not None, f"alpaca conv: order type is None"
-        assert order.side is not None, f"alpaca conv: order side is None"
-
-        match order.type:
-            case OrderType.MARKET:
-                ord_type = TBOrderType.MARKET
-            case _:
-                raise ValueError(f"Unknown order type: {order.type}")
-
-        match order.side:
-            case OrderSide.BUY:
-                ord_dir = TBOrderDir.LONG
-            case OrderSide.SELL:
-                ord_dir = TBOrderDir.SHORT
-            case _:
-                raise ValueError(f"Unknown order side: {order.side}")
-
-        if order.qty is not None:
-            amount = TBOrderAmount.shares(float(order.qty))
-        else:
-            assert order.notional is not None, f"alpaca conv: order notional value is None"
-            amount = TBOrderAmount.shares(float(order.notional))
-
-
-        assert order.position_intent is not None, f"alpaca conv: order position intent is None"
-        intent = TBIntent.from_alpaca(order.position_intent)
-        assert order.status == OrderStatus.FILLED, f"alpaca conv: to convert to local order type, alpaca orders must be filled"
-
-        return cls(
-            filled_at=order.filled_at,
-            symbol=order.symbol,
-            filled_qty=float(order.filled_qty),
-            type=ord_type,
-            side=ord_dir,
-            amount=amount,
-            intent=intent,
-            status=TBOrderState.FILLED
-        )
-
-    @staticmethod
-    def to_dict(ord: 'TBOrder') -> dict:
-        d = asdict(ord)
-        d["filled_at"] = str(ord.filled_at)
-        d["type"] = ord.type.value
-        d["side"] = ord.side.value
-        d["amount"] = TBOrderAmount.to_dict(ord.amount)
-        d["intent"] = ord.intent.value
-        d["status"] = ord.status.value
-        return d
 
 
 class Portfolio:

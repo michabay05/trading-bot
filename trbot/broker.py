@@ -1,12 +1,11 @@
 from typing import Literal
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
-from uuid import UUID
 import json, os
 
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import (
-    OrderClass, OrderSide, OrderType, PDTCheck, TimeInForce, OrderStatus
+    OrderClass, OrderSide, OrderType, PDTCheck, TimeInForce
 )
 from alpaca.trading.models import AccountConfiguration, Clock, Order, TradeAccount
 from alpaca.trading.requests import (
@@ -16,7 +15,7 @@ from alpaca.trading.requests import (
 
 from . import log, util
 from .datafeed import TBDataFeed
-from .portfolio import Portfolio, TBMarketReq, TBOrderReq, TBOrderState, Position
+from .portfolio import Portfolio, TBMarketReq, TBOrderReq, TBOrderStatus, Position
 
 
 @dataclass
@@ -59,7 +58,10 @@ class LiveBroker:
         self._time_til_reset: timedelta = timedelta(days=1)
 
         self._broker_info_path: str = "broker_info.json"
-        self.import_info()
+        try:
+            self.import_info()
+        except json.JSONDecodeError:
+            log.warn(f"Invalid broker info JSON found @ '{self._broker_info_path}'")
 
     def sync_portfolio(self):
         # Sync w/ remote's available cash
@@ -246,16 +248,18 @@ class LiveBroker:
             stop_loss=sl,
         )
 
+        # Is requested order in our budget?
         if order_value <= self._portfolio.cash:
             submitted_order = self._trade_client.submit_order(req)
             self._dir_label_symbol(ord_req.symbol, "long" if ord_req.is_long() else "short")
             assert isinstance(submitted_order, Order), f"submitted_order is not of type Order; it is {type(submitted_order)}"
-            if submitted_order.status == OrderStatus.FILLED:
-                ord_req.status = TBOrderState.FILLED
 
+            ord_req.alpaca_id = submitted_order.id
             # self._portfolio.add_to_history(submitted_order)
         else:
-            ord_req.status = TBOrderState.INSUFF_FUNDS
+            ord_req.status = TBOrderStatus.INSUFF_FUNDS
+        
+        self.add_order_req(ord_req)
 
     def execute_close_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
         if self._order_aligns_w_dir(ord_req, "close"):
@@ -280,6 +284,11 @@ class LiveBroker:
         self._symbol_labels[symbol] = DirectionLabel(dir, datetime.now())
 
     def _order_aligns_w_dir(self, ord_req: TBMarketReq, action: str) -> bool:
+        # If symbol is not in the labels, then it does not have a label
+        # associated with it
+        if ord_req.symbol not in self._symbol_labels.keys():
+            return True
+        
         # If this is true, then order is going against the stock's daily
         # direction classification.
         dir = self._symbol_labels[ord_req.symbol].direction
@@ -298,22 +307,12 @@ class LiveBroker:
 
         return True
 
-    def _on_update_event(self, data: dict) -> None:
-        # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events
+    def new_fill_event(self, ord_dict: dict) -> None:
+        order = Order(**ord_dict)
 
-        # This method needs to be reworked before being used.
-        log.warn("May not be a good idea to use this...")
-
-        match data["event"]:
-            case "fill":
-                log.debug("Event: FILL")
-                symbol = data["order"]["symbol"]
-                id = data["order"]["id"]
-                timestamp: datetime = datetime.fromisoformat(data["timestamp"])
-
-                self._portfolio.positions[symbol].created_by = UUID(id)
-                self._portfolio.positions[symbol].earliest_close = (
-                    timestamp + timedelta(days=1)
-                )
-            case _:
-                raise ValueError(f"Unknown update: {data['event']}")
+        # Find order with matching alpaca order id
+        for ord_req in self._req_history:
+            if ord_req.alpaca_id == order.id:
+                # Found order
+                ord_req.status = TBOrderStatus.FILLED
+                return

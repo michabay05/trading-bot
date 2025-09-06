@@ -1,5 +1,5 @@
 from dataclasses import asdict, dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 
 from alpaca.data.timeframe import TimeFrameUnit
@@ -78,6 +78,15 @@ class Timespan(Enum):
                 timespan_ltr = "m"
 
         return f"{mult}{timespan_ltr}"
+    
+    def as_timedelta(self, mult: int) -> timedelta:
+        match self:
+            case Timespan.DAY:
+                return timedelta(days=mult)
+            case Timespan.HOUR:
+                return timedelta(hours=mult)
+            case Timespan.MINUTE:
+                return timedelta(minutes=mult)
 
     def __str__(self):
         return self.value

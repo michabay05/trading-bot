@@ -1,5 +1,5 @@
 from datetime import datetime
-import os
+import asyncio, os
 
 from trbot.strategy import Indicator, LiveStrategy
 from trbot.portfolio import TBMarketReq, TBOrderAmount
@@ -62,13 +62,13 @@ symbols: list[str] = [
 ]
 
 ls = TrendFollowingStrat(
-    acct_name="Bot 03", data_source="alpaca",
-    # acct_name="LIVE", data_source="alpaca",
+    acct_name="Alpaca Bot",
+    # acct_name="LIVE",
     symbols=symbols.copy(), paper=True
 )
 
 try:
-    ls.start_loop()
+    asyncio.run(ls.start_loop())
 except KeyboardInterrupt:
     log.error("Received keyboard interrupt, ctrl-c...")
 

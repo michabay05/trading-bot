@@ -12,7 +12,7 @@ import talib
 from . import util, log
 from .broker import LiveBroker
 from .candles import Candle, Timespan
-from .datafeed import AlpacaDataFeed, TBDataFeed, YahooDataFeed
+from .datafeed import AlpacaDataFeed, AlpacaUpdateFeed, TBDataFeed
 from .portfolio import (
     TBIntent, TBOrderDir, TBMarketReq, TBOrderAmount,
     StopLossTrigger, TakeProfitTrigger
@@ -111,21 +111,15 @@ class _LiveData:
 
 
 class LiveStrategy:
-    def __init__(self,
-        acct_name: str, data_source: Literal["alpaca", "yahoo"], symbols: list[str], paper: bool
-    ) -> None:
+    def __init__(self, acct_name: str, symbols: list[str], paper: bool) -> None:
         self._symbols: list[str] = symbols
         self._live_data: dict[str, _LiveData] = {}
         for sym in self._symbols:
             self._live_data[sym] = _LiveData()
 
         self._broker: LiveBroker = LiveBroker(acct_name, self._symbols, paper=paper)
-        self._data_feed: TBDataFeed
-        if data_source == "alpaca":
-            self._data_feed = AlpacaDataFeed(self._symbols, acct_name)
-        else:
-            self._data_feed = YahooDataFeed(self._symbols)
-        self._data_feed.set_candle_callback(self._on_new_candle)
+        self._data_feed: TBDataFeed = AlpacaDataFeed(self._symbols, acct_name, self._on_new_candle)
+        self._update_feed: AlpacaUpdateFeed = AlpacaUpdateFeed(acct_name, self._on_update_event)
 
         self._conn_alive: bool = False
 
@@ -257,7 +251,7 @@ class LiveStrategy:
             time.sleep(sleep_time)
             now = dt.datetime.now(tz=util.MY_TIMEZONE)
 
-    def start_loop(self) -> None:
+    async def start_loop(self) -> None:
         status: dict = self._broker.get_market_status()
         self._next_close = status["next_close"]
         if status["is_open"]:
@@ -281,8 +275,17 @@ class LiveStrategy:
         while True:
             self._on_market_open()
 
+            # Starting both the data and update feed are both async functions that are
+            # not being await'd here. To stop them, the 'end_live' function must be
+            # called. The reason for doing this is because I want both streams to operate
+            # in parallel. For that reason, awaiting one or the other will make this process
+            # synchronous (which defeats the purpose of making these functions async)
+
             log.debug("Starting data stream...")
-            self._data_feed.start_live()
+            _ = self._data_feed.start_live()
+
+            log.debug("Starting update stream...")
+            _ = self._update_feed.start_live()
 
             status = self._broker.get_market_status()
             self._next_close = status["next_close"]
@@ -321,6 +324,7 @@ class LiveStrategy:
         if now > self._next_close:
             # Market is closed
             self._data_feed.end_live()
+            self._update_feed.end_live()
 
     def new_timespan_update(self, symbol: str) -> None:
         log.info(f"New timespan update for {symbol}...")
@@ -368,9 +372,21 @@ class LiveStrategy:
             self._broker.sync_portfolio()
             self._broker.execute_open_order(order, self._data_feed)
             log.debug(f"Submitted order: {order}")
-            self._broker.add_order_req(order)
         else:
             log.debug(f"No order")
+
+    def _on_update_event(self, data: dict) -> None:
+        # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events
+
+        # This method needs to be reworked before being used.
+        log.warn("May not be a good idea to use this...")
+
+        match data["event"]:
+            case "fill":
+                # Let the broker know that there is a new fill event
+                self._broker.new_fill_event(data["order"])
+            case _:
+                log.warn(f"Unknown event type: {data["event"]}")
 
     @abstractmethod
     def setup(self) -> None:
