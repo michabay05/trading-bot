@@ -218,7 +218,7 @@ class LiveBroker:
                     )
 
     def execute_open_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
-        if self._order_aligns_w_dir(ord_req, "open"):
+        if not self._order_aligns_w_dir(ord_req, "open"):
             # If this is true, then order is going against the stock's daily direction
             # classification.
             return
@@ -251,18 +251,17 @@ class LiveBroker:
         # Is requested order in our budget?
         if order_value <= self._portfolio.cash:
             submitted_order = self._trade_client.submit_order(req)
-            self._dir_label_symbol(ord_req.symbol, "long" if ord_req.is_long() else "short")
             assert isinstance(submitted_order, Order), f"submitted_order is not of type Order; it is {type(submitted_order)}"
 
             ord_req.alpaca_id = submitted_order.id
             # self._portfolio.add_to_history(submitted_order)
         else:
             ord_req.status = TBOrderStatus.INSUFF_FUNDS
-        
+
         self.add_order_req(ord_req)
 
     def execute_close_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
-        if self._order_aligns_w_dir(ord_req, "close"):
+        if not self._order_aligns_w_dir(ord_req, "close"):
             # If this is true, then order is going against the stock's daily direction
             # classification.
             return
