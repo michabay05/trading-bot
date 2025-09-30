@@ -5,7 +5,8 @@ import json, os
 
 from alpaca.trading.client import TradingClient
 from alpaca.trading.enums import (
-    OrderClass, OrderSide, OrderType, PDTCheck, TimeInForce
+    OrderClass, OrderSide, OrderType, PDTCheck, TimeInForce,
+    OrderStatus
 )
 from alpaca.trading.models import AccountConfiguration, Clock, Order, TradeAccount
 from alpaca.trading.requests import (
@@ -69,11 +70,11 @@ class LiveBroker:
         if not isinstance(acct, TradeAccount):
             raise TypeError(f"account was of type {type(acct)} instead of TradeAccount")
 
-        cash: str | None = acct.cash
-        if cash is None:
-            raise ValueError("`account.cash: str | None` was None.")
-
-        new_pft: Portfolio = Portfolio(initial_capital=float(cash))
+        cash_str: str | None = acct.cash
+        assert cash_str is not None, f"`account.cash: str | None` was None."
+        cash = float(cash_str)
+        assert cash > 0, f"account.cash(as_str: {cash_str}, as_float: {cash}) > $0.00"
+        new_pft: Portfolio = Portfolio(initial_capital=cash)
 
         # Sync w/ remote's open positions
         open_positions = self._trade_client.get_all_positions()
@@ -99,7 +100,7 @@ class LiveBroker:
 
         with open(self._broker_info_path, "r") as f:
             content = json.load(f)
-        
+
         self._symbol_labels.clear()
         for symbol, lbl in content["symbol_labels"].items():
             self._symbol_labels[symbol] = DirectionLabel(**lbl)
@@ -108,7 +109,7 @@ class LiveBroker:
         for req in content["requests"]:
             self._req_history.append(TBOrderReq(**req))
 
-    def export_info(self) -> None:
+    def export_info(self, out_dir: str) -> None:
         # This function exists purely to resolve the following issue:
         # When the program runs and executes trades, it comes up with certain
         # take profits and stop losses. However, when the program stops, then
@@ -118,7 +119,7 @@ class LiveBroker:
         #
         # In addition, doing this method also allows for the direction labels to persist
         # across restarts.
-        
+
         requests: list[dict] = []
         for req in self._req_history:
             requests.append(TBOrderReq.to_dict(req))
@@ -131,8 +132,10 @@ class LiveBroker:
             "symbol_labels": symbol_labels,
             "requests": requests
         }
-        with open(self._broker_info_path, "w") as f:
+        with open(f"{out_dir}/{self._broker_info_path}", "w") as f:
             json.dump(output, f, indent=4)
+
+        self._portfolio.save_as_json(f"{out_dir}/portfolio.json")
 
     @property
     def portfolio(self) -> Portfolio:
@@ -163,6 +166,30 @@ class LiveBroker:
             # Label can now be reset
             self._symbols.add(symbol)
             del self._symbol_labels[symbol]
+
+    def update_status(self) -> None:
+        for req in self._req_history:
+            if req.status != TBOrderStatus.WORKING:
+                # This method is only intested in orders with a status of WORKING
+                continue
+
+            assert req.alpaca_id is not None, f"alpaca_id came up as None; instead of a UUID"
+
+            remote_order = self._trade_client.get_order_by_id(req.alpaca_id)
+            assert isinstance(remote_order, Order)
+            if remote_order.status == OrderStatus.FILLED:
+                req.status = TBOrderStatus.FILLED
+
+                if remote_order.filled_qty is not None and remote_order.filled_at is not None and remote_order.filled_avg_price is not None:
+                    req.filled_qty = float(remote_order.filled_qty)
+                    req.filled_dt = remote_order.filled_at
+                    # Assign a label only after the order is filled
+                    self._dir_label_symbol(req.symbol, "long" if req.is_long() else "short")
+
+                    # Subtract the value of the order from the porfolio's cash
+                    self._portfolio.cash -= float(remote_order.filled_avg_price) * float(remote_order.filled_qty)
+                else:
+                    log.error(f"Failed to update the status of order {{ id: {remote_order.id} }}")
 
     def check_exits(self, symbol: str, close_price: float) -> TBMarketReq | None:
         if self._auto_exit:
@@ -255,10 +282,11 @@ class LiveBroker:
 
             ord_req.alpaca_id = submitted_order.id
             # self._portfolio.add_to_history(submitted_order)
+            self.add_order_req(ord_req)
         else:
             ord_req.status = TBOrderStatus.INSUFF_FUNDS
+            log.warn(f"DENIED: Order not sent due to insufficient funds (req_val: {order_value} vs own_val: {self._portfolio.cash})")
 
-        self.add_order_req(ord_req)
 
     def execute_close_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
         if not self._order_aligns_w_dir(ord_req, "close"):
@@ -283,17 +311,20 @@ class LiveBroker:
         self._symbol_labels[symbol] = DirectionLabel(dir, datetime.now())
 
     def _order_aligns_w_dir(self, ord_req: TBMarketReq, action: str) -> bool:
+        # NOTE: the only point of having `action` here is so that I can have an
+        #       informative debug output
+
         # If symbol is not in the labels, then it does not have a label
         # associated with it
         if ord_req.symbol not in self._symbol_labels.keys():
             return True
-        
+
         # If this is true, then order is going against the stock's daily
         # direction classification.
-        dir = self._symbol_labels[ord_req.symbol].direction
+        direction = self._symbol_labels[ord_req.symbol].direction
         if (
-            (dir == "long" and not ord_req.is_long()) or
-            (dir == "short" and ord_req.is_long())
+            (direction == "long" and not ord_req.is_long()) or
+            (direction == "short" and ord_req.is_long())
         ):
             # If this is true, then order is going against the stock's daily direction
             # classification.

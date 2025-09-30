@@ -12,9 +12,9 @@ import talib
 from . import util, log
 from .broker import LiveBroker
 from .candles import Candle, Timespan
-from .datafeed import AlpacaDataFeed, AlpacaUpdateFeed, TBDataFeed
+from .datafeed import AlpacaDataFeed, TBDataFeed
 from .portfolio import (
-    TBIntent, TBOrderDir, TBMarketReq, TBOrderAmount,
+    Position, TBIntent, TBOrderDir, TBMarketReq, TBOrderAmount,
     StopLossTrigger, TakeProfitTrigger
 )
 from .stockframe import SingleStockFrame
@@ -119,7 +119,6 @@ class LiveStrategy:
 
         self._broker: LiveBroker = LiveBroker(acct_name, self._symbols, paper=paper)
         self._data_feed: TBDataFeed = AlpacaDataFeed(self._symbols, acct_name, self._on_new_candle)
-        self._update_feed: AlpacaUpdateFeed = AlpacaUpdateFeed(acct_name, self._on_update_event)
 
         self._conn_alive: bool = False
 
@@ -153,9 +152,9 @@ class LiveStrategy:
         return self._live_data[symbol].agg_inds[ind_name][-1]
 
     def _init_all_live_data(self) -> None:
-        assert self._max_period > 0, f"Max period can not be negative"
+        assert self._max_period > 0, f"Max period must be positive"
         log.debug(f"Max period: {self._max_period}")
-        log.debug(f"Loading data of {self._max_period + 5} candles...")
+        log.debug(f"Loading data at least {self._max_period + 5} candles...")
 
         # TODO: come here and adjust the start date depending on if the program
         # started running on a Monday or not. On a Monday, you should go upto 4 or 5
@@ -212,27 +211,24 @@ class LiveStrategy:
 
     def export_info(self) -> None:
         date_str: str = dt.datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
-        dir: str = f"trout/logs/{date_str}/"
-        if os.path.exists(dir):
-            assert os.path.isdir(dir), f"Provided path ({dir}) must be a directory"
-            shutil.rmtree(dir)
+        dir_: str = f"trout/logs/{date_str}/"
+        if os.path.exists(dir_):
+            assert os.path.isdir(dir_), f"Provided path ({dir_}) must be a directory"
+            shutil.rmtree(dir_)
 
-        os.makedirs(dir)
+        os.makedirs(dir_)
         for symbol, ld in self._live_data.items():
             ssf: SingleStockFrame = SingleStockFrame.from_parts(
                 symbol, ld.live_timespan, ld.live_cnds
             )
-            ssf.save_to_csv(f"{dir}/live-{symbol}-{ld.live_timespan.value}.csv")
+            ssf.save_to_csv(f"{dir_}/live-{symbol}-{ld.live_timespan.value}.csv")
             ssf: SingleStockFrame = SingleStockFrame.from_parts(
                 symbol, ld.agg_timespan, ld.agg_cnds
             )
-            ssf.save_to_csv(f"{dir}/agg-{symbol}-{ld.agg_timespan.value}.csv")
+            ssf.save_to_csv(f"{dir_}/agg-{symbol}-{ld.agg_timespan.value}.csv")
 
-        # Export the state of the portfolio
-        self._broker.portfolio.save_to_json(f"{dir}/portfolio.json")
-        
         # Export the broker's temporary information
-        self._broker.export_info()
+        self._broker.export_info(dir_)
 
     def _on_market_close(self, next_open: dt.datetime) -> None:
         # Export all info pertaining to how the day went today
@@ -251,7 +247,7 @@ class LiveStrategy:
             time.sleep(sleep_time)
             now = dt.datetime.now(tz=util.MY_TIMEZONE)
 
-    async def start_loop(self) -> None:
+    def start_loop(self) -> None:
         status: dict = self._broker.get_market_status()
         self._next_close = status["next_close"]
         if status["is_open"]:
@@ -272,20 +268,11 @@ class LiveStrategy:
             # Market is currently closed
             self._on_market_close(status["next_open"])
 
+        # Main loop
         while True:
             self._on_market_open()
 
-            # Starting both the data and update feed are both async functions that are
-            # not being await'd here. To stop them, the 'end_live' function must be
-            # called. The reason for doing this is because I want both streams to operate
-            # in parallel. For that reason, awaiting one or the other will make this process
-            # synchronous (which defeats the purpose of making these functions async)
-
-            log.debug("Starting data stream...")
-            _ = self._data_feed.start_live()
-
-            log.debug("Starting update stream...")
-            _ = self._update_feed.start_live()
+            self._data_feed.start_live()
 
             status = self._broker.get_market_status()
             self._next_close = status["next_close"]
@@ -295,6 +282,9 @@ class LiveStrategy:
         ld = self._live_data[symbol]
         ld.add_live(cnd)
         log.debug(f"[{symbol:4}] Minute: {cnd}")
+
+        # Manual updates to order status
+        self._broker.update_status()
 
         # Manual exits
         order: TBMarketReq | None = self._broker.check_exits(symbol, cnd.close)
@@ -324,11 +314,10 @@ class LiveStrategy:
         if now > self._next_close:
             # Market is closed
             self._data_feed.end_live()
-            self._update_feed.end_live()
 
     def new_timespan_update(self, symbol: str) -> None:
         log.info(f"New timespan update for {symbol}...")
-        
+
         # Reset long and short direction labels if enough time has passed.
         # "enough time" is defined by the attribute inside the broker
         self._broker.check_if_labels_should_reset(symbol)
@@ -375,7 +364,7 @@ class LiveStrategy:
         else:
             log.debug(f"No order")
 
-    def _on_update_event(self, data: dict) -> None:
+    def __on_update_event(self, data: dict) -> None:
         # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events
 
         # This method needs to be reworked before being used.
@@ -388,6 +377,10 @@ class LiveStrategy:
             case _:
                 log.warn(f"Unknown event type: {data["event"]}")
 
+    # ============================================
+    #   Required methods to be implemented when
+    #           creating strategies
+    # ============================================
     @abstractmethod
     def setup(self) -> None:
         """ Called once to setup strategy """
@@ -398,6 +391,10 @@ class LiveStrategy:
         """ Called on each new candle """
         pass
 
+    # ===========================================
+    #   Convenience methods to be accessed when
+    #           creating strategies
+    # ===========================================
     def add_indicator(self, indicator: Indicator) -> str:
         self._indicators.add(indicator)
         # Find the maximum period among all the indicators added to this strategy
@@ -417,8 +414,14 @@ class LiveStrategy:
             else ld.agg_inds[str(val2)]
         )
 
+        def crossover(val1: list[float] | IndValues, val2: list[float] | IndValues) -> bool:
+            if len(val1) >= 2 and len(val2) >= 2:
+                return val1[-2] < val2[-2] and val1[-1] > val2[-1]
+            else:
+                raise ValueError("Both lists should have at least 2 elements")
+
         try:
-            return self._crossover(s1, s2)
+            return crossover(s1, s2)
         except ValueError:
             return False
 
@@ -458,6 +461,9 @@ class LiveStrategy:
     def market_sell(self, symbol: str,
         size: TBOrderAmount, tp_limit: float | None = None, sl_limit: float | None = None
     ) -> TBMarketReq:
+        if not self._broker.portfolio.in_position(symbol):
+            log.warn("For now, SELL_TO_OPEN does not work")
+
         assert size.amount > 0, "Negative size provided. (size > 0)"
         assert symbol in self._symbols, f"Provided ({symbol}) is not in list of symbols ({self._symbols})"
 
@@ -488,11 +494,18 @@ class LiveStrategy:
 
         return mkt_ord
 
-    def _crossover(self, val1: list[float] | IndValues, val2: list[float] | IndValues) -> bool:
-        if len(val1) >= 2 and len(val2) >= 2:
-            return val1[-2] < val2[-2] and val1[-1] > val2[-1]
-        else:
-            raise ValueError("Both lists should have at least 2 elements")
+    def in_position(self, symbol: str) -> bool:
+        return self._broker.portfolio.in_position(symbol)
+
+    def get_position(self, symbol: str) -> Position | None:
+        p = self._broker.portfolio.positions
+        if symbol not in p.keys():
+            return None
+
+        # Here I am returning a clone because I do not want
+        # the strategy to alter the actual positions, essentially
+        # making it read-only for the strategy maker
+        return p[symbol].clone()
 
 
 def update_live_aggregates(live_datas: dict[str, _LiveData]) -> None:

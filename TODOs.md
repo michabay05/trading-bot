@@ -43,16 +43,20 @@ A list of all the TODOs needed to be completed before each release
     - `vectorbt`
 - [ ] (refactor) Update the indicator system in the candle visualizer to use the `Indicator` type
 - [ ] (rsch) Experiment with yahoo finance data
-- [ ] (feat) Extract data stream into its own data source system
-    - This setup makes it easier to use add Yahoo finance data at some point
 - [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
 - [ ] (fix) Handle missing candle values
     - As it stands, if the bot was stopped for some reason at 10:25 and is restarted at 13:25, there will be a 3-hour gap in the data.
 - [ ] (feat) Create an additional script to make sense of all the logs and portfolio saved as files.
 - [ ] (refactor) Compare local vs remote version of portfolio
 - [ ] (feat) Add sudden jumps to the random data feed simulator
+- [ ] (feat) Add more tests based on the random candle generator
 
 ---
+
+## v0.13
+- [ ] Create a relationship between the momentum and (take profits and stop losses)
+    - [ ] Find a way to determine the quantify the strength of the momentum
+    - [ ] Set up a relationship between the quantified momemtum of a trend and the risk-reward ratio
 
 ## v0.12
 - [x] (feat) Add subscription to Alpaca's Trading Stream
@@ -69,11 +73,12 @@ A list of all the TODOs needed to be completed before each release
       stock then proceeds to "forget" everything when the bot is terminated and restarted. Therefore,
       it needs to preserve its "thought processes" across restarts. Doing so also allows the bot to
       remember which symbols had directional labels across restarts, which was also a big problem.
-- [ ] (feat) Add more tests based on the random candle generator
 
 ## v0.11
 Currently, the laws pertaining to PDT are something I am forced to bother myself with.
 
+- [x] (feat) Extract data stream into its own data source system
+    - This setup makes it easier to use add Yahoo finance data at some point
 - [x] (feat) Added distinction between absolute shares, absolute notional amounts, and relative portfolio percentage
 - [x] (refactor) Move blacklisting from `strategy.py` to `broker.py`
 - [x] (fix) Ensure that tp limits are at least a penny more/less than the market price

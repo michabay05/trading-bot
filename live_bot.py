@@ -7,13 +7,13 @@ from trbot import log, util
 
 class TrendFollowingStrat(LiveStrategy):
     def setup(self) -> None:
-        self.fast_ma = self.add_indicator(
+        self.fast_ma: str = self.add_indicator(
             Indicator(kind="ema", part=["close"], period=5)
         )
-        self.slow_ma = self.add_indicator(
+        self.slow_ma: str = self.add_indicator(
             Indicator(kind="ema", part=["close"], period=35)
         )
-        self.atr = self.add_indicator(
+        self.atr: str = self.add_indicator(
             Indicator(kind="atr", part=["high", "low", "close"], period=14)
         )
 
@@ -35,7 +35,7 @@ class TrendFollowingStrat(LiveStrategy):
     def on_candle(self, symbol: str) -> TBMarketReq | None:
         last_atr = self.last_ind_value(symbol, self.atr)
         price = self.current_price(symbol)
-        sz: TBOrderAmount = TBOrderAmount.cash_pct(0.1, self.available_cash)
+        sz: TBOrderAmount = TBOrderAmount.cash_pct(0.3, self.available_cash)
 
         if self.ind_crossover(symbol, self.fast_ma, self.slow_ma):
             (tp, sl) = self.calc_tp_sl(price, last_atr, long=True)
@@ -62,13 +62,12 @@ symbols: list[str] = [
 ]
 
 ls = TrendFollowingStrat(
-    acct_name="Alpaca Bot",
-    # acct_name="LIVE",
+    acct_name="Alpaca Bot 03",
     symbols=symbols.copy(), paper=True
 )
 
 try:
-    asyncio.run(ls.start_loop())
+    ls.start_loop()
 except KeyboardInterrupt:
     log.error("Received keyboard interrupt, ctrl-c...")
 

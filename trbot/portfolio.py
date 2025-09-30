@@ -37,7 +37,7 @@ class Position:
     quantity: float
     side: TBOrderDir
     created_by: UUID | None = None
-    # @PDT: the earliest possible time to close a position
+    # The earliest possible time to close a position
     earliest_close: datetime | None = None
 
     def close(self) -> None:
@@ -47,6 +47,9 @@ class Position:
         d = asdict(self)
         d["side"] = self.side.value
         return d
+
+    def clone(self) -> 'Position':
+        return Position(**self.to_dict())
 
 
 class TBIntent(Enum):
@@ -184,7 +187,7 @@ class TBOrderReq:
     type: TBOrderType
     status: TBOrderStatus = TBOrderStatus.WORKING
     filled_qty: float | None = None
-    filled_dt: str | None = None
+    filled_dt: datetime | None = None
     take_profit: TakeProfitTrigger | None = None
     stop_loss: StopLossTrigger | None = None
     completed: bool = False
@@ -250,7 +253,7 @@ class Portfolio:
     def __repr__(self) -> str:
         return json.dumps(Portfolio.to_dict(self), indent=4)
 
-    def save_to_json(self, filepath: str) -> None:
+    def save_as_json(self, filepath: str) -> None:
         with open(filepath, "w") as f:
             json.dump(Portfolio.to_dict(self), f, indent=4)
 
@@ -267,3 +270,6 @@ class Portfolio:
                 for symbol, position in pft.positions.items()
             },
         }
+
+    def in_position(self, symbol: str) -> bool:
+        return symbol in self._positions.keys()

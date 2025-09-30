@@ -23,7 +23,7 @@ class TBDataFeed(ABC):
         pass
 
     @abstractmethod
-    async def start_live(self) -> None:
+    def start_live(self) -> None:
         pass
 
     @abstractmethod
@@ -71,7 +71,9 @@ class AlpacaDataFeed(TBDataFeed):
                 volume=bar.volume,
             ))
 
-    async def start_live(self) -> None:
+    def start_live(self) -> None:
+        log.debug("Starting data stream...")
+
         self._live_stream.subscribe_bars(
             self.ws_callback, *self._symbols
         )
@@ -109,12 +111,19 @@ class AlpacaUpdateFeed:
             api_key, secret_key, paper=paper, raw_data=False
         )
 
-        self._update_callback: Callable[[dict], None] = callback
         self._conn_alive: bool = False
 
-    async def _ws_callback(self, data: dict) -> None:
-        if self._update_callback is not None:
-            self._update_callback(data)
+    def _ws_callback(self, data: dict) -> None:
+        # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events
+
+        # This method needs to be reworked before being used.
+        log.warn("May not be a good idea to use this...")
+
+        match data["event"]:
+            case "fill":
+                pass
+            case _:
+                log.warn(f"Unknown event type: {data["event"]}")
 
     async def start_live(self) -> None:
         self._update_stream.subscribe_trade_updates(self._ws_callback)
@@ -143,7 +152,7 @@ class RandomDataFeed(TBDataFeed):
         # a date here. The actual date does not matter.
         self._start_date: datetime = datetime(2025, 9, 1, 9, 30)
         self._time_step: timedelta = Timespan.MINUTE.as_timedelta(mult=1)
-        
+
         self._update_callback: Callable[[Candle], None] = callback
 
     def _gen_new_candle(self) -> Candle:
@@ -159,7 +168,7 @@ class RandomDataFeed(TBDataFeed):
         else:
             # Create a short candle
             close = self._rng.uniform(low, open_)
-        
+
         # As of right now, the volume does not really matter so i'll just set to something random
         volume = self._rng.randint(1000, 12345)
 
