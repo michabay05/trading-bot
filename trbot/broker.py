@@ -169,11 +169,16 @@ class LiveBroker:
 
     def update_status(self) -> None:
         for req in self._req_history:
-            if req.status != TBOrderStatus.WORKING:
+            if req.status != TBOrderStatus.WORKING or req.stop_checking:
                 # This method is only intested in orders with a status of WORKING
                 continue
 
-            assert req.alpaca_id is not None, f"alpaca_id came up as None; instead of a UUID"
+            if req.alpaca_id is None:
+                log.warn(
+                    f"Could not update the status of the order.\n{TBOrderReq.to_dict(req)}"
+                )
+                req.stop_checking = True
+                continue
 
             remote_order = self._trade_client.get_order_by_id(req.alpaca_id)
             assert isinstance(remote_order, Order)
@@ -245,7 +250,7 @@ class LiveBroker:
                     )
 
     def execute_open_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
-        if not self._order_aligns_w_dir(ord_req, "open"):
+        if not self._order_aligns_w_dir(ord_req):
             # If this is true, then order is going against the stock's daily direction
             # classification.
             return
@@ -289,7 +294,7 @@ class LiveBroker:
 
 
     def execute_close_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
-        if not self._order_aligns_w_dir(ord_req, "close"):
+        if not self._order_aligns_w_dir(ord_req):
             # If this is true, then order is going against the stock's daily direction
             # classification.
             return
@@ -310,10 +315,7 @@ class LiveBroker:
 
         self._symbol_labels[symbol] = DirectionLabel(dir, datetime.now())
 
-    def _order_aligns_w_dir(self, ord_req: TBMarketReq, action: str) -> bool:
-        # NOTE: the only point of having `action` here is so that I can have an
-        #       informative debug output
-
+    def _order_aligns_w_dir(self, ord_req: TBMarketReq) -> bool:
         # If symbol is not in the labels, then it does not have a label
         # associated with it
         if ord_req.symbol not in self._symbol_labels.keys():
@@ -330,9 +332,10 @@ class LiveBroker:
             # classification.
             log.warn(
                 f"DENIED: {ord_req.symbol} is going against its daily "
-                "direction label (long or short)"
+                f"direction label (WMT's direction: {direction}) && "
+                f"Order is to close?: {ord_req.is_to_close()}"
             )
-            log.warn(f"Order is long?: {ord_req.is_long()}; action = {action}")
+
             return False
 
         return True

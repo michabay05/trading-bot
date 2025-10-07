@@ -192,6 +192,8 @@ class TBOrderReq:
     stop_loss: StopLossTrigger | None = None
     completed: bool = False
     alpaca_id: UUID | None = None
+    # Flag for the broker to remind itself that it should not focus on this order
+    stop_checking: bool = False
 
     def is_long(self) -> bool:
         return self.side == TBOrderDir.LONG

@@ -3,7 +3,7 @@ from abc import abstractmethod
 import datetime as dt
 from dateutil.relativedelta import relativedelta
 from typing import Any, Literal
-import json, time, os, shutil
+import json, time, os
 
 import numpy as np
 from numpy.typing import NDArray
@@ -17,7 +17,7 @@ from .portfolio import (
     Position, TBIntent, TBOrderDir, TBMarketReq, TBOrderAmount,
     StopLossTrigger, TakeProfitTrigger
 )
-from .stockframe import SingleStockFrame
+from .stockframe import MultStockFrame, SingleStockFrame
 
 
 IndValues = NDArray[np.float64]
@@ -132,6 +132,20 @@ class LiveStrategy:
         self._new_interval_min: int = 15
         self._new_timespan_interval: int = self._new_interval_min * 60
 
+        # Ensure that all necessary directories are present
+        parent_dir = "trout"
+        for subdir in [ "aggs", "logs", "ohlcv-1hr", "pfts" ]:
+            # `exist_ok=True` makes sure that the program does not panic
+            # if a directory already exists at the specified location
+
+            # TODO: eliminate the need for the `ohlcv-1hr` directory
+            # TODO: simplify the `trout` directory
+            os.makedirs(f"{parent_dir}/{subdir}", exist_ok=True)
+
+        # When logging stuff, this is the output directory that will be used
+        self._out_dir: str = "trout/logs/" + now.strftime("%Y_%m_%d")
+        log.update_out_dir(self._out_dir)
+
     # NOTE: For live trading, instead of using last_close, use curr_price
     # NOTE: Use `self.current_price()` instead
     def last_close(self, symbol: str) -> float:
@@ -190,10 +204,9 @@ class LiveStrategy:
         start = dt.datetime.now() - relativedelta(months=1)
 
         # Export the most recent data fetched from the data feed
-        msf = self._data_feed.get_historical(self._symbols, Timespan.HOUR, start)
-        for symbol in msf._symbols:
-            ssf = msf.get_symbol(symbol)
-            ssf.save_to_csv(f"trout/ohlcv-1hr/{symbol}.csv")
+        timespan = Timespan.HOUR
+        msf = self._data_feed.get_historical(self._symbols, timespan, start)
+        msf.save_to_csv(f"{self._out_dir}/{timespan.as_str(mult=1)}.csv")
 
         log.debug(f"Historicals up to date (from {str(start)} to now)")
 
@@ -209,33 +222,47 @@ class LiveStrategy:
         self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
         self._last_update = self._time
 
-    def export_info(self) -> None:
-        date_str: str = dt.datetime.now(tz=util.MY_TIMEZONE).strftime("%Y_%m_%d")
-        dir_: str = f"trout/logs/{date_str}/"
-        if os.path.exists(dir_):
-            assert os.path.isdir(dir_), f"Provided path ({dir_}) must be a directory"
-            shutil.rmtree(dir_)
+    def shutdown(self) -> None:
+        try:
+            # NOTE: I am not sure why I would want to remove the entire directory...
+            # ------------------------
+            # if os.path.exists(self._out_dir):
+            #     assert os.path.isdir(self._out_dir), f"Provided path ({self._out_dir}) must be a directory"
+            #     shutil.rmtree(self._out_dir)
 
-        os.makedirs(dir_)
-        for symbol, ld in self._live_data.items():
-            ssf: SingleStockFrame = SingleStockFrame.from_parts(
-                symbol, ld.live_timespan, ld.live_cnds
-            )
-            ssf.save_to_csv(f"{dir_}/live-{symbol}-{ld.live_timespan.value}.csv")
-            ssf: SingleStockFrame = SingleStockFrame.from_parts(
-                symbol, ld.agg_timespan, ld.agg_cnds
-            )
-            ssf.save_to_csv(f"{dir_}/agg-{symbol}-{ld.agg_timespan.value}.csv")
+            if not os.path.exists(self._out_dir):
+                os.makedirs(self._out_dir)
 
-        # Export the broker's temporary information
-        self._broker.export_info(dir_)
+            # TODO: make sure that if `self._out_dir` exists, it is a directory and not a file
+            # NOTE: the odds of this happening are low but you never know...
+
+            live_ssf_list: list[SingleStockFrame] = []
+            agg_ssf_list: list[SingleStockFrame] = []
+            live_timespan = Timespan.MINUTE
+            agg_timespan = Timespan.HOUR
+            for symbol, ld in self._live_data.items():
+                live_ssf_list.append(SingleStockFrame.from_parts(
+                    symbol, ld.live_timespan, ld.live_cnds
+                ))
+                live_timespan = ld.live_timespan
+                agg_ssf_list.append(SingleStockFrame.from_parts(
+                    symbol, ld.agg_timespan, ld.agg_cnds
+                ))
+                agg_timespan = ld.agg_timespan
+
+            # Export all
+            live_msf = MultStockFrame.combine_ssfs(live_ssf_list, live_timespan)
+            live_msf.save_to_csv(f"{self._out_dir}/live-{live_timespan.as_str()}.csv")
+            agg_msf = MultStockFrame.combine_ssfs(agg_ssf_list, agg_timespan)
+            agg_msf.save_to_csv(f"{self._out_dir}/agg-{agg_timespan.as_str()}.csv")
+
+            # Export the broker's temporary information
+            self._broker.export_info(self._out_dir)
+        except Exception as e:
+            log.warn(f"Shutdown unsuccessful: {repr(e)} ({str(e)})")
 
     def _on_market_close(self, next_open: dt.datetime) -> None:
-        # Export all info pertaining to how the day went today
-        try:
-            self.export_info()
-        except Exception as e:
-            log.error(f"Failed to export portfolio: {repr(e)} ({str(e)})")
+        self.shutdown()
 
         now = dt.datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
@@ -377,10 +404,11 @@ class LiveStrategy:
             case _:
                 log.warn(f"Unknown event type: {data["event"]}")
 
-    # ============================================
+    # ===============================================================================
+    # --------------------------------------------
     #   Required methods to be implemented when
     #           creating strategies
-    # ============================================
+    # --------------------------------------------
     @abstractmethod
     def setup(self) -> None:
         """ Called once to setup strategy """
@@ -391,10 +419,10 @@ class LiveStrategy:
         """ Called on each new candle """
         pass
 
-    # ===========================================
+    # --------------------------------------------
     #   Convenience methods to be accessed when
     #           creating strategies
-    # ===========================================
+    # --------------------------------------------
     def add_indicator(self, indicator: Indicator) -> str:
         self._indicators.add(indicator)
         # Find the maximum period among all the indicators added to this strategy

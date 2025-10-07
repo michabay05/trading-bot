@@ -57,6 +57,9 @@ A list of all the TODOs needed to be completed before each release
 - [ ] Create a relationship between the momentum and (take profits and stop losses)
     - [ ] Find a way to determine the quantify the strength of the momentum
     - [ ] Set up a relationship between the quantified momemtum of a trend and the risk-reward ratio
+- [ ] Move `./strategies/` into its own git repo or something like that
+- [ ] Update the `log` folder even when program runs for multiple days
+- [ ] Find out the problem with the aggregation
 
 ## v0.12
 - [x] (feat) Add subscription to Alpaca's Trading Stream

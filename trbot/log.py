@@ -50,11 +50,16 @@ def init(
     global _ENABLE_COLOR_LOGS, _LOG_OUTPUT_PATH
 
     _ENABLE_COLOR_LOGS = enable_color_logs
+    update_out_dir(log_output_dir)
+    set_level(min_log_level)
+
+def update_out_dir(log_output_dir: str) -> None:
+    global _LOG_OUTPUT_PATH
+
     if not os.path.exists(log_output_dir):
         os.mkdir(log_output_dir)
 
     _LOG_OUTPUT_PATH = f"{log_output_dir}/logs.txt"
-    set_level(min_log_level)
 
 def set_level(level: LogLevel) -> None:
     global _MIN_LOG_LEVEL
@@ -72,7 +77,7 @@ def log(level: LogLevel, msg: str) -> None:
         print(output)
 
     if _LOG_OUTPUT_PATH is not None:
-        with open(_LOG_OUTPUT_PATH, "a") as f:
+        with open(_LOG_OUTPUT_PATH, "a+") as f:
             print(output, file=f)
 
 def debug(msg: str) -> None:

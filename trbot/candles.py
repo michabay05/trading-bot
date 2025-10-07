@@ -78,7 +78,19 @@ class Timespan(Enum):
                 timespan_ltr = "m"
 
         return f"{mult}{timespan_ltr}"
-    
+
+    def as_str(self, mult: int = 1) -> str:
+        timespan_ltr: str = ""
+        match self:
+            case Timespan.DAY:
+                timespan_ltr = "day"
+            case Timespan.HOUR:
+                timespan_ltr = "hr"
+            case Timespan.MINUTE:
+                timespan_ltr = "min"
+
+        return f"{mult}{timespan_ltr}"
+
     def as_timedelta(self, mult: int) -> timedelta:
         match self:
             case Timespan.DAY:

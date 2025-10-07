@@ -69,6 +69,17 @@ class MultStockFrame:
         self._timespan: Timespan = timespan
 
     @classmethod
+    def combine_ssfs(cls, ssfs: list[SingleStockFrame], timespan: Timespan) -> 'MultStockFrame':
+        frames: list[pd.DataFrame] = []
+        for ssf in ssfs:
+            ssf._df["symbols"] = [ssf._symbol] * len(ssf)
+            frames.append(ssf._df)
+
+        df = pd.concat(frames)
+        df.set_index(["symbols", "timestamp"], inplace=True)
+        return cls(timespan, df)
+
+    @classmethod
     def from_csv(cls, timespan: Timespan, csv_path: str) -> 'MultStockFrame':
         df = pd.read_csv(csv_path, index_col=False)
         df["timestamp"] = df["timestamp"].apply(
@@ -119,7 +130,7 @@ class MultStockFrame:
             del df["trade_count"]
         if "vwap" in df.columns:
             del df["vwap"]
-        
+
         df.set_index("timestamp", inplace=True)
 
         return cls(timespan, df)
@@ -144,7 +155,7 @@ class MultStockFrame:
 
         return SingleStockFrame(symbol, self._timespan, symbol_df)
 
-    def save_to_csv(self, out_path: str, index: bool = False) -> None:
+    def save_to_csv(self, out_path: str, index: bool = True) -> None:
         self._df.to_csv(out_path, index=index)
 
     def __repr__(self) -> str:
