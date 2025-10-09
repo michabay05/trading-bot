@@ -43,7 +43,6 @@ A list of all the TODOs needed to be completed before each release
     - `vectorbt`
 - [ ] (refactor) Update the indicator system in the candle visualizer to use the `Indicator` type
 - [ ] (rsch) Experiment with yahoo finance data
-- [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
 - [ ] (fix) Handle missing candle values
     - As it stands, if the bot was stopped for some reason at 10:25 and is restarted at 13:25, there will be a 3-hour gap in the data.
 - [ ] (feat) Create an additional script to make sense of all the logs and portfolio saved as files.
@@ -54,16 +53,21 @@ A list of all the TODOs needed to be completed before each release
 ---
 
 ## v0.13
-- [ ] Create a relationship between the momentum and (take profits and stop losses)
+- [ ] (feat) Create a relationship between the momentum and (take profits and stop losses)
     - [ ] Find a way to determine the quantify the strength of the momentum
+        - IDEA #1: on golden and death cross, use RSI to quantify momentum
+            - Not sure how well this works though . . .
     - [ ] Set up a relationship between the quantified momemtum of a trend and the risk-reward ratio
-- [ ] Move `./strategies/` into its own git repo or something like that
-- [ ] Update the `log` folder even when program runs for multiple days
-- [ ] Find out the problem with the aggregation
-- [ ] Use the `earliest_close` attribute of a position to follow PDT rules
+- [x] (refactor) Move `./strategies/` into its own git repo or something like that
+    - Moved it to a separate git repo
+- [ ] (refactor) Update the `log` folder even when program runs for multiple days
+- [ ] (fix) Use the `earliest_close` attribute of a position to follow PDT rules
     - [x] Set `earliest_close` after an OPEN order is FILLED place
     - [x] Reset `earliest_close` after `now > earliest_close`
         - [x] Reset the symbol direction as well
+- [x] (fix) Prevent calling `setup()` again when the bot runs for multiple days
+- [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
+    - This will probably be done using a separate script that is responsible for running the bot. Every 'N' hours (where 'N' - (0, 24]), the script stops the bot and checks for a new git commit. If found, then, the latest changes are fetched. If not found, rerun the bot.
 
 ## v0.12
 - [x] (feat) Add subscription to Alpaca's Trading Stream
