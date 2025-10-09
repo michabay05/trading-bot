@@ -33,6 +33,11 @@ class TrendFollowingStrat(LiveStrategy):
         return (tp, sl)
 
     def on_candle(self, symbol: str) -> TBMarketReq | None:
+        # If there's an open position with the current symbol, then do . . .
+        position = self.get_position(symbol)
+        if position is not None:
+            pass
+
         last_atr = self.last_ind_value(symbol, self.atr)
         price = self.current_price(symbol)
         sz: TBOrderAmount = TBOrderAmount.cash_pct(0.3, self.available_cash)

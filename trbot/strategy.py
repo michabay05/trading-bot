@@ -51,8 +51,6 @@ class Indicator:
                     vals = [cnd.low for cnd in cnds]
                 case "high":
                     vals = [cnd.high for cnd in cnds]
-                case _:
-                    raise ValueError(f"Unknown part of a candle: {part}")
 
             candle_chunks[part] = np.array(vals, dtype=np.float64)
 
@@ -122,7 +120,7 @@ class LiveStrategy:
 
         self._conn_alive: bool = False
 
-        self._indicators: set[Indicator] = set()
+        self._indicators: list[Indicator] = []
         self._max_period: int = 0
 
         now = dt.datetime.now(tz=util.MY_TIMEZONE)
@@ -250,11 +248,14 @@ class LiveStrategy:
                 ))
                 agg_timespan = ld.agg_timespan
 
-            # Export all
+            # Export all stock data
             live_msf = MultStockFrame.combine_ssfs(live_ssf_list, live_timespan)
-            live_msf.save_to_csv(f"{self._out_dir}/live-{live_timespan.as_str()}.csv")
+            if live_msf is not None:
+                live_msf.save_to_csv(f"{self._out_dir}/live-{live_timespan.as_str()}.csv")
+
             agg_msf = MultStockFrame.combine_ssfs(agg_ssf_list, agg_timespan)
-            agg_msf.save_to_csv(f"{self._out_dir}/agg-{agg_timespan.as_str()}.csv")
+            if agg_msf is not None:
+                agg_msf.save_to_csv(f"{self._out_dir}/agg-{agg_timespan.as_str()}.csv")
 
             # Export the broker's temporary information
             self._broker.export_info(self._out_dir)
@@ -314,6 +315,8 @@ class LiveStrategy:
         self._broker.update_status()
 
         # Manual exits
+        # NOTE: if a close order is submitted and it gets rejected by the broker due to PDT rules
+        #       just keep retrying until the `earliest_close` time has passed.
         order: TBMarketReq | None = self._broker.check_exits(symbol, cnd.close)
         if order is not None:
             self._broker.sync_portfolio()
@@ -336,6 +339,7 @@ class LiveStrategy:
 
  
         # Used for live data visualizing
+        # NOTE: currently this is not used at all
         update_live_aggregates(self._live_data)
 
         if now > self._next_close:
@@ -424,9 +428,11 @@ class LiveStrategy:
     #           creating strategies
     # --------------------------------------------
     def add_indicator(self, indicator: Indicator) -> str:
-        self._indicators.add(indicator)
-        # Find the maximum period among all the indicators added to this strategy
-        self._max_period = max(self._max_period, indicator.period)
+        if indicator.name() not in [ind.name() for ind in self._indicators]:
+            self._indicators.append(indicator)
+            # Find the maximum period among all the indicators added to this strategy
+            self._max_period = max(self._max_period, indicator.period)
+
         return indicator.name()
 
     def ind_crossover(self, symbol: str, val1: str | float, val2: str | float) -> bool:
@@ -521,9 +527,6 @@ class LiveStrategy:
             )
 
         return mkt_ord
-
-    def in_position(self, symbol: str) -> bool:
-        return self._broker.portfolio.in_position(symbol)
 
     def get_position(self, symbol: str) -> Position | None:
         p = self._broker.portfolio.positions

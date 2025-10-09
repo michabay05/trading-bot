@@ -5,8 +5,9 @@ import enum
 import json
 from uuid import UUID
 
-from alpaca.trading.enums import PositionIntent
+from alpaca.trading.enums import PositionIntent, PositionSide
 
+from . import log
 
 class TBOrderType(Enum):
     MARKET = "market"
@@ -17,12 +18,19 @@ class TBOrderDir(Enum):
     SHORT = "short"
 
     def opposite(self) -> 'TBOrderDir':
-        if self == TBOrderDir.LONG:
-            return TBOrderDir.SHORT
-        elif self == TBOrderDir.SHORT:
-            return TBOrderDir.LONG
-        else:
-            raise ValueError(f"Unknown side: {self.value}")
+        match self:
+            case TBOrderDir.LONG:
+                return TBOrderDir.SHORT
+            case TBOrderDir.SHORT:
+                return TBOrderDir.LONG
+
+    @classmethod
+    def from_alpaca(cls, side: PositionSide) -> 'TBOrderDir':
+        match side:
+            case PositionSide.LONG:
+                return TBOrderDir.LONG
+            case PositionSide.SHORT:
+                return TBOrderDir.SHORT
 
 
 class TBOrderStatus(Enum):
@@ -36,8 +44,12 @@ class Position:
     symbol: str
     quantity: float
     side: TBOrderDir
+    alpaca_id: UUID
+    unrealized_pl: float | None = None
+    unrealized_plpc: float | None = None
+    market_value: float | None = None
     created_by: UUID | None = None
-    # The earliest possible time to close a position
+    # The earliest possible time to close a position (following PDT)
     earliest_close: datetime | None = None
 
     def close(self) -> None:
@@ -275,3 +287,10 @@ class Portfolio:
 
     def in_position(self, symbol: str) -> bool:
         return symbol in self._positions.keys()
+
+    def set_earliest_close(self, symbol: str, earliest_close_dt: datetime | None) -> None:
+        if not self.in_position(symbol):
+            log.warn(f"Could not set earliest close because there is no open position for {symbol}")
+            return
+
+        self._positions[symbol].earliest_close = earliest_close_dt

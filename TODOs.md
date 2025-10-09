@@ -60,6 +60,10 @@ A list of all the TODOs needed to be completed before each release
 - [ ] Move `./strategies/` into its own git repo or something like that
 - [ ] Update the `log` folder even when program runs for multiple days
 - [ ] Find out the problem with the aggregation
+- [ ] Use the `earliest_close` attribute of a position to follow PDT rules
+    - [x] Set `earliest_close` after an OPEN order is FILLED place
+    - [x] Reset `earliest_close` after `now > earliest_close`
+        - [x] Reset the symbol direction as well
 
 ## v0.12
 - [x] (feat) Add subscription to Alpaca's Trading Stream

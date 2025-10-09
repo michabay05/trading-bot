@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from . import util
+from . import log, util
 from .candles import Candle, Timespan
 
 class SingleStockFrame:
@@ -69,13 +69,19 @@ class MultStockFrame:
         self._timespan: Timespan = timespan
 
     @classmethod
-    def combine_ssfs(cls, ssfs: list[SingleStockFrame], timespan: Timespan) -> 'MultStockFrame':
+    def combine_ssfs(cls, ssfs: list[SingleStockFrame], timespan: Timespan) -> 'MultStockFrame | None':
         frames: list[pd.DataFrame] = []
         for ssf in ssfs:
-            ssf._df["symbols"] = [ssf._symbol] * len(ssf)
-            frames.append(ssf._df)
+            if len(ssf) != 0:
+                ssf._df["symbols"] = [ssf._symbol] * len(ssf)
+                frames.append(ssf._df)
+
+        if len(frames) == 0:
+            log.warn("There were no stockframes to export.")
+            return None
 
         df = pd.concat(frames)
+        df.to_csv("testing.csv")
         df.set_index(["symbols", "timestamp"], inplace=True)
         return cls(timespan, df)
 

@@ -16,7 +16,7 @@ from alpaca.trading.requests import (
 
 from . import log, util
 from .datafeed import TBDataFeed
-from .portfolio import Portfolio, TBMarketReq, TBOrderReq, TBOrderStatus, Position
+from .portfolio import Portfolio, TBMarketReq, TBOrderDir, TBOrderReq, TBOrderStatus, Position
 
 
 @dataclass
@@ -83,12 +83,21 @@ class LiveBroker:
 
         positions: dict[str, Position] = {}
         for pos in open_positions:
-            d = {
-                "symbol": pos.symbol,
-                "quantity": float(pos.qty),
-                "side": pos.side,
-            }
-            positions[d["symbol"]] = Position(**d)
+            # Convert from `str | None` to `float | None`
+            unrealized_pl = float(pos.unrealized_pl) if pos.unrealized_pl is not None else pos.unrealized_pl
+            unrealized_plpc = float(pos.unrealized_plpc) if pos.unrealized_plpc is not None else pos.unrealized_plpc
+            market_value = float(pos.market_value) if pos.market_value is not None else pos.market_value
+
+            syncd_pos = Position(
+                symbol=pos.symbol,
+                quantity=float(pos.qty),
+                side=TBOrderDir.from_alpaca(pos.side),
+                alpaca_id=pos.asset_id,
+                unrealized_pl=unrealized_pl,
+                unrealized_plpc=unrealized_plpc,
+                market_value=market_value
+            )
+            positions[syncd_pos.symbol] = syncd_pos
 
         new_pft.replace_all_positions(positions)
         self._portfolio = new_pft
@@ -168,6 +177,10 @@ class LiveBroker:
             del self._symbol_labels[symbol]
 
     def update_status(self) -> None:
+        # This method is intended to do the following:
+        #   - Update the status of an order (WORKING, FILL, CANCELED, etc)
+        #   - Update the `earliest_close` of all positions, as necessary
+
         for req in self._req_history:
             if req.status != TBOrderStatus.WORKING or req.stop_checking:
                 # This method is only intested in orders with a status of WORKING
@@ -185,7 +198,11 @@ class LiveBroker:
             if remote_order.status == OrderStatus.FILLED:
                 req.status = TBOrderStatus.FILLED
 
-                if remote_order.filled_qty is not None and remote_order.filled_at is not None and remote_order.filled_avg_price is not None:
+                if (
+                    remote_order.filled_qty is not None and
+                    remote_order.filled_at is not None and
+                    remote_order.filled_avg_price is not None
+                ):
                     req.filled_qty = float(remote_order.filled_qty)
                     req.filled_dt = remote_order.filled_at
                     # Assign a label only after the order is filled
@@ -193,8 +210,20 @@ class LiveBroker:
 
                     # Subtract the value of the order from the porfolio's cash
                     self._portfolio.cash -= float(remote_order.filled_avg_price) * float(remote_order.filled_qty)
+
+                    # Calculate the earliest possible time where the position for this
+                    # specific symbol is allowed (Only here to align with PDT rules)
+                    self._portfolio.set_earliest_close(req.symbol, req.filled_dt)
                 else:
                     log.error(f"Failed to update the status of order {{ id: {remote_order.id} }}")
+
+        # Update the `earliest_close` attribute
+        now = datetime.now()
+        for symbol in self._portfolio.positions.keys():
+            pos = self._portfolio.positions[symbol]
+            if pos.earliest_close is not None and now >= pos.earliest_close:
+                self._portfolio.set_earliest_close(symbol, None)
+                self._dir_label_symbol(symbol, "none")
 
     def check_exits(self, symbol: str, close_price: float) -> TBMarketReq | None:
         if self._auto_exit:
@@ -309,11 +338,14 @@ class LiveBroker:
         assert isinstance(submitted_order, Order), f"submitted_order is not of type Order; it is {type(submitted_order)}"
         # self._portfolio.add_to_history(submitted_order)
 
-    def _dir_label_symbol(self, symbol: str, dir: Literal["long", "short"]) -> None:
+    def _dir_label_symbol(self, symbol: str, dir: Literal["long", "short", "none"]) -> None:
         assert dir in ["long", "short"], f"Unknown direction label: {dir}"
         assert symbol in self._symbols, f"Symbol({symbol}) is not in symbol list({self._symbols})"
 
-        self._symbol_labels[symbol] = DirectionLabel(dir, datetime.now())
+        if dir == "none":
+            del self._symbol_labels[symbol]
+        else:
+            self._symbol_labels[symbol] = DirectionLabel(dir, datetime.now())
 
     def _order_aligns_w_dir(self, ord_req: TBMarketReq) -> bool:
         # If symbol is not in the labels, then it does not have a label
