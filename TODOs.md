@@ -49,6 +49,7 @@ A list of all the TODOs needed to be completed before each release
 - [ ] (refactor) Compare local vs remote version of portfolio
 - [ ] (feat) Add sudden jumps to the random data feed simulator
 - [ ] (feat) Add more tests based on the random candle generator
+- [ ] (feat) Add ability for script to revert back to a previous commit
 
 ---
 
@@ -66,8 +67,17 @@ A list of all the TODOs needed to be completed before each release
     - [x] Reset `earliest_close` after `now > earliest_close`
         - [x] Reset the symbol direction as well
 - [x] (fix) Prevent calling `setup()` again when the bot runs for multiple days
-- [ ] (feat) Setup a script that can automatically detect new commits from github and update this bot on market close
-    - This will probably be done using a separate script that is responsible for running the bot. Every 'N' hours (where 'N' - (0, 24]), the script stops the bot and checks for a new git commit. If found, then, the latest changes are fetched. If not found, rerun the bot.
+- [ ] (feat) Create a script responsible for running the bot instead of manually running the bot
+    - The script should be able to
+        - [ ] Run and stop the program associated with the bot
+        - [x] Detect new commits made to github
+            - [Good resource](https://gist.github.com/gwpl/6f2c8f2574db6df770c51795d02cd458)
+        - [x] Update the local copy of the bot using remote's copy
+        - [ ] Maintain a frequency parameter that details how often it should check for changes.
+- [ ] (refactor) Move `log.py` out of `trbot`
+    - `log.py` is a project-wide utility and should not be placed within a directory
+- [ ] (refactor) Rework the `trout` directory
+    - There should be a dedicated `logs` directory at the project's top level. `trout` should be phased out along with the other content within it.
 
 ## v0.12
 - [x] (feat) Add subscription to Alpaca's Trading Stream
