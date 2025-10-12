@@ -48,16 +48,14 @@ class Position:
     unrealized_pl: float | None = None
     unrealized_plpc: float | None = None
     market_value: float | None = None
-    created_by: UUID | None = None
     # The earliest possible time to close a position (following PDT)
     earliest_close: datetime | None = None
-
-    def close(self) -> None:
-        pass
 
     def to_dict(self) -> dict:
         d = asdict(self)
         d["side"] = self.side.value
+        d["alpaca_id"] = str(self.alpaca_id)
+        d["earliest_close"] = str(self.earliest_close)
         return d
 
     def clone(self) -> 'Position':
@@ -277,7 +275,8 @@ class Portfolio:
     @staticmethod
     def to_dict(pft: 'Portfolio') -> dict:
         return {
-            "capital": pft.cash,
+            "initial_captial": pft._initial_capital,
+            "cash": pft.cash,
             "position_count": len(pft.positions),
             "positions": {
                 symbol: Position.to_dict(position)

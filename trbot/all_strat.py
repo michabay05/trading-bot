@@ -1,9 +1,6 @@
-from datetime import datetime
-import os
-
 from trbot.strategy import Indicator, LiveStrategy
 from trbot.portfolio import TBMarketReq, TBOrderAmount
-from trbot import log, util
+from trbot import log
 
 class TrendFollowingStrat(LiveStrategy):
     def setup(self) -> None:
@@ -51,22 +48,4 @@ class TrendFollowingStrat(LiveStrategy):
             log.debug(f"{symbol}: Going short...\n\n")
             return self.market_sell(symbol, size=sz, tp_limit=tp, sl_limit=sl)
 
-
-symbols: list[str] = [
-    "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
-    "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS", "AMZN"
-]
-
-ls = TrendFollowingStrat(
-    acct_name="Alpaca Bot 03",
-    symbols=symbols.copy(), paper=True
-)
-
-try:
-    ls.start_loop()
-except KeyboardInterrupt:
-    log.error("Received keyboard interrupt, ctrl-c...")
-    log.info("Shutting down")
-    ls.shutdown()
-    log.info("Complete ... Goodbye!")
 

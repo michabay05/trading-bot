@@ -15,7 +15,7 @@ from .candles import Candle, Timespan
 from .datafeed import AlpacaDataFeed, TBDataFeed
 from .portfolio import (
     Position, TBIntent, TBOrderDir, TBMarketReq, TBOrderAmount,
-    StopLossTrigger, TakeProfitTrigger
+    StopLossTrigger, TakeProfitTrigger, TBOrderReq, Portfolio
 )
 from .stockframe import MultStockFrame, SingleStockFrame
 
@@ -83,6 +83,13 @@ class Indicator:
             case _:
                 raise ValueError(f"Unknown kind of indicator: {self._kind}")
 
+    @staticmethod
+    def to_dict(ind: 'Indicator') -> dict:
+        return {
+            "kind": ind._kind,
+            "parts": ind._parts,
+            "params": ind._params
+        }
 
 @dataclass
 class _LiveData:
@@ -107,6 +114,40 @@ class _LiveData:
         tmp["agg_timespan"] = self.agg_timespan.value
         return tmp
 
+    @staticmethod
+    def export_all_data(
+        live_data: dict[str, '_LiveData'], live_csv_path: str, agg_csv_path: str
+    ) -> None:
+        if len(live_data) == 0:
+            log.warn("Nothing to export")
+            return
+
+        live_ssf_list: list[SingleStockFrame] = []
+        agg_ssf_list: list[SingleStockFrame] = []
+
+        # NOTE: these timespans are just placeholders
+        live_timespan = Timespan.MINUTE
+        agg_timespan = Timespan.HOUR
+
+        for symbol, ld in live_data.items():
+            live_ssf_list.append(SingleStockFrame.from_parts(
+                symbol, ld.live_timespan, ld.live_cnds
+            ))
+            live_timespan = ld.live_timespan
+            agg_ssf_list.append(SingleStockFrame.from_parts(
+                symbol, ld.agg_timespan, ld.agg_cnds
+            ))
+            agg_timespan = ld.agg_timespan
+
+        # Export all stock data
+        live_msf = MultStockFrame.combine_ssfs(live_ssf_list, live_timespan)
+        if live_msf is not None:
+            live_msf.save_to_csv(live_csv_path)
+
+        agg_msf = MultStockFrame.combine_ssfs(agg_ssf_list, agg_timespan)
+        if agg_msf is not None:
+            agg_msf.save_to_csv(agg_csv_path)
+
 
 class LiveStrategy:
     def __init__(self, acct_name: str, symbols: list[str], paper: bool) -> None:
@@ -123,25 +164,24 @@ class LiveStrategy:
         self._indicators: list[Indicator] = []
         self._max_period: int = 0
 
-        now = dt.datetime.now(tz=util.MY_TIMEZONE)
-        self._last_update: dt.datetime = now
-        self._next_close: dt.datetime = now
-        # `new_interval` amount of seconds, a new timespan will have been declared
+        self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
+        self._last_update: dt.datetime = self._time
+        self._next_close: dt.datetime = self._time
+        # `new_interval`: amount of minutes, a new timespan will have been declared
         self._new_interval_min: int = 15
-        self._new_timespan_interval: int = self._new_interval_min * 60
+        self._new_timespan_interval_sec: int = self._new_interval_min * 60
 
         # Ensure that all necessary directories are present
-        parent_dir = "trout"
-        for subdir in [ "aggs", "logs", "ohlcv-1hr", "pfts" ]:
+        # TODO: simplify the `trout` directory
+        self._parent_dir = "trout"
+        # TODO: eliminate the need for the `ohlcv-1hr` directory
+        self._required_subdirs: list[str] = [ "aggs", "logs", "ohlcv-1hr", "pfts" ]
+        for subdir in self._required_subdirs:
             # `exist_ok=True` makes sure that the program does not panic
             # if a directory already exists at the specified location
-
-            # TODO: eliminate the need for the `ohlcv-1hr` directory
-            # TODO: simplify the `trout` directory
-            os.makedirs(f"{parent_dir}/{subdir}", exist_ok=True)
+            os.makedirs(f"{self._parent_dir}/{subdir}", exist_ok=True)
 
         # When logging stuff, this is the output directory that will be used
-        self._out_dir: str = "trout/logs/" + now.strftime("%Y_%m_%d")
         log.update_out_dir(self._out_dir)
 
     # NOTE: For live trading, instead of using last_close, use curr_price
@@ -151,6 +191,14 @@ class LiveStrategy:
 
     def current_price(self, symbol: str) -> float:
         return self._data_feed.get_latest_price(symbol)
+
+    @property
+    def _out_dir(self) -> str:
+        return f"{self._parent_dir}/logs/" + self._time.strftime("%Y_%m_%d")
+
+    @property
+    def _strat_name(self) -> str:
+        return self.__class__.__qualname__
 
     @property
     def curr_dt_str(self) -> str:
@@ -201,6 +249,10 @@ class LiveStrategy:
         # Bring historical data up to date
         start = dt.datetime.now() - relativedelta(months=1)
 
+        # Update the log output dir; this is especially helpful when the bot runs
+        # for multiple days at a time
+        log.update_out_dir(self._out_dir)
+
         # Export the most recent data fetched from the data feed
         timespan = Timespan.HOUR
         msf = self._data_feed.get_historical(self._symbols, timespan, start)
@@ -234,28 +286,11 @@ class LiveStrategy:
             # TODO: make sure that if `self._out_dir` exists, it is a directory and not a file
             # NOTE: the odds of this happening are low but you never know...
 
-            live_ssf_list: list[SingleStockFrame] = []
-            agg_ssf_list: list[SingleStockFrame] = []
-            live_timespan = Timespan.MINUTE
-            agg_timespan = Timespan.HOUR
-            for symbol, ld in self._live_data.items():
-                live_ssf_list.append(SingleStockFrame.from_parts(
-                    symbol, ld.live_timespan, ld.live_cnds
-                ))
-                live_timespan = ld.live_timespan
-                agg_ssf_list.append(SingleStockFrame.from_parts(
-                    symbol, ld.agg_timespan, ld.agg_cnds
-                ))
-                agg_timespan = ld.agg_timespan
-
-            # Export all stock data
-            live_msf = MultStockFrame.combine_ssfs(live_ssf_list, live_timespan)
-            if live_msf is not None:
-                live_msf.save_to_csv(f"{self._out_dir}/live-{live_timespan.as_str()}.csv")
-
-            agg_msf = MultStockFrame.combine_ssfs(agg_ssf_list, agg_timespan)
-            if agg_msf is not None:
-                agg_msf.save_to_csv(f"{self._out_dir}/agg-{agg_timespan.as_str()}.csv")
+            _LiveData.export_all_data(
+                self._live_data,
+                f"{self._out_dir}/live.csv",
+                f"{self._out_dir}/agg.csv"
+            )
 
             # Export the broker's temporary information
             self._broker.export_info(self._out_dir)
@@ -281,8 +316,8 @@ class LiveStrategy:
         if status["is_open"]:
             # Market is currently open
             now = dt.datetime.now(tz=util.MY_TIMEZONE)
-            time_til_divisible = now.timestamp() % self._new_timespan_interval
-            time_til_divisible = self._new_timespan_interval - time_til_divisible
+            time_til_divisible = now.timestamp() % self._new_timespan_interval_sec
+            time_til_divisible = self._new_timespan_interval_sec - time_til_divisible
             # If current time is not divisible by the new interval,
             # (like interval=15min, then divisible = xx:00, xx:15, xx:30, xx:45))
             # then wait until the current time is divisible
@@ -326,7 +361,7 @@ class LiveStrategy:
             self._broker.add_order_req(order)
 
         now = dt.datetime.now(tz=util.MY_TIMEZONE)
-        if (now - self._last_update).total_seconds() >= self._new_timespan_interval:
+        if (now - self._last_update).total_seconds() >= self._new_timespan_interval_sec:
             self._last_update = now
             log.info("Detected new timespan...")
 
@@ -394,6 +429,50 @@ class LiveStrategy:
             log.debug(f"Submitted order: {order}")
         else:
             log.debug(f"No order")
+
+    def export_everything(self, output_path: str) -> dict:
+        output = {}
+
+        # Strategy
+        output["strategy"] = {
+            "name": self._strat_name,
+            "symbols": self._symbols,
+            "required_dirs": self._required_subdirs,
+            "parent_dir": self._parent_dir,
+            "indicators": [
+                Indicator.to_dict(ind) for ind in self._indicators
+            ],
+            "new_interval_min": self._new_interval_min
+        }
+
+        # Broker
+        broker = self._broker
+        output["broker"] = {
+            "acct_name": broker._acct_name,
+            "symbol_labels": broker._symbol_labels,
+            "auto_exit": broker._auto_exit,
+            "time_til_reset": str(broker._time_til_reset),
+            "broker_info_path": broker._broker_info_path,
+            "symbol_labels": [
+                {
+                    symb: {
+                        "direction": label.direction,
+                        "created_at": str(label.created_at)
+                    }
+                } for symb, label in broker._symbol_labels.items()
+            ],
+            "req_history": [
+                TBOrderReq.to_dict(ord_req) for ord_req in broker._req_history
+            ],
+        }
+
+        # Positions
+        output["portfolio"] = Portfolio.to_dict(broker.portfolio)
+
+        with open(output_path, "w+") as f:
+            json.dump(output, f, indent=4)
+
+        return output
 
     def __on_update_event(self, data: dict) -> None:
         # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events

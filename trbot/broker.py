@@ -27,17 +27,24 @@ class DirectionLabel:
 
 class LiveBroker:
     def __init__(self, acct_name: str, symbols: list[str], paper: bool = True) -> None:
-        api_key, secret_key = util.alpaca_keys(acct_name)
+        self._acct_name = acct_name
+        api_key, secret_key = util.alpaca_keys(self._acct_name)
         self._trade_client: TradingClient = TradingClient(
             api_key, secret_key, paper=paper, raw_data=False
         )
 
         # Set account configurations
-        acct_config = self._trade_client.get_account_configurations()
-        assert isinstance(acct_config, AccountConfiguration), f"acct_config is not of type AccountConfiguration; it is {type(acct_config)}"
-        acct_config.fractional_trading = True
-        acct_config.pdt_check = PDTCheck.BOTH
-        self._trade_client.set_account_configurations(acct_config)
+        acct_config = {
+            "fractional_trading": True,
+            "no_shorting": False,
+        }
+
+        alpaca_acct_config = self._trade_client.get_account_configurations()
+        assert isinstance(alpaca_acct_config, AccountConfiguration), f"acct_config is not of type AccountConfiguration; it is {type(alpaca_acct_config)}"
+        alpaca_acct_config.fractional_trading = acct_config["fractional_trading"]
+        alpaca_acct_config.no_shorting = acct_config["no_shorting"]
+        alpaca_acct_config.pdt_check = PDTCheck.BOTH
+        self._trade_client.set_account_configurations(alpaca_acct_config)
 
         self._req_history: list[TBOrderReq] = []
         self._portfolio: Portfolio = Portfolio()
@@ -56,7 +63,7 @@ class LiveBroker:
         # the direction label and re-added into the symbols list. Once a symbol
         # with no direction is either long or short, it will take
         # `self.time_til_reset` until it loses its label
-        self._time_til_reset: timedelta = timedelta(days=1)
+        self._time_til_reset: datetime = datetime.now() + timedelta(days=1)
 
         self._broker_info_path: str = "broker_info.json"
         try:

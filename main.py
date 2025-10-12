@@ -13,6 +13,9 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 import subprocess, sys, threading, time
 
+from trbot import log
+from trbot.all_strat import TrendFollowingStrat
+
 @dataclass
 class CmdOutput:
     code: int
@@ -21,7 +24,7 @@ class CmdOutput:
 
 def run_cmd(cmd: list[str]) -> CmdOutput | None:
     try:
-        print(f"INFO: cmd: {cmd}")
+        log.info(f"cmd: {cmd}")
         proc = subprocess.run(
             cmd,
             capture_output=True,
@@ -30,8 +33,7 @@ def run_cmd(cmd: list[str]) -> CmdOutput | None:
         )
         return CmdOutput(proc.returncode, proc.stdout, proc.stderr)
     except Exception as e:
-        print(f"ERROR: Failed to run cmd ({cmd})")
-        print(f"ERROR: {repr(e)}")
+        log.error(f"Failed to run cmd ({cmd}): {repr(e)}")
 
 def get_all_commits(use_remote: bool) -> list[str]:
     cmd_args = ["git", "log", "--oneline"]
@@ -43,8 +45,8 @@ def get_all_commits(use_remote: bool) -> list[str]:
         sys.exit(1)
 
     if output.code != 0:
-        print(f"ERROR: subcmd exited with code {output.code}")
-        print(f"ERROR: stdout: {output.stderr}")
+        log.error(f"subcmd exited with code {output.code}")
+        log.error(f"stdout: {output.stderr}")
         sys.exit(1)
 
     print(output.stdout)
@@ -63,7 +65,7 @@ def get_current_commit(use_remote: bool) -> str:
     cmd = run_cmd(["git", "rev-parse", dest])
 
     if cmd is None:
-        print("ERROR: failed to get current commit hash")
+        log.error("failed to get current commit hash")
         sys.exit(1)
 
     return cmd.stdout.strip()
@@ -71,17 +73,9 @@ def get_current_commit(use_remote: bool) -> str:
 def fetch_latest():
     cmd = run_cmd(["git", "fetch", "origin"])
     if cmd is not None:
-        print("INFO: fetched latest changes from origin")
+        log.info("fetched latest changes from origin")
     else:
-        print("ERROR: failed to fetch latest change from origin")
-
-def run_bot() -> bool:
-    cmd = run_cmd(["uv", "run", "live_bot.py"])
-    if cmd is None:
-        print("ERROR: failed to run bot")
-        return False
-
-    return True
+        log.error("failed to fetch latest change from origin")
 
 def sync_w_remote():
     fetch_latest()
@@ -91,9 +85,32 @@ def sync_w_remote():
     if local_commit != remote_commit:
         cmd = run_cmd(["git", "pull", "origin", "main"])
         if cmd is None:
-            print(f"ERROR: failed to sync changes with remote")
+            log.error("failed to sync changes with remote")
 
 # ============================================================================
+
+def run_bot() -> None:
+    symbols: list[str] = [
+        "GE", "HPQ", "EBAY", "XLF", "GE", "GOOG", "SPY", "AAPL",
+        "PEP", "LOGI", "INTC", "TGT", "WMT", "NIO", "HIMS", "AMZN"
+    ]
+
+    ls = TrendFollowingStrat(
+        acct_name="Alpaca Bot 03",
+        symbols=symbols.copy(), paper=True
+    )
+
+    ls.export_everything("test.json")
+
+    # try:
+    #     ls.start_loop()
+    # except KeyboardInterrupt:
+    #     log.error("Received keyboard interrupt, ctrl-c...")
+    #     log.info("Shutting down")
+    #     ls.shutdown()
+    #     log.info("Complete ... Goodbye!")
+
+
 freq = 1
 gap_between_checks = timedelta(hours=24 / freq)
 
@@ -105,11 +122,10 @@ last_check = start
 bot_thread = threading.Thread(target=run_bot)
 bot_thread.start()
 
-while True:
-    if now - last_check >= gap_between_checks:
-        sync_w_remote()
-    else:
-        time.sleep(gap_between_checks.total_seconds() - 1)
-
-        last_check = now
-        now = datetime.now()
+# while True:
+#     if now - last_check >= gap_between_checks:
+#         sync_w_remote()
+#     else:
+#         time.sleep(gap_between_checks.total_seconds() - 1)
+#         last_check = now
+#         now = datetime.now()
