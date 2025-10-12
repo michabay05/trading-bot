@@ -9,7 +9,7 @@ Before running these commands, remember to install `talib` on your system (not t
 $ python -m venv .venv
 $ source .venv/bin/activate
 $ pip install -r requirements.txt
-$ python live_bot.py
+$ python main.py
 ```
 ---
 Visualize candles and indicators (run this command after setting up virtual environment)
@@ -23,10 +23,9 @@ $ npm run dev
 ## Features
 - Historical data downloader
 - Candle replayer (with a modifiable replay time factor)
-- A variety of indicators such as SMA, EMA, RSI
+- Indicators such as SMA, EMA, RSI
 - Strategy implementation system
-- Backtesting
-- Take profit and stop losses
+- Take profit and stop losses (both manually and automatically)
 
 ## Resource used
 - [areed1192/python-trading-robot](https://github.com/areed1192/python-trading-robot.git)
