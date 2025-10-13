@@ -78,7 +78,11 @@ A list of all the TODOs needed to be completed before each release
     - There should be a dedicated `logs` directory at the project's top level. `trout` should be phased out along with the other content within it.
 - [x] (feat) Add ability to export everything about a strategy
     - Ideally, via the exported data an exact duplicate of the bot's state can be recreated across restarts.
-- [ ] (feat) Add ability to import everything about a strategy
+- [x] (feat) Add ability to import everything about a strategy
+- [x] (refactor) Save all the logs into a single string and dump on command
+    - Right now, it writes to file everytime it prints to the screen.
+- [ ] (refactor) Decide on whether is necessary to sync portfolio when constructing the broker.
+    - This is because it can conflict with the portfolio attributes when syncing and importing from file.
 
 ## v0.12
 - [x] (feat) Add subscription to Alpaca's Trading Stream

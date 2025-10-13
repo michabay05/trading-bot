@@ -25,6 +25,9 @@ class DirectionLabel:
     direction: Literal["long", "short"]
     created_at: datetime
 
+    @classmethod
+    def from_dict(cls, d: dict) -> 'DirectionLabel':
+        return cls(d["direction"], datetime.fromisoformat(d["created_at"]))
 
 class LiveBroker:
     def __init__(self, acct_name: str, symbols: list[str], paper: bool = True) -> None:
@@ -39,13 +42,16 @@ class LiveBroker:
         self.acct_config = {
             "fractional_trading": True,
             "no_shorting": False,
+            "pdt_check": True,
         }
 
         alpaca_acct_config = self._trade_client.get_account_configurations()
         assert isinstance(alpaca_acct_config, AccountConfiguration), f"acct_config is not of type AccountConfiguration; it is {type(alpaca_acct_config)}"
         alpaca_acct_config.fractional_trading = self.acct_config["fractional_trading"]
         alpaca_acct_config.no_shorting = self.acct_config["no_shorting"]
-        alpaca_acct_config.pdt_check = PDTCheck.BOTH
+        if self.acct_config["pdt_check"]:
+            alpaca_acct_config.pdt_check = PDTCheck.BOTH
+
         self._trade_client.set_account_configurations(alpaca_acct_config)
 
         self._req_history: list[TBOrderReq] = []
@@ -83,7 +89,7 @@ class LiveBroker:
         assert cash_str is not None, f"`account.cash: str | None` was None."
         cash = float(cash_str)
         assert cash > 0, f"account.cash(as_str: {cash_str}, as_float: {cash}) > $0.00"
-        new_pft: Portfolio = Portfolio(initial_capital=cash)
+        new_pft: Portfolio = Portfolio(cash=cash)
 
         # Sync w/ remote's open positions
         open_positions = self._trade_client.get_all_positions()

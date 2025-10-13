@@ -50,7 +50,8 @@ class Logger:
         self.prefix: str = prefix
         self.enable_color_logs: bool = enable_color_logs
         self.print_to_screen: bool = print_to_screen
-        self.log_output_path: str | None = None
+        self.log_output_path: str = ""
+        self.log_str: str = ""
         self.update_out_dir(log_output_dir)
         self.set_min_level(min_log_level)
 
@@ -75,9 +76,12 @@ class Logger:
             else:
                 print(output)
 
-        if self.log_output_path is not None:
-            with open(self.log_output_path, "a+") as f:
-                print(output, file=f)
+    def dump_logs(self, log_output_path: str | None = None) -> None:
+        if log_output_path is None:
+            log_output_path = self.log_output_path
+
+        with open(log_output_path, "w+") as f:
+            f.write(self.log_str)
 
     def debug(self, msg: str) -> None:
         self.log(LogLevel.DEBUG, msg)

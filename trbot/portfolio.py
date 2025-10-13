@@ -7,7 +7,7 @@ from uuid import UUID
 
 from alpaca.trading.enums import PositionIntent, PositionSide
 
-from . import log
+from .log import bot_log as b_log
 
 class TBOrderType(Enum):
     MARKET = "market"
@@ -50,6 +50,13 @@ class Position:
     market_value: float | None = None
     # The earliest possible time to close a position (following PDT)
     earliest_close: datetime | None = None
+
+    @classmethod
+    def from_dict(cls, pos_dict: dict) -> 'Position':
+        if isinstance(pos_dict["side"], str):
+            pos_dict["side"] = TBOrderDir(pos_dict["side"])
+
+        return cls(**pos_dict)
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -241,10 +248,9 @@ class TBMarketReq(TBOrderReq):
 
 
 class Portfolio:
-    def __init__(self, initial_capital: float = 1000.0) -> None:
-        self._initial_capital: float = initial_capital
-        self._cash: float = self._initial_capital
-        # Stores currently open positions
+    def __init__(self, cash: float = 1000.0) -> None:
+        self._cash: float = cash
+        # Stores currently all the bot's positions
         self._positions: dict[str, Position] = {}
 
     @property
@@ -269,15 +275,13 @@ class Portfolio:
         with open(filepath, "w") as f:
             json.dump(Portfolio.to_dict(self), f, indent=4)
 
-    def init_from_json(self, filepath: str) -> None:
+    def init_from_json(self, _filepath: str) -> None:
         raise NotImplementedError()
 
     @staticmethod
     def to_dict(pft: 'Portfolio') -> dict:
         return {
-            "initial_captial": pft._initial_capital,
             "cash": pft.cash,
-            "position_count": len(pft.positions),
             "positions": {
                 symbol: Position.to_dict(position)
                 for symbol, position in pft.positions.items()
@@ -289,7 +293,7 @@ class Portfolio:
 
     def set_earliest_close(self, symbol: str, earliest_close_dt: datetime | None) -> None:
         if not self.in_position(symbol):
-            log.warn(f"Could not set earliest close because there is no open position for {symbol}")
+            b_log.warn(f"Could not set earliest close because there is no open position for {symbol}")
             return
 
         self._positions[symbol].earliest_close = earliest_close_dt

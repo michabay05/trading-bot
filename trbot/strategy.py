@@ -11,7 +11,7 @@ import talib
 
 from . import util
 from .log import bot_log as b_log
-from .broker import LiveBroker
+from .broker import DirectionLabel, LiveBroker
 from .candles import Candle, Timespan
 from .datafeed import AlpacaDataFeed, TBDataFeed
 from .portfolio import (
@@ -153,8 +153,9 @@ class _LiveData:
 
 
 class LiveStrategy:
-    def __init__(self, acct_name: str, symbols: list[str], paper: bool) -> None:
+    def __init__(self, acct_name: str, strat_name: str, symbols: list[str], paper: bool) -> None:
         self._symbols: list[str] = symbols
+        self._strat_name: str = strat_name
         self._live_data: dict[str, _LiveData] = {}
         for sym in self._symbols:
             self._live_data[sym] = _LiveData()
@@ -203,10 +204,6 @@ class LiveStrategy:
     @property
     def _out_dir(self) -> str:
         return f"{self._parent_dir}/logs/" + self._time.strftime("%Y_%m_%d")
-
-    @property
-    def _strat_name(self) -> str:
-        return self.__class__.__qualname__
 
     @property
     def curr_dt_str(self) -> str:
@@ -296,6 +293,9 @@ class LiveStrategy:
                 f"{self._out_dir}/live.csv",
                 f"{self._out_dir}/agg.csv"
             )
+
+            # Dump all the logs into a file
+            b_log.dump_logs()
 
             # Export the broker's temporary information
             self._broker.export_info(self._out_dir)
@@ -454,6 +454,7 @@ class LiveStrategy:
 
         strat = cls(
             acct_name=info["broker"]["acct_name"],
+            strat_name=info["strategy"]["name"],
             symbols=info["strategy"]["symbols"],
             paper=info["broker"]["paper_trading"]
         )
@@ -465,8 +466,21 @@ class LiveStrategy:
             Indicator(**ind_info) for ind_info in info["strategy"]["indicators"]
         ]
 
-        # TODO: finish restoring the state of strategy from the strategy
-        # strat._broker = 
+        strat._broker.acct_config = info["broker"]["acct_config"]
+        strat._broker._symbol_labels = {
+            symb: DirectionLabel.from_dict(d) for symb, d in info["broker"]["symbol_labels"]
+        }
+        strat._broker._auto_exit = info["broker"]["auto_exit"]
+        strat._broker._time_til_reset = info["broker"]["time_til_reset"]
+        strat._broker._req_history = [
+            TBOrderReq(**ord_req_d) for ord_req_d in info["broker"]["req_history"]
+        ]
+
+        strat._broker._portfolio.cash = info["portfolio"]["cash"]
+        strat._broker._portfolio.replace_all_positions({
+            symbol: Position.from_dict(pos_dict)
+            for symbol, pos_dict in info["portfolio"]["positions"].items()
+        })
 
         return strat
 
@@ -489,19 +503,17 @@ class LiveStrategy:
         broker = self._broker
         output["broker"] = {
             "acct_name": broker._acct_name,
+            "acct_config": broker.acct_config,
             "paper_trading": broker.paper_trading,
-            "symbol_labels": broker._symbol_labels,
             "auto_exit": broker._auto_exit,
             "time_til_reset": str(broker._time_til_reset),
             "broker_info_path": broker._broker_info_path,
-            "symbol_labels": [
-                {
-                    symb: {
-                        "direction": label.direction,
-                        "created_at": str(label.created_at)
-                    }
+            "symbol_labels": {
+                symb: {
+                    "direction": label.direction,
+                    "created_at": str(label.created_at)
                 } for symb, label in broker._symbol_labels.items()
-            ],
+            },
             "req_history": [
                 TBOrderReq.to_dict(ord_req) for ord_req in broker._req_history
             ],

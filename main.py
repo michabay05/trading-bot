@@ -16,7 +16,7 @@ from typing import Callable
 import subprocess, sys
 
 from trbot.log import repl_log
-from trbot.strategy import quit_event
+from trbot.strategy import LiveStrategy, quit_event
 from trbot.all_strat import TrendFollowingStrat
 
 @dataclass
@@ -33,10 +33,13 @@ def run_bot() -> None:
 
     ls = TrendFollowingStrat(
         acct_name="Alpaca Bot 03",
+        strat_name="Trend following",
         symbols=symbols.copy(), paper=True
     )
 
     ls.export_everything("test.json")
+    new_strat = LiveStrategy.import_everything("test.json")
+    new_strat.export_everything("duplicate.json")
 
     # try:
     #     ls.start_loop()
@@ -48,7 +51,7 @@ def run_bot() -> None:
 
 @dataclass
 class ReplCmd:
-    func: Callable
+    func: Callable[[list[str]], None]
     desc: str
 
 class Runner:
@@ -83,7 +86,7 @@ class Runner:
             )
         }
 
-    def _repl_bot_start(self) -> None:
+    def _repl_bot_start(self, _args: list[str]) -> None:
         if not self.bot_running:
             if quit_event.is_set():
                 quit_event.clear()
@@ -94,7 +97,7 @@ class Runner:
         else:
             repl_log.info("Bot is already running")
 
-    def _repl_bot_stop(self) -> None:
+    def _repl_bot_stop(self, _args: list[str]) -> None:
         if self.bot_running:
             quit_event.set()
             self.bot_thread.join()
@@ -103,18 +106,30 @@ class Runner:
         else:
             repl_log.info("Bot is not running so there's nothing to kill")
 
-    def _repl_commit(self) -> None:
+    def _repl_commit(self, _args: list[str]) -> None:
         repl_log.info(f"Local commit:  {self.get_current_commit(use_remote=False)}")
         repl_log.info(f"Remote commit: {self.get_current_commit(use_remote=True)}")
 
-    def _repl_quit(self) -> None:
+    def _repl_quit(self, _args: list[str]) -> None:
         repl_log.info(f"Quitting...")
         self.should_quit = True
 
-    def _repl_help(self) -> None:
+    def _repl_help(self, _args: list[str]) -> None:
         repl_log.info("Listed below are all the available commands")
         for cmd, rc in self.repl_cmds.items():
             repl_log.info(f"{cmd:^15} |   {rc.desc}")
+
+    def _repl_set_freq(self, args: list[str]) -> None:
+        try:
+            new_freq = int(args[0].strip())
+        except Exception as e:
+            repl_log.warn(f"Unable to parse {args[0]} into an integer")
+            repl_log.warn(f"{repr(e)}")
+            repl_log.info(f"Keeping previous frequency of {self.freq}")
+            return
+
+        repl_log.info(f"Changing check frequency from {self.freq} to {new_freq}")
+        self.freq = new_freq
 
     @property
     def gap_between_checks(self) -> timedelta:
@@ -129,18 +144,18 @@ class Runner:
                 self.last_check = self.now
 
             user_input: str = input("> ")
-            user_input = user_input.strip()
             repl_log.debug(f"Input received: '{user_input}'")
 
-            if user_input not in self.repl_cmds.keys():
-                repl_log.warn(f"Unknown input provided: '{user_input}'")
+            parts = user_input.split()
+            if parts[0] not in self.repl_cmds.keys():
+                repl_log.warn(f"Unknown subcommand provided: '{parts[0]}'")
                 continue
 
-            self.repl_cmds[user_input].func()
+            self.repl_cmds[parts[0]].func(parts[1:])
             self.now = datetime.now()
 
         if self.bot_running:
-            self._repl_bot_stop()
+            self._repl_bot_stop([])
 
     def run_cmd(self, cmd: list[str]) -> CmdOutput:
         try:
