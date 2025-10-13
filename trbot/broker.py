@@ -14,7 +14,8 @@ from alpaca.trading.requests import (
     StopLossRequest, TakeProfitRequest
 )
 
-from . import log, util
+from . import util
+from .log import bot_log as b_log
 from .datafeed import TBDataFeed
 from .portfolio import Portfolio, TBMarketReq, TBOrderDir, TBOrderReq, TBOrderStatus, Position
 
@@ -27,22 +28,23 @@ class DirectionLabel:
 
 class LiveBroker:
     def __init__(self, acct_name: str, symbols: list[str], paper: bool = True) -> None:
-        self._acct_name = acct_name
+        self._acct_name: str = acct_name
+        self.paper_trading: bool = paper
         api_key, secret_key = util.alpaca_keys(self._acct_name)
         self._trade_client: TradingClient = TradingClient(
             api_key, secret_key, paper=paper, raw_data=False
         )
 
         # Set account configurations
-        acct_config = {
+        self.acct_config = {
             "fractional_trading": True,
             "no_shorting": False,
         }
 
         alpaca_acct_config = self._trade_client.get_account_configurations()
         assert isinstance(alpaca_acct_config, AccountConfiguration), f"acct_config is not of type AccountConfiguration; it is {type(alpaca_acct_config)}"
-        alpaca_acct_config.fractional_trading = acct_config["fractional_trading"]
-        alpaca_acct_config.no_shorting = acct_config["no_shorting"]
+        alpaca_acct_config.fractional_trading = self.acct_config["fractional_trading"]
+        alpaca_acct_config.no_shorting = self.acct_config["no_shorting"]
         alpaca_acct_config.pdt_check = PDTCheck.BOTH
         self._trade_client.set_account_configurations(alpaca_acct_config)
 
@@ -69,7 +71,7 @@ class LiveBroker:
         try:
             self.import_info()
         except json.JSONDecodeError:
-            log.warn(f"Invalid broker info JSON found @ '{self._broker_info_path}'")
+            b_log.warn(f"Invalid broker info JSON found @ '{self._broker_info_path}'")
 
     def sync_portfolio(self):
         # Sync w/ remote's available cash
@@ -111,7 +113,7 @@ class LiveBroker:
 
     def import_info(self) -> None:
         if not os.path.exists(self._broker_info_path):
-            log.warn(f"No broker information found at '{self._broker_info_path}'")
+            b_log.warn(f"No broker information found at '{self._broker_info_path}'")
             return
 
         with open(self._broker_info_path, "r") as f:
@@ -194,7 +196,7 @@ class LiveBroker:
                 continue
 
             if req.alpaca_id is None:
-                log.warn(
+                b_log.warn(
                     f"Could not update the status of the order.\n{TBOrderReq.to_dict(req)}"
                 )
                 req.stop_checking = True
@@ -222,7 +224,7 @@ class LiveBroker:
                     # specific symbol is allowed (Only here to align with PDT rules)
                     self._portfolio.set_earliest_close(req.symbol, req.filled_dt)
                 else:
-                    log.error(f"Failed to update the status of order {{ id: {remote_order.id} }}")
+                    b_log.error(f"Failed to update the status of order {{ id: {remote_order.id} }}")
 
         # Update the `earliest_close` attribute
         now = datetime.now()
@@ -326,7 +328,7 @@ class LiveBroker:
             self.add_order_req(ord_req)
         else:
             ord_req.status = TBOrderStatus.INSUFF_FUNDS
-            log.warn(f"DENIED: Order not sent due to insufficient funds (req_val: {order_value} vs own_val: {self._portfolio.cash})")
+            b_log.warn(f"DENIED: Order not sent due to insufficient funds (req_val: {order_value} vs own_val: {self._portfolio.cash})")
 
 
     def execute_close_order(self, ord_req: TBMarketReq, data_feed: TBDataFeed) -> None:
@@ -369,7 +371,7 @@ class LiveBroker:
         ):
             # If this is true, then order is going against the stock's daily direction
             # classification.
-            log.warn(
+            b_log.warn(
                 f"DENIED: {ord_req.symbol} is going against its daily "
                 f"direction label (WMT's direction: {direction}) && "
                 f"Order is to close?: {ord_req.is_to_close()}"

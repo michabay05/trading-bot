@@ -1,5 +1,5 @@
-import os
-import enum, sys
+import enum, os, sys
+from typing import NoReturn
 
 from colorama import Fore, Style
 
@@ -38,60 +38,76 @@ class LogLevel(enum.Enum):
                 return Fore.RED + Style.BRIGHT
 
 
-_ENABLE_COLOR_LOGS: bool = True
-_LOG_OUTPUT_PATH: str | None = None
-_MIN_LOG_LEVEL: LogLevel = LogLevel.DEBUG
+class Logger:
+    def __init__(
+        self,
+        prefix: str,
+        log_output_dir: str,
+        print_to_screen: bool,
+        enable_color_logs: bool = True,
+        min_log_level: LogLevel = LogLevel.DEBUG
+    ) -> None:
+        self.prefix: str = prefix
+        self.enable_color_logs: bool = enable_color_logs
+        self.print_to_screen: bool = print_to_screen
+        self.log_output_path: str | None = None
+        self.update_out_dir(log_output_dir)
+        self.set_min_level(min_log_level)
 
-def init(
-    log_output_dir: str,
-    enable_color_logs: bool = True,
-    min_log_level: LogLevel = LogLevel.DEBUG
-) -> None:
-    global _ENABLE_COLOR_LOGS, _LOG_OUTPUT_PATH
+    def update_out_dir(self, log_output_dir: str) -> None:
+        if not os.path.exists(log_output_dir):
+            os.mkdir(log_output_dir)
 
-    _ENABLE_COLOR_LOGS = enable_color_logs
-    update_out_dir(log_output_dir)
-    set_level(min_log_level)
+        self.log_output_path = f"{log_output_dir}/{self.prefix}-logs.txt"
 
-def update_out_dir(log_output_dir: str) -> None:
-    global _LOG_OUTPUT_PATH
+    def set_min_level(self, level: LogLevel) -> None:
+        self.min_log_level = level
 
-    if not os.path.exists(log_output_dir):
-        os.mkdir(log_output_dir)
+    def log(self, level: LogLevel, msg: str) -> None:
+        if level.value < self.min_log_level.value:
+            return
 
-    _LOG_OUTPUT_PATH = f"{log_output_dir}/logs.txt"
+        output: str = f"[{self.prefix:4}] {str(level)}: {msg}"
+        if self.print_to_screen:
+            if self.enable_color_logs:
+                colored_output = level.color_codes() + output + Style.RESET_ALL
+                print(colored_output)
+            else:
+                print(output)
 
-def set_level(level: LogLevel) -> None:
-    global _MIN_LOG_LEVEL
-    _MIN_LOG_LEVEL = level
+        if self.log_output_path is not None:
+            with open(self.log_output_path, "a+") as f:
+                print(output, file=f)
 
-def log(level: LogLevel, msg: str) -> None:
-    if level.value < _MIN_LOG_LEVEL.value:
-        return
+    def debug(self, msg: str) -> None:
+        self.log(LogLevel.DEBUG, msg)
 
-    output: str = f"{str(level)}: {msg}"
-    if _ENABLE_COLOR_LOGS:
-        colored_output = level.color_codes() + output + Style.RESET_ALL
-        print(colored_output)
-    else:
-        print(output)
+    def info(self, msg: str) -> None:
+        self.log(LogLevel.INFO, msg)
 
-    if _LOG_OUTPUT_PATH is not None:
-        with open(_LOG_OUTPUT_PATH, "a+") as f:
-            print(output, file=f)
+    def warn(self, msg: str) -> None:
+        self.log(LogLevel.WARN, msg)
 
-def debug(msg: str) -> None:
-    log(LogLevel.DEBUG, msg)
+    def error(self, msg: str) -> None:
+        self.log(LogLevel.ERROR, msg)
 
-def info(msg: str) -> None:
-    log(LogLevel.INFO, msg)
+    def fatal(self, msg: str) -> NoReturn:
+        self.log(LogLevel.FATAL, msg)
+        sys.exit(1)
 
-def warn(msg: str) -> None:
-    log(LogLevel.WARN, msg)
+repl_log: Logger = Logger(
+    prefix="REPL",
+    log_output_dir="trout/logs",
+    print_to_screen=True,
+    enable_color_logs=True,
+    # min_log_level=LogLevel.INFO
+    min_log_level=LogLevel.DEBUG
+)
 
-def error(msg: str) -> None:
-    log(LogLevel.ERROR, msg)
+bot_log: Logger = Logger(
+    prefix="BOT",
+    log_output_dir="trout/logs",
+    print_to_screen=False,
+    enable_color_logs=False,
+)
 
-def fatal(msg: str) -> None:
-    log(LogLevel.FATAL, msg)
-    sys.exit(1)

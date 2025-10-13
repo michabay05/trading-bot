@@ -9,11 +9,14 @@
 # the source below.
 #   - Source: https://gist.github.com/gwpl/6f2c8f2574db6df770c51795d02cd458
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-import subprocess, sys, threading, time
+from threading import Thread
+from typing import Callable
+import subprocess, sys
 
-from trbot import log
+from trbot.log import repl_log
+from trbot.strategy import quit_event
 from trbot.all_strat import TrendFollowingStrat
 
 @dataclass
@@ -21,73 +24,6 @@ class CmdOutput:
     code: int
     stdout: str
     stderr: str
-
-def run_cmd(cmd: list[str]) -> CmdOutput | None:
-    try:
-        log.info(f"cmd: {cmd}")
-        proc = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            check=False
-        )
-        return CmdOutput(proc.returncode, proc.stdout, proc.stderr)
-    except Exception as e:
-        log.error(f"Failed to run cmd ({cmd}): {repr(e)}")
-
-def get_all_commits(use_remote: bool) -> list[str]:
-    cmd_args = ["git", "log", "--oneline"]
-    if use_remote:
-        cmd_args.extend(["origin", "main"])
-
-    output = run_cmd(cmd_args)
-    if output is None:
-        sys.exit(1)
-
-    if output.code != 0:
-        log.error(f"subcmd exited with code {output.code}")
-        log.error(f"stdout: {output.stderr}")
-        sys.exit(1)
-
-    print(output.stdout)
-
-    # Parse git commit logs
-    hashes: list[str] = []
-    lines: list[str] = output.stdout.splitlines()
-    for line in lines:
-        parts: list[str] = line.split()
-        hashes.append(parts[0])
-
-    return hashes
-
-def get_current_commit(use_remote: bool) -> str:
-    dest = "origin/main" if use_remote else "HEAD"
-    cmd = run_cmd(["git", "rev-parse", dest])
-
-    if cmd is None:
-        log.error("failed to get current commit hash")
-        sys.exit(1)
-
-    return cmd.stdout.strip()
-
-def fetch_latest():
-    cmd = run_cmd(["git", "fetch", "origin"])
-    if cmd is not None:
-        log.info("fetched latest changes from origin")
-    else:
-        log.error("failed to fetch latest change from origin")
-
-def sync_w_remote():
-    fetch_latest()
-
-    local_commit = get_current_commit(use_remote=False)
-    remote_commit = get_current_commit(use_remote=True)
-    if local_commit != remote_commit:
-        cmd = run_cmd(["git", "pull", "origin", "main"])
-        if cmd is None:
-            log.error("failed to sync changes with remote")
-
-# ============================================================================
 
 def run_bot() -> None:
     symbols: list[str] = [
@@ -110,22 +46,175 @@ def run_bot() -> None:
     #     ls.shutdown()
     #     log.info("Complete ... Goodbye!")
 
+@dataclass
+class ReplCmd:
+    func: Callable
+    desc: str
 
-freq = 1
-gap_between_checks = timedelta(hours=24 / freq)
+class Runner:
+    def __init__(self) -> None:
+        self.should_quit: bool = False
+        self.now: datetime = datetime.now()
+        self.last_check: datetime = field(init=False)
+        self.bot_thread: Thread = Thread(target=run_bot)
+        self.bot_running: bool = False
+        self.freq: int = 1
 
-now = datetime.now()
-start = now
-# Check for remote changes before running the bot
-last_check = start
+        self.repl_cmds: dict[str, ReplCmd] = {
+            "start": ReplCmd(
+                func=self._repl_bot_start,
+                desc="Start running the bot (if not already running)"
+            ),
+            "stop": ReplCmd(
+                func=self._repl_bot_stop,
+                desc="Stop running the bot (if already running)"
+            ),
+            "commit": ReplCmd(
+                func=self._repl_commit,
+                desc="Get the current commit hash of the local and remote repo"
+            ),
+            "quit": ReplCmd(
+                func=self._repl_quit,
+                desc="Quit the current program"
+            ),
+            "help": ReplCmd(
+                func=self._repl_help,
+                desc="Print a list of all the available repl commands and a brief description"
+            )
+        }
 
-bot_thread = threading.Thread(target=run_bot)
-bot_thread.start()
+    def _repl_bot_start(self) -> None:
+        if not self.bot_running:
+            if quit_event.is_set():
+                quit_event.clear()
 
-# while True:
-#     if now - last_check >= gap_between_checks:
-#         sync_w_remote()
-#     else:
-#         time.sleep(gap_between_checks.total_seconds() - 1)
-#         last_check = now
-#         now = datetime.now()
+            self.bot_thread.start()
+            self.bot_running = True
+            repl_log.info("Bot has started.")
+        else:
+            repl_log.info("Bot is already running")
+
+    def _repl_bot_stop(self) -> None:
+        if self.bot_running:
+            quit_event.set()
+            self.bot_thread.join()
+            self.bot_running = False
+            repl_log.info("Bot has stopped.")
+        else:
+            repl_log.info("Bot is not running so there's nothing to kill")
+
+    def _repl_commit(self) -> None:
+        repl_log.info(f"Local commit:  {self.get_current_commit(use_remote=False)}")
+        repl_log.info(f"Remote commit: {self.get_current_commit(use_remote=True)}")
+
+    def _repl_quit(self) -> None:
+        repl_log.info(f"Quitting...")
+        self.should_quit = True
+
+    def _repl_help(self) -> None:
+        repl_log.info("Listed below are all the available commands")
+        for cmd, rc in self.repl_cmds.items():
+            repl_log.info(f"{cmd:^15} |   {rc.desc}")
+
+    @property
+    def gap_between_checks(self) -> timedelta:
+         return timedelta(hours=24 / self.freq)
+
+    def run(self) -> None:
+        self.last_check = self.now
+
+        while not self.should_quit:
+            if self.now - self.last_check >= self.gap_between_checks:
+                self.sync_w_remote()
+                self.last_check = self.now
+
+            user_input: str = input("> ")
+            user_input = user_input.strip()
+            repl_log.debug(f"Input received: '{user_input}'")
+
+            if user_input not in self.repl_cmds.keys():
+                repl_log.warn(f"Unknown input provided: '{user_input}'")
+                continue
+
+            self.repl_cmds[user_input].func()
+            self.now = datetime.now()
+
+        if self.bot_running:
+            self._repl_bot_stop()
+
+    def run_cmd(self, cmd: list[str]) -> CmdOutput:
+        try:
+            repl_log.debug(f"cmd: {cmd}")
+            proc = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                check=False
+            )
+            return CmdOutput(proc.returncode, proc.stdout, proc.stderr)
+        except Exception as e:
+            repl_log.fatal(f"Failed to run cmd ({cmd}): {repr(e)}")
+
+    def get_all_commits(self, use_remote: bool) -> list[str]:
+        cmd_args = ["git", "log", "--oneline"]
+        if use_remote:
+            cmd_args.extend(["origin", "main"])
+
+        output = self.run_cmd(cmd_args)
+        if output.code != 0:
+            repl_log.error(f"subcmd exited with code {output.code}")
+            repl_log.error(f"stdout: {output.stderr}")
+            sys.exit(1)
+
+        print(output.stdout)
+
+        # Parse git commit logs
+        hashes: list[str] = []
+        lines: list[str] = output.stdout.splitlines()
+        for line in lines:
+            parts: list[str] = line.split()
+            hashes.append(parts[0])
+
+        return hashes
+
+    def get_local_branch(self) -> str:
+        cmd = self.run_cmd(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+
+        if cmd.code != 0:
+            repl_log.error(f"stderr: {cmd.stderr}")
+            repl_log.error("failed to get current branch")
+
+        return cmd.stdout.strip()
+
+    def get_current_commit(self, use_remote: bool) -> str:
+        dest = "origin/main" if use_remote else "HEAD"
+        cmd = self.run_cmd(["git", "rev-parse", dest])
+
+        if cmd.code != 0:
+            repl_log.error(f"stderr: {cmd.stderr}")
+            repl_log.error("failed to get current commit hash")
+
+        return cmd.stdout.strip()
+
+    def fetch_latest(self):
+        cmd = self.run_cmd(["git", "fetch", "origin"])
+        if cmd.code != 0:
+            repl_log.error(cmd.stderr)
+            repl_log.error("fetched latest changes from origin")
+        else:
+            repl_log.error("failed to fetch latest change from origin")
+
+    def sync_w_remote(self):
+        self.fetch_latest()
+
+        local_commit = self.get_current_commit(use_remote=False)
+        remote_commit = self.get_current_commit(use_remote=True)
+        if local_commit != remote_commit:
+            cmd = self.run_cmd(["git", "pull", "origin", "main"])
+            if cmd.code != 0:
+                repl_log.error(f"stderr: {cmd.stderr}")
+                repl_log.error("failed to sync changes with remote")
+
+# ============================================================================
+
+Runner().run()

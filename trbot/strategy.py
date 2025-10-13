@@ -3,13 +3,14 @@ from abc import abstractmethod
 import datetime as dt
 from dateutil.relativedelta import relativedelta
 from typing import Any, Literal
-import json, time, os
+import json, threading, time, os
 
 import numpy as np
 from numpy.typing import NDArray
 import talib
 
-from . import util, log
+from . import util
+from .log import bot_log as b_log
 from .broker import LiveBroker
 from .candles import Candle, Timespan
 from .datafeed import AlpacaDataFeed, TBDataFeed
@@ -23,6 +24,8 @@ from .stockframe import MultStockFrame, SingleStockFrame
 IndValues = NDArray[np.float64]
 IndicatorKind = Literal["sma", "ema", "rsi", "atr"]
 CandlePart = Literal["close", "low", "high"]
+
+quit_event: threading.Event = threading.Event()
 
 class Indicator:
     def __init__(self,
@@ -119,7 +122,7 @@ class _LiveData:
         live_data: dict[str, '_LiveData'], live_csv_path: str, agg_csv_path: str
     ) -> None:
         if len(live_data) == 0:
-            log.warn("Nothing to export")
+            b_log.warn("Nothing to export")
             return
 
         live_ssf_list: list[SingleStockFrame] = []
@@ -169,7 +172,8 @@ class LiveStrategy:
         self._next_close: dt.datetime = self._time
         # `new_interval`: amount of minutes, a new timespan will have been declared
         self._new_interval_min: int = 15
-        self._new_timespan_interval_sec: int = self._new_interval_min * 60
+
+        self._already_setup: bool = False
 
         # Ensure that all necessary directories are present
         # TODO: simplify the `trout` directory
@@ -182,7 +186,11 @@ class LiveStrategy:
             os.makedirs(f"{self._parent_dir}/{subdir}", exist_ok=True)
 
         # When logging stuff, this is the output directory that will be used
-        log.update_out_dir(self._out_dir)
+        b_log.update_out_dir(self._out_dir)
+
+    @property
+    def _new_timespan_interval_sec(self) -> int:
+        return self._new_interval_min * 60
 
     # NOTE: For live trading, instead of using last_close, use curr_price
     # NOTE: Use `self.current_price()` instead
@@ -213,22 +221,22 @@ class LiveStrategy:
 
     def _init_all_live_data(self) -> None:
         assert self._max_period > 0, f"Max period must be positive"
-        log.debug(f"Max period: {self._max_period}")
-        log.debug(f"Loading data at least {self._max_period + 5} candles...")
+        b_log.debug(f"Max period: {self._max_period}")
+        b_log.debug(f"Loading data at least {self._max_period + 5} candles...")
 
         # TODO: come here and adjust the start date depending on if the program
         # started running on a Monday or not. On a Monday, you should go upto 4 or 5
         # days backwards.
         end = dt.datetime.now()
         start = end - dt.timedelta(days=4)
-        log.debug(f"Date range: {str(start)}...{str(end)}")
+        b_log.debug(f"Date range: {str(start)}...{str(end)}")
 
         msf = self._data_feed.get_historical(
             self._symbols, Timespan.MINUTE, start, mult=1, end=end
         )
 
         for symbol in msf.symbols:
-            log.debug(f"    Symbol: {symbol}")
+            b_log.debug(f"    Symbol: {symbol}")
             ld = self._live_data[symbol]
             # path = f"trout/ohlcv-1hr/{symbol}.csv"
             # ssf = SingleStockFrame.from_csv(symbol, Timespan.HOUR, path)
@@ -251,22 +259,25 @@ class LiveStrategy:
 
         # Update the log output dir; this is especially helpful when the bot runs
         # for multiple days at a time
-        log.update_out_dir(self._out_dir)
+        b_log.update_out_dir(self._out_dir)
 
         # Export the most recent data fetched from the data feed
         timespan = Timespan.HOUR
         msf = self._data_feed.get_historical(self._symbols, timespan, start)
         msf.save_to_csv(f"{self._out_dir}/{timespan.as_str(mult=1)}.csv")
 
-        log.debug(f"Historicals up to date (from {str(start)} to now)")
+        b_log.debug(f"Historicals up to date (from {str(start)} to now)")
 
-        self.setup()
-        log.info("Indicators setup")
+        if not self._already_setup:
+            self.setup()
+            b_log.info("Indicators setup")
+            self._already_setup = True
+
         self._init_all_live_data()
-        log.info("Live data initialized")
+        b_log.info("Live data initialized")
 
-        log.info(f"Symbols: {self._symbols}")
-        log.info(f"Cash: ${self._broker._portfolio.cash:.2f}")
+        b_log.info(f"Symbols: {self._symbols}")
+        b_log.info(f"Cash: ${self._broker._portfolio.cash:.2f}")
 
         # Update current hour variable
         self._time = dt.datetime.now(tz=util.MY_TIMEZONE)
@@ -274,12 +285,6 @@ class LiveStrategy:
 
     def shutdown(self) -> None:
         try:
-            # NOTE: I am not sure why I would want to remove the entire directory...
-            # ------------------------
-            # if os.path.exists(self._out_dir):
-            #     assert os.path.isdir(self._out_dir), f"Provided path ({self._out_dir}) must be a directory"
-            #     shutil.rmtree(self._out_dir)
-
             if not os.path.exists(self._out_dir):
                 os.makedirs(self._out_dir)
 
@@ -295,7 +300,7 @@ class LiveStrategy:
             # Export the broker's temporary information
             self._broker.export_info(self._out_dir)
         except Exception as e:
-            log.warn(f"Shutdown unsuccessful: {repr(e)} ({str(e)})")
+            b_log.warn(f"Shutdown unsuccessful: {repr(e)} ({str(e)})")
 
     def _on_market_close(self, next_open: dt.datetime) -> None:
         self.shutdown()
@@ -303,10 +308,10 @@ class LiveStrategy:
         now = dt.datetime.now(tz=util.MY_TIMEZONE)
         # Wake up every 30 minutes and then sleep
         while now < next_open:
-            log.info(f"Current time: {now}")
+            b_log.info(f"Current time: {now}")
             diff = next_open - now
             sleep_time = min(diff.total_seconds(), 30 * 60)
-            log.info(f"Sleeping for {sleep_time:.4f} seconds...")
+            b_log.info(f"Sleeping for {sleep_time:.4f} seconds...")
             time.sleep(sleep_time)
             now = dt.datetime.now(tz=util.MY_TIMEZONE)
 
@@ -322,7 +327,7 @@ class LiveStrategy:
             # (like interval=15min, then divisible = xx:00, xx:15, xx:30, xx:45))
             # then wait until the current time is divisible
             if time_til_divisible != 0.0:
-                log.info(
+                b_log.info(
                     f"Waiting for {time_til_divisible:.4f} more seconds "
                     "until time is divisible by interval"
                 )
@@ -344,7 +349,7 @@ class LiveStrategy:
     def _on_new_candle(self, symbol: str, cnd: Candle) -> None:
         ld = self._live_data[symbol]
         ld.add_live(cnd)
-        log.debug(f"[{symbol:4}] Minute: {cnd}")
+        b_log.debug(f"[{symbol:4}] Minute: {cnd}")
 
         # Manual updates to order status
         self._broker.update_status()
@@ -357,32 +362,37 @@ class LiveStrategy:
             self._broker.sync_portfolio()
             assert order.is_to_close(), "Local broker's exit orders must be with the intention to close"
             self._broker.execute_close_order(order, self._data_feed)
-            log.debug(f"Submitted order: {order}")
+            b_log.debug(f"Submitted order: {order}")
             self._broker.add_order_req(order)
 
         now = dt.datetime.now(tz=util.MY_TIMEZONE)
         if (now - self._last_update).total_seconds() >= self._new_timespan_interval_sec:
             self._last_update = now
-            log.info("Detected new timespan...")
+            b_log.info("Detected new timespan...")
 
             for symbol in self._symbols:
                 try:
                     self.new_timespan_update(symbol)
                 except Exception as e:
-                    log.error(f"Timespan update error: {repr(e)} ({str(e)})")
-                log.debug("------------------")
+                    b_log.error(f"Timespan update error: {repr(e)} ({str(e)})")
+                b_log.debug("------------------")
 
  
         # Used for live data visualizing
         # NOTE: currently this is not used at all
         update_live_aggregates(self._live_data)
 
+        if quit_event.is_set():
+            # The REPL is forcing this thread to stop
+            self._data_feed.end_live()
+            self.shutdown()
+
         if now > self._next_close:
             # Market is closed
             self._data_feed.end_live()
 
     def new_timespan_update(self, symbol: str) -> None:
-        log.info(f"New timespan update for {symbol}...")
+        b_log.info(f"New timespan update for {symbol}...")
 
         # Reset long and short direction labels if enough time has passed.
         # "enough time" is defined by the attribute inside the broker
@@ -409,26 +419,56 @@ class LiveStrategy:
 
         agg_cnd: Candle = ssf.row_to_candle(-1)
         symbol_ld.add_agg(agg_cnd)
-        log.debug(f"\n\n{symbol:4}: {agg_cnd}\n\n")
+        b_log.debug(f"\n\n{symbol:4}: {agg_cnd}\n\n")
 
         # ... recalculate the indicator values, ...
-        log.debug("Indicator values: [")
+        b_log.debug("Indicator values: [")
         for ind in self._indicators:
             values = ind.compute_from_candles(symbol_ld.agg_cnds)
             name = ind.name()
             symbol_ld.set_indicator(name, values)
-            log.debug(f"    {name}: {values[-1]}")
+            b_log.debug(f"    {name}: {values[-1]}")
 
-        log.debug("]")
+        b_log.debug("]")
 
         # ... and apply strategy on the new target-timespan candle
         order: TBMarketReq | None = self.on_candle(symbol)
         if order is not None:
             self._broker.sync_portfolio()
             self._broker.execute_open_order(order, self._data_feed)
-            log.debug(f"Submitted order: {order}")
+            b_log.debug(f"Submitted order: {order}")
         else:
-            log.debug(f"No order")
+            b_log.debug(f"No order")
+
+    @classmethod
+    def import_everything(cls, import_info_path: str) -> 'LiveStrategy':
+        info = {}
+        try:
+            with open(import_info_path, "r") as f:
+                info = json.load(f)
+        except json.JSONDecodeError:
+            b_log.fatal(f"failed to import strategy (json error when reading '{import_info_path}')")
+        except Exception as e:
+            b_log.error(f"{repr(e)}; {str(e)}")
+            b_log.fatal(f"failed to import strategy, '{import_info_path}'")
+
+        strat = cls(
+            acct_name=info["broker"]["acct_name"],
+            symbols=info["strategy"]["symbols"],
+            paper=info["broker"]["paper_trading"]
+        )
+
+        strat._parent_dir = info["strategy"]["parent_dir"]
+        strat._required_subdirs = info["strategy"]["required_dirs"]
+        strat._new_interval_min = info["strategy"]["new_interval_min"]
+        strat._indicators = [
+            Indicator(**ind_info) for ind_info in info["strategy"]["indicators"]
+        ]
+
+        # TODO: finish restoring the state of strategy from the strategy
+        # strat._broker = 
+
+        return strat
 
     def export_everything(self, output_path: str) -> dict:
         output = {}
@@ -449,6 +489,7 @@ class LiveStrategy:
         broker = self._broker
         output["broker"] = {
             "acct_name": broker._acct_name,
+            "paper_trading": broker.paper_trading,
             "symbol_labels": broker._symbol_labels,
             "auto_exit": broker._auto_exit,
             "time_til_reset": str(broker._time_til_reset),
@@ -478,14 +519,14 @@ class LiveStrategy:
         # Source: https://docs.alpaca.markets/docs/websocket-streaming#common-events
 
         # This method needs to be reworked before being used.
-        log.warn("May not be a good idea to use this...")
+        b_log.warn("May not be a good idea to use this...")
 
         match data["event"]:
             case "fill":
                 # Let the broker know that there is a new fill event
                 self._broker.new_fill_event(data["order"])
             case _:
-                log.warn(f"Unknown event type: {data["event"]}")
+                b_log.warn(f"Unknown event type: {data["event"]}")
 
     # ===============================================================================
     # --------------------------------------------
@@ -575,7 +616,7 @@ class LiveStrategy:
         size: TBOrderAmount, tp_limit: float | None = None, sl_limit: float | None = None
     ) -> TBMarketReq:
         if not self._broker.portfolio.in_position(symbol):
-            log.warn("For now, SELL_TO_OPEN does not work")
+            b_log.warn("For now, SELL_TO_OPEN does not work")
 
         assert size.amount > 0, "Negative size provided. (size > 0)"
         assert symbol in self._symbols, f"Provided ({symbol}) is not in list of symbols ({self._symbols})"

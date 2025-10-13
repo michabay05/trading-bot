@@ -74,12 +74,11 @@ A list of all the TODOs needed to be completed before each release
             - [Good resource](https://gist.github.com/gwpl/6f2c8f2574db6df770c51795d02cd458)
         - [x] Update the local copy of the bot using remote's copy
         - [ ] Maintain a frequency parameter that details how often it should check for changes.
-- [x] (refactor) Move `log.py` out of `trbot`
-    - `log.py` is a project-wide utility and should probably not be placed within a directory
 - [ ] (refactor) Rework the `trout` directory
     - There should be a dedicated `logs` directory at the project's top level. `trout` should be phased out along with the other content within it.
 - [x] (feat) Add ability to export everything about a strategy
     - Ideally, via the exported data an exact duplicate of the bot's state can be recreated across restarts.
+- [ ] (feat) Add ability to import everything about a strategy
 
 ## v0.12
 - [x] (feat) Add subscription to Alpaca's Trading Stream
